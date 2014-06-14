@@ -83,4 +83,14 @@ ok(norm(z0) == z0.norm,     "norm(z0) == z0.norm")
 ok(norm(z0) == z0.abs ** 2, "norm(z0) == z0.abs ** 2")
 ok(conj(z0) == z0.conj,     "conj(z0) == z0.conj")
 ok(proj(z0) == z0.proj,     "conj(z0) == z0.proj")
+z0 = 0+0.i
+z0.real += 1
+ok(z0 == 1,     ".real as a setter")
+z0.imag += 1
+ok(z0 == 1+1.i, ".imag as a setter")
+z0.abs *= 2
+ok(z0 == 2+2.i, ".abs as a setter")
+z0.arg *= 2
+ok(abs(z0.re) < epsilon && abs(z0.im - 2*sqrt(2)) < epsilon,
+    ".arg as a setter")
 done_testing()

@@ -40,11 +40,17 @@ struct Complex: Printable, Equatable  {
         return "(\(self.re)\(sign)\(self.im).i)"
     }
     static var I:Complex { return Complex(0, 1) }
-    var real:Double { return re }
-    var imag:Double { return im }
+    var real:Double { get{ return re } set(r){ re = r } }
+    var imag:Double { get{ return im } set(i){ im = i } }
+    var abs:Double  {
+    get { return hypot(re, im) }
+    set(r){ let f = r / abs; re *= f; im *= f }
+    }
+    var arg:Double  {
+    get { return atan2(im, re) }
+    set(t){ let m = abs; re = m * cos(t); im = m * sin(t) }
+    }
     var norm:Double { return re * re + im * im }
-    var abs:Double  { return hypot(re, im) }
-    var arg:Double  { return atan2(im, re) }
     var conj:Complex { return Complex(re, -im) }
     var proj:Complex {
         if re != Double.inf && im != Double.inf {
