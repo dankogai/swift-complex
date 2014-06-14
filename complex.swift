@@ -62,6 +62,10 @@ struct Complex: Printable, Equatable  {
             )
         }
     }
+    var tuple:(Double, Double) {
+    get { return (re, im) }
+    set(t){ (re, im) = t}
+    }
     // (x + yi) * i = (-y + xi)
     var i:Complex { return Complex(-im, re) }
 }

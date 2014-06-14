@@ -93,4 +93,9 @@ ok(z0 == 2+2.i, ".abs as a setter")
 z0.arg *= 2
 ok(abs(z0.re) < epsilon && abs(z0.im - 2*sqrt(2)) < epsilon,
     ".arg as a setter")
+z0 = 1+1.i
+var (r, i) = z0.tuple
+ok(r == 1 && i == 1, "(r, i) = z.tuple")
+z0.tuple = (2, 2)
+ok(z0 == 2+2.i, "z.tuple = (r, i)")
 done_testing()
