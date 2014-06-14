@@ -10,7 +10,7 @@ Usage:
 
 Just add complex.swift to it
 
-### via command line
+### via command line:
 
 ````shell
 xcrun swift main.swift complex.swift
@@ -35,7 +35,7 @@ complex.swift implements all the functionality of [complex in c++11], arguably m
 
 ### Difference from C++11
 
-* Property functions are provided as properties:
+* Property functions are also provided as properties:
   * `real`
   * `imag`
   * `norm`

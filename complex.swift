@@ -267,3 +267,9 @@ func acosh(z:Complex) -> Complex {
 func atanh(z:Complex) -> Complex {
     return 0.5 * log((1 + z)/(1 - z))
 }
+// for the compatibility's sake w/ C++11
+func real(z:Complex) -> Double { return z.real }
+func imag(z:Complex) -> Double { return z.imag }
+func norm(z:Complex) -> Double { return z.norm }
+func conj(z:Complex) -> Complex { return z.conj }
+func proj(z:Complex) -> Complex { return z.proj }
