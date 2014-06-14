@@ -1,7 +1,9 @@
 swift-complex
 =============
 
-Complex numbers in Swift
+Complex numbers in [Swift]
+
+[Swift]: https://developer.apple.com/swift/
 
 Usage
 -----
@@ -30,10 +32,10 @@ println(z0 * z1 == 2)       // true
 Description
 -----------
 
-complex.swift implements all the functionality of [complex in c++11], arguably more intuitively. 
+complex.swift implements all the functionality of [std::complex in c++11], arguably more intuitively. 
 
 
-[complex in c++11]: http://www.cplusplus.com/reference/complex/
+[std::complex in c++11]: http://www.cplusplus.com/reference/complex/
 
 ### Difference from C++11
 
@@ -49,3 +51,4 @@ complex.swift implements all the functionality of [complex in c++11], arguably m
 * Construct a complex number via polar notation as:
   * `Complex(abs:magnitude, arg:argument)`
 * In addition to `pow()`, it comes with the `**` operator
+* Not generic -- yet
