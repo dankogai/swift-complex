@@ -19,7 +19,10 @@ extension Double {
     static var LOG10E:Double { return 1/LN10 }
     static var SQRT2:Double { return sqrt(2) }
     static var SQRT1_2:Double { return 1/SQRT2 }
-    static var inf:Double { return 1.0/0.0 }
+    // use infinity instead
+    // static var inf:Double { return 1.0/0.0 }
+    static var epsilon:Double { return 0x1p-52 }
+    // self * 1i
     var i:Complex { return Complex(0, self) }
 }
 
@@ -53,11 +56,11 @@ struct Complex: Printable, Equatable  {
     var norm:Double { return re * re + im * im }
     var conj:Complex { return Complex(re, -im) }
     var proj:Complex {
-        if re != Double.inf && im != Double.inf {
+        if re != Double.infinity && im != Double.infinity {
             return self
         } else {
             return Complex(
-                Double.inf,
+                Double.infinity,
                 im > 0.0 ? 0.0 : im == 0.0 ? 0.0 : -0.0
             )
         }
@@ -285,3 +288,34 @@ func imag(z:Complex) -> Double { return z.imag }
 func norm(z:Complex) -> Double { return z.norm }
 func conj(z:Complex) -> Complex { return z.conj }
 func proj(z:Complex) -> Complex { return z.proj }
+//
+// approximate comparisons
+//
+operator infix =~ { associativity none precedence 130 }
+@infix func =~ (lhs:Double, rhs:Double) -> Bool {
+    if lhs == rhs { return true }
+    return abs(1.0 - lhs/rhs) <= 2 * Double.epsilon
+}
+@infix func =~ (lhs:Complex, rhs:Complex) -> Bool {
+    if lhs == rhs { return true }
+    return lhs.abs =~ rhs.abs
+}
+@infix func =~ (lhs:Complex, rhs:Double) -> Bool {
+    return lhs.abs =~ abs(rhs)
+}
+@infix func =~ (lhs:Double, rhs:Complex) -> Bool {
+    return abs(lhs) =~ rhs.abs
+}
+operator infix !~ { associativity none precedence 130 }
+@infix func !~ (lhs:Double, rhs:Double) -> Bool {
+    return !(lhs =~ rhs)
+}
+@infix func !~ (lhs:Complex, rhs:Complex) -> Bool {
+    return !(lhs =~ rhs)
+}
+@infix func !~ (lhs:Complex, rhs:Double) -> Bool {
+    return !(lhs =~ rhs)
+}
+@infix func !~ (lhs:Double, rhs:Complex) -> Bool {
+    return !(lhs =~ rhs)
+}
