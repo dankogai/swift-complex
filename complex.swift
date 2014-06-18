@@ -9,7 +9,7 @@
 import Darwin   // Foundation is overkill
 
 extension Double {
-    static var PI:Double { return 4 * atan2(1, 1) }
+    static var PI:Double { return atan2(0, -1) }
     static var π:Double { return PI }
     static var E:Double { return exp(1) }
     static var e:Double { return E }
