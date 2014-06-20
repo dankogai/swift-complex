@@ -53,7 +53,7 @@ struct Complex: Printable, Equatable  {
     get { return atan2(im, re) }
     set(t){ let m = abs; re = m * cos(t); im = m * sin(t) }
     }
-    var norm:Double { return re * re + im * im }
+    var norm:Double { return hypot(re, im) }
     var conj:Complex { return Complex(re, -im) }
     var proj:Complex {
         if re != Double.infinity && im != Double.infinity {
@@ -147,7 +147,7 @@ struct Complex: Printable, Equatable  {
 }
 // /, /=
 @infix func / (lhs:Complex, rhs:Complex) -> Complex {
-    let d = rhs.re * rhs.re + rhs.im * rhs.im
+    let d = hypot(rhs.re, rhs.im)
     return Complex(
         (lhs.re * rhs.re + lhs.im * rhs.im) / d,
         (lhs.im * rhs.re - lhs.re * rhs.im) / d
@@ -220,7 +220,11 @@ operator infix **= { associativity right precedence 90 }
 }
 // sqrt(z)
 func sqrt(z:Complex) -> Complex {
-    return z ** 0.5
+    // return z ** 0.5
+    let d = hypot(z.re, z.im)
+    let re = sqrt((z.re + d)/2)
+    let im = z.im < 0 ? -sqrt((-z.re + d)/2) : sqrt((-z.re + d)/2)
+    return Complex(re, im)
 }
 // cos(z)
 func cos(z:Complex) -> Complex {
