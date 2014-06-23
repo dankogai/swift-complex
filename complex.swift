@@ -19,7 +19,7 @@ extension Double {
     static var LOG10E:Double { return 1/LN10 }
     static var SQRT2:Double { return sqrt(2) }
     static var SQRT1_2:Double { return 1/SQRT2 }
-    // use infinity instead
+    // use .infinity instead
     // static var inf:Double { return 1.0/0.0 }
     static var epsilon:Double { return 0x1p-52 }
     // self * 1i
@@ -38,9 +38,8 @@ struct Complex: Printable, Equatable  {
         self.im = abs * sin(arg)
     }
     var description:String {
-        let sign = self.im >  0.0 ? "+"
-                 : self.im == 0.0 ? "+" : ""
-        return "(\(self.re)\(sign)\(self.im).i)"
+    let plus = im.isSignMinus ? "" : "+"
+        return "(\(re)\(plus)\(im).i)"
     }
     static var I:Complex { return Complex(0, 1) }
     var real:Double { get{ return re } set(r){ re = r } }
@@ -56,12 +55,11 @@ struct Complex: Printable, Equatable  {
     var norm:Double { return hypot(re, im) }
     var conj:Complex { return Complex(re, -im) }
     var proj:Complex {
-        if re != Double.infinity && im != Double.infinity {
+        if re.isFinite && im.isFinite {
             return self
         } else {
             return Complex(
-                Double.infinity,
-                im > 0.0 ? 0.0 : im == 0.0 ? 0.0 : -0.0
+                Double.infinity, im.isSignMinus ? -0.0 : 0.0
             )
         }
     }
