@@ -97,6 +97,8 @@ ok(z0 =~ 0.0+2*sqrt(2).i, ".arg as a setter")
 z0 = 1+1.i
 var (r, i) = z0.tuple
 ok(r == 1 && i == 1, "(r, i) = z.tuple")
+(r, i) = z0
+ok(r == 1 && i == 1, "(r, i) = z")
 z0.tuple = (2, 2)
 ok(z0 == 2+2.i, "z.tuple = (r, i)")
 done_testing()
