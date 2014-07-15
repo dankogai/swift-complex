@@ -148,7 +148,7 @@ struct Complex: Printable, Equatable  {
 }
 // /, /=
 @infix func / (lhs:Complex, rhs:Complex) -> Complex {
-    let d = hypot(rhs.re, rhs.im)
+    let d = rhs.re * rhs.re + rhs.im * rhs.im
     return Complex(
         (lhs.re * rhs.re + lhs.im * rhs.im) / d,
         (lhs.im * rhs.re - lhs.re * rhs.im) / d
