@@ -9,20 +9,23 @@
 import Darwin   // Foundation is overkill
 
 extension Double {
-    static var PI:Double { return 3.14159265358979323846264338327950288419716939937510 }
-    static var π:Double { return PI }
-    static var E:Double { return 2.718281828459045235360287471352662497757247093699 }
-    static var e:Double { return E }
-    static var LN2:Double { return 0.6931471805599453094172321214581765680755001343602552 }
-    static var LOG2E:Double { return 1/LN2 }
-    static var LN10:Double { return 2.3025850929940456840179914546843642076011014886287729 }
-    static var LOG10E:Double { return 1/LN10 }
-    static var SQRT2:Double { return 1.4142135623730950488016887242096980785696718753769480 }
-    static var SQRT1_2:Double { return 1/SQRT2 }
-    // use .infinity instead
-    // static var inf:Double { return 1.0/0.0 }
-    static var epsilon:Double { return 0x1p-52 }
-    // self * 1i
+    // these ought to be static let 
+    // but give users a chance to overwrite it
+    static var PI = 3.14159265358979323846264338327950288419716939937510
+    static var π = PI
+    static var E =  2.718281828459045235360287471352662497757247093699
+    static var e = E
+    static var LN2 =
+        0.6931471805599453094172321214581765680755001343602552
+    static var LOG2E = 1 / LN2
+    static var LN10 =
+        2.3025850929940456840179914546843642076011014886287729
+    static var LOG10E = 1/LN10
+    static var SQRT2 =
+        1.4142135623730950488016887242096980785696718753769480
+    static var SQRT1_2 = 1/SQRT2
+    static var epsilon = 0x1p-52
+    /// self * 1i
     var i:Complex { return Complex(0, self) }
 }
 
@@ -179,8 +182,8 @@ func log(z:Complex) -> Complex {
     return Complex(log(z.abs), z.arg)
 }
 // log10(z) -- just because C++ has it
-func log10(z:Complex) -> Complex { return log(z) / Double.LN10 }
-func log10(r:Double) -> Double { return log(r) / Double.LN10 }
+func log10(z:Complex) -> Complex { return log(z) / log(10) }
+func log10(r:Double) -> Double { return log(r) / log(10) }
 // pow(b, x)
 func pow(lhs:Complex, rhs:Complex) -> Complex {
     let z = log(lhs) * rhs
