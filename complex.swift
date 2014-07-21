@@ -70,7 +70,7 @@ struct Complex: Printable, Equatable  {
     get { return (re, im) }
     set(t){ (re, im) = t}
     }
-    @conversion func __conversion()->(Double, Double) {
+    func __conversion()->(Double, Double) {
         return (re, im)
     }
     // (x + yi) * i = (-y + xi)
