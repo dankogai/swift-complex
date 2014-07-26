@@ -47,7 +47,11 @@ struct Complex: Printable, DebugPrintable, Equatable, Hashable {
     var debugDescription:String {
         return String(format:"Complex(%a, %a)", re, im)
     }
-    var hashValue:Int { return debugDescription.hashValue }
+    var hashValue:Int {
+        let mask = sizeof(Int) == 32
+            ? 0x5555_5555 : 0x5555_5555_5555_5555
+        return (re.hashValue & ~mask) | (im.hashValue & mask)
+    }
     static var I:Complex { return Complex(0, 1) }
     var real:Double { get{ return re } set(r){ re = r } }
     var imag:Double { get{ return im } set(i){ im = i } }
