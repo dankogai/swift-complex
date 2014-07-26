@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Dan Kogai. All rights reserved.
 //
 
-import Darwin   // Foundation is overkill
+import Foundation // We now need String(format:...)
 
 extension Double {
     // these ought to be static let 
@@ -29,7 +29,7 @@ extension Double {
     var i:Complex { return Complex(0, self) }
 }
 
-struct Complex: Printable, Equatable  {
+struct Complex: Printable, DebugPrintable, Equatable, Hashable {
     var (re:Double, im:Double) = (0.0, 0.0)
     init(){}
     init(_ re:Double, _ im:Double) {
@@ -41,9 +41,13 @@ struct Complex: Printable, Equatable  {
         self.im = abs * sin(arg)
     }
     var description:String {
-    let plus = im.isSignMinus ? "" : "+"
+        let plus = im.isSignMinus ? "" : "+"
         return "(\(re)\(plus)\(im).i)"
     }
+    var debugDescription:String {
+        return String(format:"Complex(%a, %a)", re, im)
+    }
+    var hashValue:Int { return debugDescription.hashValue }
     static var I:Complex { return Complex(0, 1) }
     var real:Double { get{ return re } set(r){ re = r } }
     var imag:Double { get{ return im } set(i){ im = i } }
@@ -327,3 +331,4 @@ operator infix !~ { associativity none precedence 130 }
 @infix func !~ (lhs:Double, rhs:Complex) -> Bool {
     return !(lhs =~ rhs)
 }
+/// You can use Complex as a dictionary key

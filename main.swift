@@ -101,4 +101,8 @@ ok(r == 1 && i == 1, "(r, i) = z.tuple")
 ok(r == 1 && i == 1, "(r, i) = z")
 z0.tuple = (2, 2)
 ok(z0 == 2+2.i, "z.tuple = (r, i)")
+ok(exp(Double.PI.i).debugDescription ==
+    "Complex(-0x1p+0, 0x1.1a62633145c07p-53)", "debugDescription")
+var dict = [0+0.i:"origin"]
+ok(dict[0+0.i] == "origin", "Complex as a dictionary key")
 done_testing()
