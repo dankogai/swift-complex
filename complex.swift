@@ -85,97 +85,97 @@ struct Complex: Printable, DebugPrintable, Equatable, Hashable {
     var i:Complex { return Complex(-im, re) }
 }
 // != is auto-generated thanks to Equatable
-@infix func == (lhs:Complex, rhs:Complex) -> Bool {
+func == (lhs:Complex, rhs:Complex) -> Bool {
     return lhs.re == rhs.re && lhs.im == rhs.im
 }
-@infix func == (lhs:Complex, rhs:Double) -> Bool {
+func == (lhs:Complex, rhs:Double) -> Bool {
     return lhs.re == rhs && lhs.im == 0
 }
-@infix func == (lhs:Double, rhs:Complex) -> Bool {
+func == (lhs:Double, rhs:Complex) -> Bool {
     return lhs == rhs.re && rhs.im == 0
 }
 // +, +=
-@prefix func + (z:Complex) -> Complex {
+prefix func + (z:Complex) -> Complex {
     return z
 }
-@infix func + (lhs:Complex, rhs:Complex) -> Complex {
+func + (lhs:Complex, rhs:Complex) -> Complex {
     return Complex(lhs.re + rhs.re, lhs.im + rhs.im)
 }
-@infix func + (lhs:Complex, rhs:Double) -> Complex {
+func + (lhs:Complex, rhs:Double) -> Complex {
     return lhs + Complex(rhs, 0)
 }
-@infix func + (lhs:Double, rhs:Complex) -> Complex {
+func + (lhs:Double, rhs:Complex) -> Complex {
     return Complex(lhs, 0) + rhs
 }
-@assignment func += (inout lhs:Complex, rhs:Complex) -> Complex {
+func += (inout lhs:Complex, rhs:Complex) -> Complex {
     lhs.re += rhs.re ; lhs.im += rhs.im
     return lhs
 }
-@assignment func += (inout lhs:Complex, rhs:Double) -> Complex {
+func += (inout lhs:Complex, rhs:Double) -> Complex {
     lhs.re += rhs
     return lhs
 }
 // -, -=
-@prefix func - (z:Complex) -> Complex {
+prefix func - (z:Complex) -> Complex {
     return Complex(-z.re, -z.im)
 }
-@infix func - (lhs:Complex, rhs:Complex) -> Complex {
+func - (lhs:Complex, rhs:Complex) -> Complex {
     return Complex(lhs.re - rhs.re, lhs.im - rhs.im)
 }
-@infix func - (lhs:Complex, rhs:Double) -> Complex {
+func - (lhs:Complex, rhs:Double) -> Complex {
     return lhs - Complex(rhs, 0)
 }
-@infix func - (lhs:Double, rhs:Complex) -> Complex {
+func - (lhs:Double, rhs:Complex) -> Complex {
     return Complex(lhs, 0) - rhs
 }
-@assignment func -= (inout lhs:Complex, rhs:Complex) -> Complex {
+func -= (inout lhs:Complex, rhs:Complex) -> Complex {
     lhs.re -= rhs.re ; lhs.im -= rhs.im
     return lhs
 }
-@assignment func -= (inout lhs:Complex, rhs:Double) -> Complex {
+func -= (inout lhs:Complex, rhs:Double) -> Complex {
     lhs.re -= rhs
     return lhs
 }
 // *, *=
-@infix func * (lhs:Complex, rhs:Complex) -> Complex {
+func * (lhs:Complex, rhs:Complex) -> Complex {
     return Complex(
         lhs.re * rhs.re - lhs.im * rhs.im,
         lhs.re * rhs.im + lhs.im * rhs.re
     )
 }
-@infix func * (lhs:Complex, rhs:Double) -> Complex {
+func * (lhs:Complex, rhs:Double) -> Complex {
     return Complex(lhs.re * rhs, lhs.im * rhs)
 }
-@infix func * (lhs:Double, rhs:Complex) -> Complex {
+func * (lhs:Double, rhs:Complex) -> Complex {
     return Complex(lhs * rhs.re, lhs * rhs.im)
 }
-@assignment func *= (inout lhs:Complex, rhs:Complex) -> Complex {
+func *= (inout lhs:Complex, rhs:Complex) -> Complex {
     lhs = lhs * rhs
     return lhs
 }
-@assignment func *= (inout lhs:Complex, rhs:Double) -> Complex {
+func *= (inout lhs:Complex, rhs:Double) -> Complex {
     lhs = lhs * rhs
     return lhs
 }
 // /, /=
-@infix func / (lhs:Complex, rhs:Complex) -> Complex {
+func / (lhs:Complex, rhs:Complex) -> Complex {
     let d = rhs.re * rhs.re + rhs.im * rhs.im
     return Complex(
         (lhs.re * rhs.re + lhs.im * rhs.im) / d,
         (lhs.im * rhs.re - lhs.re * rhs.im) / d
     )
 }
-@infix func / (lhs:Complex, rhs:Double) -> Complex {
+func / (lhs:Complex, rhs:Double) -> Complex {
     return Complex(lhs.re / rhs, lhs.im / rhs)
 }
-@infix func / (lhs:Double, rhs:Complex) -> Complex {
+func / (lhs:Double, rhs:Complex) -> Complex {
     return Complex(lhs, 0) / rhs
 }
-@assignment func /= (inout lhs:Complex, rhs:Complex) -> Complex {
+func /= (inout lhs:Complex, rhs:Complex) -> Complex {
     lhs = lhs / rhs
     return lhs
 }
-@assignment func /= (inout lhs:Complex, rhs:Double) -> Complex {
+func /= (inout lhs:Complex, rhs:Double) -> Complex {
     lhs = lhs / rhs
     return lhs
 }
@@ -204,29 +204,29 @@ func pow(lhs:Double, rhs:Complex) -> Complex {
     return pow(Complex(lhs, 0), rhs)
 }
 // **, **=
-operator infix ** { associativity right precedence 170 }
-@infix func ** (lhs:Double, rhs:Double) -> Double {
+infix operator ** { associativity right precedence 170 }
+func ** (lhs:Double, rhs:Double) -> Double {
     return pow(lhs, rhs)
 }
-@infix func ** (lhs:Complex, rhs:Complex) -> Complex {
+func ** (lhs:Complex, rhs:Complex) -> Complex {
     return pow(lhs, rhs)
 }
-@infix func ** (lhs:Double, rhs:Complex) -> Complex {
+func ** (lhs:Double, rhs:Complex) -> Complex {
     return pow(lhs, rhs)
 }
-@infix func ** (lhs:Complex, rhs:Double) -> Complex {
+func ** (lhs:Complex, rhs:Double) -> Complex {
     return pow(lhs, rhs)
 }
-operator infix **= { associativity right precedence 90 }
-@assignment func **= (inout lhs:Double, rhs:Double) -> Double {
+infix operator **= { associativity right precedence 90 }
+func **= (inout lhs:Double, rhs:Double) -> Double {
     lhs = pow(lhs, rhs)
     return lhs
 }
-@assignment func **= (inout lhs:Complex, rhs:Complex) -> Complex {
+func **= (inout lhs:Complex, rhs:Complex) -> Complex {
     lhs = pow(lhs, rhs)
     return lhs
 }
-@assignment func **= (inout lhs:Complex, rhs:Double) -> Complex {
+func **= (inout lhs:Complex, rhs:Double) -> Complex {
     lhs = pow(lhs, rhs)
     return lhs
 }
@@ -307,32 +307,32 @@ func proj(z:Complex) -> Complex { return z.proj }
 //
 // approximate comparisons
 //
-operator infix =~ { associativity none precedence 130 }
-@infix func =~ (lhs:Double, rhs:Double) -> Bool {
+infix operator =~ { associativity none precedence 130 }
+func =~ (lhs:Double, rhs:Double) -> Bool {
     if lhs == rhs { return true }
     return abs(1.0 - lhs/rhs) <= 2 * Double.epsilon
 }
-@infix func =~ (lhs:Complex, rhs:Complex) -> Bool {
+func =~ (lhs:Complex, rhs:Complex) -> Bool {
     if lhs == rhs { return true }
     return lhs.abs =~ rhs.abs
 }
-@infix func =~ (lhs:Complex, rhs:Double) -> Bool {
+func =~ (lhs:Complex, rhs:Double) -> Bool {
     return lhs.abs =~ abs(rhs)
 }
-@infix func =~ (lhs:Double, rhs:Complex) -> Bool {
+func =~ (lhs:Double, rhs:Complex) -> Bool {
     return abs(lhs) =~ rhs.abs
 }
-operator infix !~ { associativity none precedence 130 }
-@infix func !~ (lhs:Double, rhs:Double) -> Bool {
+infix operator !~ { associativity none precedence 130 }
+func !~ (lhs:Double, rhs:Double) -> Bool {
     return !(lhs =~ rhs)
 }
-@infix func !~ (lhs:Complex, rhs:Complex) -> Bool {
+func !~ (lhs:Complex, rhs:Complex) -> Bool {
     return !(lhs =~ rhs)
 }
-@infix func !~ (lhs:Complex, rhs:Double) -> Bool {
+func !~ (lhs:Complex, rhs:Double) -> Bool {
     return !(lhs =~ rhs)
 }
-@infix func !~ (lhs:Double, rhs:Complex) -> Bool {
+func !~ (lhs:Double, rhs:Complex) -> Bool {
     return !(lhs =~ rhs)
 }
 /// You can use Complex as a dictionary key

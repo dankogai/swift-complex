@@ -8,7 +8,7 @@
 //
 
 var tests = 0
-func ok(p:@auto_closure ()->Bool, _ msg:String = "") {
+func ok(p:@autoclosure ()->Bool, _ msg:String = "") {
     var result = (p() ? "" : "not ") + "ok"
     println("\(result) \(++tests) # \(msg)")
 }
