@@ -78,10 +78,6 @@ struct Complex: Printable, DebugPrintable, Equatable, Hashable {
     get { return (re, im) }
     set(t){ (re, im) = t}
     }
-//    func __conversion()->(Double, Double) {
-//        return (re, im)
-//    }
-    // (x + yi) * i = (-y + xi)
     var i:Complex { return Complex(-im, re) }
 }
 // != is auto-generated thanks to Equatable
@@ -158,12 +154,26 @@ func *= (inout lhs:Complex, rhs:Double) -> Complex {
     return lhs
 }
 // /, /=
+//
+// cf. https://github.com/dankogai/swift-complex/issues/3
+//
 func / (lhs:Complex, rhs:Complex) -> Complex {
-    let d = rhs.re * rhs.re + rhs.im * rhs.im
-    return Complex(
-        (lhs.re * rhs.re + lhs.im * rhs.im) / d,
-        (lhs.im * rhs.re - lhs.re * rhs.im) / d
-    )
+    if abs(rhs.re) >= abs(rhs.im) {
+        let r = rhs.im / rhs.re
+        let d = rhs.re + rhs.im * r
+        return Complex (
+            (lhs.re + lhs.im * r) / d,
+            (lhs.im - lhs.re * r) / d
+        )
+    } else {
+        let r = rhs.re / rhs.im
+        let d = rhs.re * r + rhs.im
+        return Complex (
+            (lhs.re * r + lhs.im) / d,
+            (lhs.im * r - lhs.re) / d
+        )
+
+    }
 }
 func / (lhs:Complex, rhs:Double) -> Complex {
     return Complex(lhs.re / rhs, lhs.im / rhs)

@@ -30,7 +30,7 @@ ok(z1 =~ z0*z0, "*=")
 ok(z1.abs =~ z0.abs ** 2, "(z0 * z1).abs = z0.abs * z1.abs")
 ok(z1.arg =~ z0.arg *  2, "(z0 * z1).arg = z0.abs + z1.arg")
 z1 /= z0
-ok(z1 =~ z0, "/=")
+ok(z1 == z0, "/=")
 z0 = exp(Double.PI.i)
 ok(z0 =~ -1.0, "exp(PI.i) =~ -1.0 // Euler!")
 z1 = log(z0)
