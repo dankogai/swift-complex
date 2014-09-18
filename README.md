@@ -15,7 +15,7 @@ Just add complex.swift to it
 ### via command line:
 
 ````shell
-xcrun swift main.swift complex.swift
+xcrun -sdk macosx swiftc *.swift && ./main
 ````
 
 Synopsis
