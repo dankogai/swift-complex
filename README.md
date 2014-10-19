@@ -39,7 +39,7 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 
 ### Difference from C++11
 
-* Instead of defining the constant `i`, `Double` and `Complex` has a property `.i` which returns `self * Complex(0,1)` so it does not pollute the identifier `i`, too popularly used for iteration to make it a constant.
+* Instead of defining the constant `i`, `Double` and `Complex` have a property `.i` which returns `self * Complex(0,1)` so it does not pollute the identifier `i`, too popularly used for iteration to make it a constant.
 * Following functions are also provided as properties:
   * `z.real` for `real(z)`
   * `z.imag` for `imag(z)`
@@ -52,3 +52,5 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
   * `Complex(abs:magnitude, arg:argument)`
 * In addition to `pow()`, it comes with the `**` operator
 * Not generic -- yet
+  * (If|When) swift supports `long double`, which is a 128-bit float in clang....
+ 
