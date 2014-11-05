@@ -53,4 +53,4 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 * In addition to `pow()`, it comes with the `**` operator
 * Not generic -- yet
   * (If|When) swift supports `long double`, which is a 128-bit float in clang....
- 
+  * Added Complex32 for those who needs `Float` version.  In a way I found `protocol FloatingPointType` is not very useful since it does not support basic ops like `+ - * /` :-(
