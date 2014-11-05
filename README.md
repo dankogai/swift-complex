@@ -1,7 +1,7 @@
 swift-complex
 =============
 
-Complex numbers in [Swift]
+Complex numbers in [Swift].
 
 [Swift]: https://developer.apple.com/swift/
 
@@ -10,7 +10,12 @@ Usage
 
 ### in your project:
 
-Just add complex.swift to it
+Just add [complex.swift] to it.
+
+If you want `Complex32` also add [complex32.swift] .  Note you still need complex.swift for operator definitions even if you only need `Complex32`.
+
+[complex.swift]: ./complex.swift
+[complex32.swift]: ./complex32.swift
 
 ### via command line:
 
