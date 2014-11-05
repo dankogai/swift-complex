@@ -47,6 +47,7 @@ struct Complex: Printable, DebugPrintable, Equatable, Hashable {
     var debugDescription:String {
         return String(format:"Complex(%a, %a)", re, im)
     }
+    /// You can use Complex as a dictionary key
     var hashValue:Int { // take most significant halves and join
         let bits = sizeof(Int) * 4
         let mask = bits == 16 ? 0xffff : 0xffffFFFF
@@ -345,4 +346,4 @@ func !~ (lhs:Complex, rhs:Double) -> Bool {
 func !~ (lhs:Double, rhs:Complex) -> Bool {
     return !(lhs =~ rhs)
 }
-/// You can use Complex as a dictionary key
+typealias Complex64=Complex
