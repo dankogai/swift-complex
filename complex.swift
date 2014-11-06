@@ -346,4 +346,5 @@ func !~ (lhs:Complex, rhs:Double) -> Bool {
 func !~ (lhs:Double, rhs:Complex) -> Bool {
     return !(lhs =~ rhs)
 }
+// typealias to be a little more consistent w/ Complex32
 typealias Complex64=Complex

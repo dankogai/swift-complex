@@ -45,7 +45,7 @@ struct Complex32: Printable, DebugPrintable, Equatable, Hashable {
         return "(\(re)\(plus)\(im).i)"
     }
     var debugDescription:String {
-        return String(format:"Complex(%a, %a)", re, im)
+        return String(format:"Complex32(%a, %a)", re, im)
     }
     /// You can use Complex as a dictionary key
     var hashValue:Int { // take most significant halves and join
