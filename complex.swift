@@ -8,6 +8,11 @@
 
 import Foundation // We now need String(format:...)
 
+infix operator ** { associativity right precedence 170 }
+infix operator **= { associativity right precedence 90 }
+infix operator =~ { associativity none precedence 130 }
+infix operator !~ { associativity none precedence 130 }
+
 extension Double {
     // these ought to be static let 
     // but give users a chance to overwrite it
@@ -104,13 +109,11 @@ func + (lhs:Complex, rhs:Double) -> Complex {
 func + (lhs:Double, rhs:Complex) -> Complex {
     return Complex(lhs, 0) + rhs
 }
-func += (inout lhs:Complex, rhs:Complex) -> Complex {
+func += (inout lhs:Complex, rhs:Complex) {
     lhs.re += rhs.re ; lhs.im += rhs.im
-    return lhs
 }
-func += (inout lhs:Complex, rhs:Double) -> Complex {
+func += (inout lhs:Complex, rhs:Double) {
     lhs.re += rhs
-    return lhs
 }
 // -, -=
 prefix func - (z:Complex) -> Complex {
@@ -125,13 +128,11 @@ func - (lhs:Complex, rhs:Double) -> Complex {
 func - (lhs:Double, rhs:Complex) -> Complex {
     return Complex(lhs, 0) - rhs
 }
-func -= (inout lhs:Complex, rhs:Complex) -> Complex {
+func -= (inout lhs:Complex, rhs:Complex) {
     lhs.re -= rhs.re ; lhs.im -= rhs.im
-    return lhs
 }
-func -= (inout lhs:Complex, rhs:Double) -> Complex {
+func -= (inout lhs:Complex, rhs:Double) {
     lhs.re -= rhs
-    return lhs
 }
 // *, *=
 func * (lhs:Complex, rhs:Complex) -> Complex {
@@ -146,13 +147,11 @@ func * (lhs:Complex, rhs:Double) -> Complex {
 func * (lhs:Double, rhs:Complex) -> Complex {
     return Complex(lhs * rhs.re, lhs * rhs.im)
 }
-func *= (inout lhs:Complex, rhs:Complex) -> Complex {
+func *= (inout lhs:Complex, rhs:Complex) {
     lhs = lhs * rhs
-    return lhs
 }
-func *= (inout lhs:Complex, rhs:Double) -> Complex {
+func *= (inout lhs:Complex, rhs:Double) {
     lhs = lhs * rhs
-    return lhs
 }
 // /, /=
 //
@@ -182,13 +181,11 @@ func / (lhs:Complex, rhs:Double) -> Complex {
 func / (lhs:Double, rhs:Complex) -> Complex {
     return Complex(lhs, 0) / rhs
 }
-func /= (inout lhs:Complex, rhs:Complex) -> Complex {
+func /= (inout lhs:Complex, rhs:Complex) {
     lhs = lhs / rhs
-    return lhs
 }
-func /= (inout lhs:Complex, rhs:Double) -> Complex {
+func /= (inout lhs:Complex, rhs:Double) {
     lhs = lhs / rhs
-    return lhs
 }
 // exp(z)
 func exp(z:Complex) -> Complex {
@@ -215,7 +212,6 @@ func pow(lhs:Double, rhs:Complex) -> Complex {
     return pow(Complex(lhs, 0), rhs)
 }
 // **, **=
-infix operator ** { associativity right precedence 170 }
 func ** (lhs:Double, rhs:Double) -> Double {
     return pow(lhs, rhs)
 }
@@ -228,18 +224,14 @@ func ** (lhs:Double, rhs:Complex) -> Complex {
 func ** (lhs:Complex, rhs:Double) -> Complex {
     return pow(lhs, rhs)
 }
-infix operator **= { associativity right precedence 90 }
-func **= (inout lhs:Double, rhs:Double) -> Double {
+func **= (inout lhs:Double, rhs:Double) {
     lhs = pow(lhs, rhs)
-    return lhs
 }
-func **= (inout lhs:Complex, rhs:Complex) -> Complex {
+func **= (inout lhs:Complex, rhs:Complex) {
     lhs = pow(lhs, rhs)
-    return lhs
 }
-func **= (inout lhs:Complex, rhs:Double) -> Complex {
+func **= (inout lhs:Complex, rhs:Double) {
     lhs = pow(lhs, rhs)
-    return lhs
 }
 // sqrt(z)
 func sqrt(z:Complex) -> Complex {
@@ -318,7 +310,6 @@ func proj(z:Complex) -> Complex { return z.proj }
 //
 // approximate comparisons
 //
-infix operator =~ { associativity none precedence 130 }
 func =~ (lhs:Double, rhs:Double) -> Bool {
     if lhs == rhs { return true }
     return abs(1.0 - lhs/rhs) <= 2 * Double.epsilon
@@ -333,7 +324,6 @@ func =~ (lhs:Complex, rhs:Double) -> Bool {
 func =~ (lhs:Double, rhs:Complex) -> Bool {
     return abs(lhs) =~ rhs.abs
 }
-infix operator !~ { associativity none precedence 130 }
 func !~ (lhs:Double, rhs:Double) -> Bool {
     return !(lhs =~ rhs)
 }

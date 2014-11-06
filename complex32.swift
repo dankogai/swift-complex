@@ -104,13 +104,11 @@ func + (lhs:Complex32, rhs:Float) -> Complex32 {
 func + (lhs:Float, rhs:Complex32) -> Complex32 {
     return Complex32(lhs, 0) + rhs
 }
-func += (inout lhs:Complex32, rhs:Complex32) -> Complex32 {
+func += (inout lhs:Complex32, rhs:Complex32) {
     lhs.re += rhs.re ; lhs.im += rhs.im
-    return lhs
 }
-func += (inout lhs:Complex32, rhs:Float) -> Complex32 {
+func += (inout lhs:Complex32, rhs:Float) {
     lhs.re += rhs
-    return lhs
 }
 // -, -=
 prefix func - (z:Complex32) -> Complex32 {
@@ -125,13 +123,11 @@ func - (lhs:Complex32, rhs:Float) -> Complex32 {
 func - (lhs:Float, rhs:Complex32) -> Complex32 {
     return Complex32(lhs, 0) - rhs
 }
-func -= (inout lhs:Complex32, rhs:Complex32) -> Complex32 {
+func -= (inout lhs:Complex32, rhs:Complex32) {
     lhs.re -= rhs.re ; lhs.im -= rhs.im
-    return lhs
 }
-func -= (inout lhs:Complex32, rhs:Float) -> Complex32 {
+func -= (inout lhs:Complex32, rhs:Float) {
     lhs.re -= rhs
-    return lhs
 }
 // *, *=
 func * (lhs:Complex32, rhs:Complex32) -> Complex32 {
@@ -146,13 +142,11 @@ func * (lhs:Complex32, rhs:Float) -> Complex32 {
 func * (lhs:Float, rhs:Complex32) -> Complex32 {
     return Complex32(lhs * rhs.re, lhs * rhs.im)
 }
-func *= (inout lhs:Complex32, rhs:Complex32) -> Complex32 {
+func *= (inout lhs:Complex32, rhs:Complex32) {
     lhs = lhs * rhs
-    return lhs
 }
-func *= (inout lhs:Complex32, rhs:Float) -> Complex32 {
+func *= (inout lhs:Complex32, rhs:Float) {
     lhs = lhs * rhs
-    return lhs
 }
 // /, /=
 //
@@ -186,9 +180,8 @@ func /= (inout lhs:Complex32, rhs:Complex32) -> Complex32 {
     lhs = lhs / rhs
     return lhs
 }
-func /= (inout lhs:Complex32, rhs:Float) -> Complex32 {
+func /= (inout lhs:Complex32, rhs:Float) {
     lhs = lhs / rhs
-    return lhs
 }
 // exp(z)
 func exp(z:Complex32) -> Complex32 {
@@ -215,7 +208,6 @@ func pow(lhs:Float, rhs:Complex32) -> Complex32 {
     return pow(Complex32(lhs, 0), rhs)
 }
 // **, **=
-// infix operator ** { associativity right precedence 170 }
 func ** (lhs:Float, rhs:Float) -> Float {
     return pow(lhs, rhs)
 }
@@ -229,17 +221,14 @@ func ** (lhs:Complex32, rhs:Float) -> Complex32 {
     return pow(lhs, rhs)
 }
 infix operator **= { associativity right precedence 90 }
-func **= (inout lhs:Float, rhs:Float) -> Float {
+func **= (inout lhs:Float, rhs:Float) {
     lhs = pow(lhs, rhs)
-    return lhs
 }
-func **= (inout lhs:Complex32, rhs:Complex32) -> Complex32 {
+func **= (inout lhs:Complex32, rhs:Complex32) {
     lhs = pow(lhs, rhs)
-    return lhs
 }
-func **= (inout lhs:Complex32, rhs:Float) -> Complex32 {
+func **= (inout lhs:Complex32, rhs:Float) {
     lhs = pow(lhs, rhs)
-    return lhs
 }
 // sqrt(z)
 func sqrt(z:Complex32) -> Complex32 {
@@ -318,7 +307,6 @@ func proj(z:Complex32) -> Complex32 { return z.proj }
 //
 // approximate comparisons
 //
-// infix operator =~ { associativity none precedence 130 }
 func =~ (lhs:Float, rhs:Float) -> Bool {
     if lhs == rhs { return true }
     return abs((1.0 as Float) - lhs/rhs) <= (2.0 as Float) * Float.epsilon
@@ -333,7 +321,6 @@ func =~ (lhs:Complex32, rhs:Float) -> Bool {
 func =~ (lhs:Float, rhs:Complex32) -> Bool {
     return abs(lhs) =~ rhs.abs
 }
-infix operator !~ { associativity none precedence 130 }
 func !~ (lhs:Float, rhs:Float) -> Bool {
     return !(lhs =~ rhs)
 }
