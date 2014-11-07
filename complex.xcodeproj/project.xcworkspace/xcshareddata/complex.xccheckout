@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>51DCE48F-D4E9-48B6-8DC3-66824C322D08</string>
+	<key>IDESourceControlProjectName</key>
+	<string>complex</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>B03A99DD0BB0F8710A818BE3DA208B25A869D12D</key>
+		<string>https://github.com/dankogai/swift-complex.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>complex.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>B03A99DD0BB0F8710A818BE3DA208B25A869D12D</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/dankogai/swift-complex.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>B03A99DD0BB0F8710A818BE3DA208B25A869D12D</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B03A99DD0BB0F8710A818BE3DA208B25A869D12D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>swift-complex</string>
+		</dict>
+	</array>
+</dict>
+</plist>
