@@ -17,6 +17,8 @@ Just add [complex/complex.swift] to it.
 ### via command line:
 
 ````shell
+git clone https://github.com/dankogai/swift-complex.git
+cd swift-complex/complex
 xcrun -sdk macosx swiftc *.swift && ./main
 ````
 
