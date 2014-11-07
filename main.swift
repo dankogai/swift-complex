@@ -19,9 +19,10 @@ ok(1-1.i == Complex(1,-1), "1-1.i == Complex(1,-1)")
 ok(0.i   == Complex(),     "0.i   == Complex()")
 ok(1+0.i == 1,             "1+0.i == 1")
 ok(1     == 1+0.i,         "1     == 1+0.i")
-var z0 = Complex(abs:10, arg:atan2(3,4))
+var z0 = Complex(abs:10.0, arg:atan2(3.0,4.0))
 ok(z0.re == 8 && z0.im == 6,
     "Complex(abs:10, arg:atan2(3,4)) == 8+6.i")
+ok(sizeofValue(z0.re) == sizeof(Double), "z0.re is Double")
 ok(z0 - z0 == 0+0.i, "z - z = 0+0.i")
 ok(z0 + z0 =~ z0 * 2, "z + z = z0 * 2")
 var z1 = z0
@@ -81,10 +82,10 @@ ok(norm(z0) == z0.norm,     "norm(z0) == z0.norm")
 ok(norm(z0) == z0.abs ** 2, "norm(z0) == z0.abs ** 2")
 ok(conj(z0) == z0.conj,     "conj(z0) == z0.conj")
 ok(proj(z0) == z0.proj,     "proj(z0) == z0.proj")
-ok(proj((1/0.0)-1.i) == Complex(1/0.0, -0.0),  "(inf,-1).proj == (inf,-0)")
-ok(proj(0-(1.0/0.0).i) == Complex(1/0.0, -0.0),  "(0,-inf).proj == (inf,-0)")
-ok(proj((1/0.0)+1.i) == Complex(1/0.0, +0.0),  "(inf,+1).proj == (inf,+0)")
-ok(proj(0+(1.0/0.0).i) == Complex(1/0.0, +0.0),  "(0,+inf).proj == (inf,+0)")
+ok(proj((1/0.0)-1.i) == Complex64(1/0.0, -0.0),  "(inf,-1).proj == (inf,-0)")
+ok(proj(0-(1.0/0.0).i) == Complex64(1/0.0, -0.0),  "(0,-inf).proj == (inf,-0)")
+ok(proj((1/0.0)+1.i) == Complex64(1/0.0, +0.0),  "(inf,+1).proj == (inf,+0)")
+ok(proj(0+(1.0/0.0).i) == Complex64(1/0.0, +0.0),  "(0,+inf).proj == (inf,+0)")
 z0 = 0+0.i
 z0.real += 1
 ok(z0 == 1,     ".real as a setter")
@@ -101,8 +102,10 @@ ok(r == 1 && i == 1, "(r, i) = z.tuple")
 ok(r == 1 && i == 1, "(r, i) = z")
 z0.tuple = (2, 2)
 ok(z0 == 2+2.i, "z.tuple = (r, i)")
-ok(exp(Double.PI.i).debugDescription ==
-    "Complex(-0x1p+0, 0x1.1a62633145c07p-53)", "debugDescription")
-var dict = [0+0.i:"origin"]
-ok(dict[0+0.i] == "origin", "Complex as a dictionary key")
+//ok(exp(Double.PI.i).debugDescription ==
+//    "Complex(-0x1p+0, 0x1.1a62633145c07p-53)", "debugDescription")
+//var dict = [0+0.i:"origin"]
+//ok(dict[0+0.i] == "origin", "Complex as a dictionary key")
+var z32 = Complex32(4,2);
+ok(sizeofValue(z32.re) == sizeof(Float), "z32.re is Float")
 done_testing()
