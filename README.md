@@ -12,10 +12,7 @@ Usage
 
 Just add [complex.swift] to it.
 
-If you want `Complex32` also add [complex32.swift] .  Note you still need complex.swift for operator definitions even if you only need `Complex32`.
-
 [complex.swift]: ./complex.swift
-[complex32.swift]: ./complex32.swift
 
 ### via command line:
 
@@ -56,6 +53,5 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 * Construct a complex number via polar notation as:
   * `Complex(abs:magnitude, arg:argument)`
 * In addition to `pow()`, it comes with the `**` operator
-* Not generic -- yet
-  * (If|When) swift supports `long double`, which is a 128-bit float in clang....
-  * Added Complex32 for those who needs `Float` version.  In a way I found `protocol FloatingPointType` is not very useful since it does not support basic ops like `+ - * /` :-(
+* Generic! (as of version 0.3.0)
+  * Complex numbers are `Complex<T>` where `T` is a type of `.re` and `.im` that conforms to the `RealType` protocol.  See the source to find what `RealType` is doing.
