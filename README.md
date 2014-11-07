@@ -10,9 +10,9 @@ Usage
 
 ### in your project:
 
-Just add [complex.swift] to it.
+Just add [complex/complex.swift] to it.
 
-[complex.swift]: ./complex.swift
+[complex/complex.swift]: ./complex/complex.swift
 
 ### via command line:
 
