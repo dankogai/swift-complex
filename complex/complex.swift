@@ -32,6 +32,8 @@ protocol RealType {
     var isInfinite: Bool { get }
     var isNaN: Bool { get }
     var isSignaling: Bool { get }
+    // copied from Hashable
+    var hashValue: Int { get }
     // Built-in operators
     func ==(Self, Self)->Bool
     func !=(Self, Self)->Bool
@@ -123,7 +125,7 @@ extension Float : RealType {
     var i:Complex<Float>{ return Complex<Float>(0.0 as Float, self) }
 }
 // el corazon
-struct Complex<T:RealType> : Equatable, Printable {
+struct Complex<T:RealType> : Equatable, Printable, Hashable {
     var (re:T, im:T)
     init(_ re:T, _ im:T) {
         self.re = re
@@ -134,22 +136,25 @@ struct Complex<T:RealType> : Equatable, Printable {
         self.re = abs * arg.cos()
         self.im = abs * arg.sin()
     }
-    var description:String {
-        let plus = im.isSignMinus ? "" : "+"
-        return "(\(re)\(plus)\(im).i)"
-    }
+    /// real part thereof
     var real:T { get{ return re } set(r){ re = r } }
+    /// imaginary part thereof
     var imag:T { get{ return im } set(i){ im = i } }
+    /// absolute value thereof
     var abs:T {
         get { return re.hypot(im) }
         set(r){ let f = r / abs; re *= f; im *= f }
     }
+    /// argument thereof
     var arg:T  {
         get { return im.atan2(re) }
         set(t){ let m = abs; re = m * t.cos(); im = m * t.sin() }
     }
+    /// norm thereof
     var norm:T { return re.hypot(im) }
+    /// conjugate thereof
     var conj:Complex { return Complex(re, -im) }
+    /// projection thereof
     var proj:Complex {
         if re.isFinite && im.isFinite {
             return self
@@ -159,11 +164,24 @@ struct Complex<T:RealType> : Equatable, Printable {
             )
         }
     }
+    /// (real, imag)
     var tuple:(T, T) {
         get { return (re, im) }
         set(t){ (re, im) = t}
     }
+    /// z * i
     var i:Complex { return Complex(-im, re) }
+    /// .description -- conforms to Printable
+    var description:String {
+        let plus = im.isSignMinus ? "" : "+"
+        return "(\(re)\(plus)\(im).i)"
+    }
+    /// .hashvalue -- conforms to Hashable
+    var hashValue:Int { // take most significant halves and join
+        let bits = sizeof(Int) * 4
+        let mask = bits == 16 ? 0xffff : 0xffffFFFF
+        return (re.hashValue & ~mask) | (im.hashValue >> bits)
+    }
 }
 // operator definitions
 infix operator ** { associativity right precedence 170 }
