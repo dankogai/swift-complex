@@ -20,9 +20,11 @@ protocol RealType {
     init(_ value: Int64)
     init(_ value: UInt)
     init(_ value: Int)
-    class var infinity: Self { get }
-    class var NaN: Self { get }
-    class var quietNaN: Self { get }
+    init(_ value: Double)
+    init(_ value: Float)
+    //class var infinity: Self { get }
+    //class var NaN: Self { get }
+    //class var quietNaN: Self { get }
     var floatingPointClass: FloatingPointClassification { get }
     var isSignMinus: Bool { get }
     var isNormal: Bool { get }
@@ -61,8 +63,8 @@ protocol RealType {
     func hypot(Self)->Self
     func atan2(Self)->Self
     func pow(Self)->Self
-    class var LN10:Self { get }
-    class var epsilon:Self { get }
+    //class var LN10:Self { get }
+    //class var epsilon:Self { get }
 }
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
@@ -160,7 +162,7 @@ struct Complex<T:RealType> : Equatable, Printable, Hashable {
             return self
         } else {
             return Complex(
-                T.infinity, im.isSignMinus ? -T(0) : T(0)
+                T(1)/T(0), im.isSignMinus ? -T(0) : T(0)
             )
         }
     }
@@ -300,8 +302,8 @@ func log<T>(z:Complex<T>) -> Complex<T> {
     return Complex(z.abs.log(), z.arg)
 }
 // log10(z) -- just because C++ has it
-func log10<T>(z:Complex<T>) -> Complex<T> { return log(z) / T.LN10 }
-func log10<T:RealType>(r:T) -> T { return r.log() / T.LN10 }
+func log10<T>(z:Complex<T>) -> Complex<T> { return log(z) / T(log(10.0)) }
+func log10<T:RealType>(r:T) -> T { return r.log() / T(log(10.0)) }
 // pow(b, x)
 func pow<T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
     let z = log(lhs) * rhs
@@ -340,8 +342,11 @@ func sqrt<T>(z:Complex<T>) -> Complex<T> {
     // return z ** 0.5
     let d = z.re.hypot(z.im)
     let re = ((z.re + d)/T(2)).sqrt()
-    let im = z.im < T(0) ? -((-z.re + d)/T(2)).sqrt() : ((-z.re + d)/T(2)).sqrt()
-    return Complex(re, im)
+    if z.im < T(0) {
+        return Complex(re, -((-z.re + d)/T(2)).sqrt())
+    } else {
+        return Complex(re,  ((-z.re + d)/T(2)).sqrt())
+    }
 }
 // cos(z)
 func cos<T>(z:Complex<T>) -> Complex<T> {
@@ -361,7 +366,8 @@ func tan<T>(z:Complex<T>) -> Complex<T> {
 }
 // atan(z)
 func atan<T>(z:Complex<T>) -> Complex<T> {
-    let t = log(T(1) - z.i) - log(T(1) + z.i)
+    var t = log(T(1) - z.i)
+    t -= log(T(1) + z.i)
     return t.i / T(2)
 }
 func atan<T:RealType>(r:T) -> T { return atan(Complex(r, T(0))).re }
@@ -417,7 +423,8 @@ func proj<T>(z:Complex<T>) -> Complex<T> { return z.proj }
 func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     if lhs == rhs { return true }
     let t = (rhs - lhs) / rhs
-    return t.abs <= T(2) * T.epsilon
+    let epsilon = sizeof(T) < 8 ? 0x1p-23 : 0x1p-52
+    return t.abs <= T(2) * T(epsilon)
 }
 func =~ <T>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
     if lhs == rhs { return true }
