@@ -39,6 +39,7 @@ ok(z1 == Double.PI.i, "log(exp(PI.i)) == PI.i")
 ok(2.0 * 3.0 ** 4.0 == 162.0, "2.0 * 3.0 ** 4.0 == 2.0 * (3.0 ** 4.0)")
 ok(Double.E ** Double.PI.i == exp(Double.PI.i), "exp(z) == e ** z")
 ok(sqrt(-1+0.i) == 1.i, "sqrt(-1) == i")
+ok(sqrt(2.i) == 1+1.i, "sqrt(2i) == 1+i")
 ok(tan(z0) == sin(z0)/cos(z0), "tan(z) == sin(z)/cos(z)")
 ok(sin(z0)**2 + cos(z0)**2 =~ 1, "sin**2 + cos**2")
 ok(asin(sin(0.5)) =~ 0.5, "asin(sin(r)) =~ r")
@@ -109,3 +110,4 @@ ok(dict[0+0.i] == "origin", "Complex as a dictionary key")
 var z32 = Complex32(4,2);
 ok(sizeofValue(z32.re) == sizeof(Float), "z32.re is Float")
 done_testing()
+

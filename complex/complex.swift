@@ -23,7 +23,8 @@ protocol RealType {
     init(_ value: Double)
     init(_ value: Float)
     // class vars are now gone 
-    // because they will be static vars in Swift 1.2, making them incompatible
+    // because they will be static vars in Swift 1.2, 
+    // making them incompatible to one another
     //class var infinity: Self { get }
     //class var NaN: Self { get }
     //class var quietNaN: Self { get }
@@ -368,9 +369,8 @@ func tan<T>(z:Complex<T>) -> Complex<T> {
 }
 // atan(z)
 func atan<T>(z:Complex<T>) -> Complex<T> {
-    var t = log(T(1) - z.i)
-    t -= log(T(1) + z.i)
-    return t.i / T(2)
+    let l0 = log(T(1) - z.i), l1 = log(T(1) + z.i)
+    return (l0 - l1).i / T(2)
 }
 func atan<T:RealType>(r:T) -> T { return atan(Complex(r, T(0))).re }
 // atan2(z, zz)
