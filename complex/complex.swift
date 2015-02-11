@@ -22,6 +22,8 @@ protocol RealType {
     init(_ value: Int)
     init(_ value: Double)
     init(_ value: Float)
+    // class vars are now gone 
+    // because they will be static vars in Swift 1.2, making them incompatible
     //class var infinity: Self { get }
     //class var NaN: Self { get }
     //class var quietNaN: Self { get }
