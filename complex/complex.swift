@@ -309,6 +309,7 @@ func log10<T>(z:Complex<T>) -> Complex<T> { return log(z) / T(log(10.0)) }
 func log10<T:RealType>(r:T) -> T { return r.log() / T(log(10.0)) }
 // pow(b, x)
 func pow<T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
+    if lhs.abs == T(0) { return Complex(T(1), T(0)) } // fix issue 8
     let z = log(lhs) * rhs
     return exp(z)
 }
