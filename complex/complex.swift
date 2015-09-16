@@ -40,22 +40,22 @@ protocol RealType {
     // copied from Hashable
     var hashValue: Int { get }
     // Built-in operators
-    func ==(Self, Self)->Bool
-    func !=(Self, Self)->Bool
-    func < (Self, Self)->Bool
-    func <= (Self, Self)->Bool
-    func > (Self, Self)->Bool
-    func >= (Self, Self)->Bool
-    prefix func + (Self)->Self
-    prefix func - (Self)->Self
-    func + (Self, Self)->Self
-    func - (Self, Self)->Self
-    func * (Self, Self)->Self
-    func / (Self, Self)->Self
-    func += (inout Self, Self)
-    func -= (inout Self, Self)
-    func *= (inout Self, Self)
-    func /= (inout Self, Self)
+    func ==(_: Self, _: Self)->Bool
+    func !=(_: Self, _: Self)->Bool
+    func < (_: Self, _: Self)->Bool
+    func <= (_: Self, _: Self)->Bool
+    func > (_: Self, _: Self)->Bool
+    func >= (_: Self, _: Self)->Bool
+    prefix func + (_: Self)->Self
+    prefix func - (_: Self)->Self
+    func + (_: Self, _: Self)->Self
+    func - (_: Self, _: Self)->Self
+    func * (_: Self, _: Self)->Self
+    func / (_: Self, _: Self)->Self
+    func += (inout _: Self, _: Self)
+    func -= (inout _: Self, _: Self)
+    func *= (inout _: Self, _: Self)
+    func /= (inout _: Self, _: Self)
     // methodized functions for protocol's sake
     var abs:Self { get }
     func cos()->Self
@@ -63,9 +63,9 @@ protocol RealType {
     func log()->Self
     func sin()->Self
     func sqrt()->Self
-    func hypot(Self)->Self
-    func atan2(Self)->Self
-    func pow(Self)->Self
+    func hypot(_: Self)->Self
+    func atan2(_: Self)->Self
+    func pow(_: Self)->Self
     //class var LN10:Self { get }
     //class var epsilon:Self { get }
 }
@@ -130,8 +130,8 @@ extension Float : RealType {
     var i:Complex<Float>{ return Complex<Float>(0.0 as Float, self) }
 }
 // el corazon
-struct Complex<T:RealType> : Equatable, Printable, Hashable {
-    var (re:T, im:T)
+struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable {
+    var (re, im): (T, T)
     init(_ re:T, _ im:T) {
         self.re = re
         self.im = im
@@ -314,32 +314,32 @@ func pow<T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
     return exp(z)
 }
 func pow<T>(lhs:Complex<T>, rhs:T) -> Complex<T> {
-    return pow(lhs, Complex(rhs, T(0)))
+    return pow(lhs, rhs: Complex(rhs, T(0)))
 }
 func pow<T>(lhs:T, rhs:Complex<T>) -> Complex<T> {
-    return pow(Complex(lhs, T(0)), rhs)
+    return pow(Complex(lhs, T(0)), rhs: rhs)
 }
 // **, **=
 func **<T:RealType>(lhs:T, rhs:T) -> T {
     return lhs.pow(rhs)
 }
 func ** <T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
-    return pow(lhs, rhs)
+    return pow(lhs, rhs: rhs)
 }
 func ** <T>(lhs:T, rhs:Complex<T>) -> Complex<T> {
-    return pow(lhs, rhs)
+    return pow(lhs, rhs: rhs)
 }
 func ** <T>(lhs:Complex<T>, rhs:T) -> Complex<T> {
-    return pow(lhs, rhs)
+    return pow(lhs, rhs: rhs)
 }
 func **= <T:RealType>(inout lhs:T, rhs:T) {
     lhs = lhs.pow(rhs)
 }
 func **= <T>(inout lhs:Complex<T>, rhs:Complex<T>) {
-    lhs = pow(lhs, rhs)
+    lhs = pow(lhs, rhs: rhs)
 }
 func **= <T>(inout lhs:Complex<T>, rhs:T) {
-    lhs = pow(lhs, rhs)
+    lhs = pow(lhs, rhs: rhs)
 }
 // sqrt(z)
 func sqrt<T>(z:Complex<T>) -> Complex<T> {
@@ -409,8 +409,9 @@ func acosh<T>(z:Complex<T>) -> Complex<T> {
 }
 // atanh(z)
 func atanh<T>(z:Complex<T>) -> Complex<T> {
-    let t = log((T(1) + z)/(T(1) - z))
-    return t / T(2)
+    let t0 = T(1) + z
+    let t1 = T(1) - z
+    return log(t0 / t1) / T(2)
 }
 // for the compatibility's sake w/ C++11
 func abs<T>(z:Complex<T>) -> T { return z.abs }

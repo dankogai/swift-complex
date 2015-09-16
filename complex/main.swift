@@ -9,10 +9,10 @@
 
 var tests = 0
 func ok(p:Bool, _ msg:String = "") {
-    var result = (p ? "" : "not ") + "ok"
-    println("\(result) \(++tests) # \(msg)")
+    let result = (p ? "" : "not ") + "ok"
+    print("\(result) \(++tests) # \(msg)")
 }
-func done_testing(){ println("1..\(tests)") }
+func done_testing(){ print("1..\(tests)") }
 
 import Foundation
 ok(1-1.i == Complex(1,-1), "1-1.i == Complex(1,-1)")
@@ -37,7 +37,8 @@ ok(z0 =~ -1.0, "exp(PI.i) =~ -1.0 // Euler!")
 z1 = log(z0)
 ok(z1 == Double.PI.i, "log(exp(PI.i)) == PI.i")
 ok(2.0 * 3.0 ** 4.0 == 162.0, "2.0 * 3.0 ** 4.0 == 2.0 * (3.0 ** 4.0)")
-ok(0.i ** (42 + 0.195.i) == 1+0.i, "pow(0, y) == 1.0+0.0i // issue 8")
+let zero = 0 + 0.i, one = 1.0 + 0.0.i
+ok(zero ** (42.0 + 0.195.i) == one, "pow(0, y) == 1.0+0.0i // issue 8")
 ok(Double.E ** Double.PI.i == exp(Double.PI.i), "exp(z) == e ** z")
 ok(sqrt(-1+0.i) == 1.i, "sqrt(-1) == i")
 ok(sqrt(2.i) == 1+1.i, "sqrt(2i) == 1+i")

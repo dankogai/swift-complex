@@ -5,6 +5,13 @@ Complex numbers in [Swift].
 
 [Swift]: https://developer.apple.com/swift/
 
+Prerequisite
+------------
+
+Swift 2.0 or better.
+For Swift 1.x and below see the swift-1.x branch 
+(which is no longer maintained).
+
 Usage
 -----
 
