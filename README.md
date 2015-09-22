@@ -1,3 +1,5 @@
+[![build status](https://secure.travis-ci.org/dankogai/swift-complex.png)](http://travis-ci.org/dankogai/swift-complex)
+
 swift-complex
 =============
 
