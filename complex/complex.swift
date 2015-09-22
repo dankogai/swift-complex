@@ -7,9 +7,8 @@
 //
 
 import Foundation
-// protocol RealType : FloatingPointType // sadly crashes as of Swift 1.1 :-(
-protocol RealType {
-    // copied from FloatingPointType
+protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, Hashable {
+    // Initializers
     init(_ value: UInt8)
     init(_ value: Int8)
     init(_ value: UInt16)
@@ -22,30 +21,7 @@ protocol RealType {
     init(_ value: Int)
     init(_ value: Double)
     init(_ value: Float)
-    // class vars are now gone 
-    // because they will be static vars in Swift 1.2, 
-    // making them incompatible to one another
-    //class var infinity: Self { get }
-    //class var NaN: Self { get }
-    //class var quietNaN: Self { get }
-    var floatingPointClass: FloatingPointClassification { get }
-    var isSignMinus: Bool { get }
-    var isNormal: Bool { get }
-    var isFinite: Bool { get }
-    var isZero: Bool { get }
-    var isSubnormal: Bool { get }
-    var isInfinite: Bool { get }
-    var isNaN: Bool { get }
-    var isSignaling: Bool { get }
-    // copied from Hashable
-    var hashValue: Int { get }
     // Built-in operators
-    func ==(_: Self, _: Self)->Bool
-    func !=(_: Self, _: Self)->Bool
-    func < (_: Self, _: Self)->Bool
-    func <= (_: Self, _: Self)->Bool
-    func > (_: Self, _: Self)->Bool
-    func >= (_: Self, _: Self)->Bool
     prefix func + (_: Self)->Self
     prefix func - (_: Self)->Self
     func + (_: Self, _: Self)->Self
@@ -69,6 +45,7 @@ protocol RealType {
     //class var LN10:Self { get }
     //class var epsilon:Self { get }
 }
+
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
     var abs:Double { return Swift.abs(self) }
