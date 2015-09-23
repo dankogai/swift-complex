@@ -285,38 +285,38 @@ func log<T>(z:Complex<T>) -> Complex<T> {
 func log10<T>(z:Complex<T>) -> Complex<T> { return log(z) / T(log(10.0)) }
 func log10<T:RealType>(r:T) -> T { return r.log() / T(log(10.0)) }
 // pow(b, x)
-func pow<T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
+func pow<T>(lhs:Complex<T>, _ rhs:Complex<T>) -> Complex<T> {
     if lhs == T(0) { return Complex(T(1), T(0)) } // 0 ** 0 == 1
     let z = log(lhs) * rhs
     return exp(z)
 }
-func pow<T>(lhs:Complex<T>, rhs:T) -> Complex<T> {
-    return pow(lhs, rhs: Complex(rhs, T(0)))
+func pow<T>(lhs:Complex<T>, _ rhs:T) -> Complex<T> {
+    return pow(lhs, Complex(rhs, T(0)))
 }
-func pow<T>(lhs:T, rhs:Complex<T>) -> Complex<T> {
-    return pow(Complex(lhs, T(0)), rhs: rhs)
+func pow<T>(lhs:T, _ rhs:Complex<T>) -> Complex<T> {
+    return pow(Complex(lhs, T(0)), rhs)
 }
 // **, **=
 func **<T:RealType>(lhs:T, rhs:T) -> T {
     return lhs.pow(rhs)
 }
 func ** <T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
-    return pow(lhs, rhs: rhs)
+    return pow(lhs, rhs)
 }
 func ** <T>(lhs:T, rhs:Complex<T>) -> Complex<T> {
-    return pow(lhs, rhs: rhs)
+    return pow(lhs, rhs)
 }
 func ** <T>(lhs:Complex<T>, rhs:T) -> Complex<T> {
-    return pow(lhs, rhs: rhs)
+    return pow(lhs, rhs)
 }
 func **= <T:RealType>(inout lhs:T, rhs:T) {
     lhs = lhs.pow(rhs)
 }
 func **= <T>(inout lhs:Complex<T>, rhs:Complex<T>) {
-    lhs = pow(lhs, rhs: rhs)
+    lhs = pow(lhs, rhs)
 }
 func **= <T>(inout lhs:Complex<T>, rhs:T) {
-    lhs = pow(lhs, rhs: rhs)
+    lhs = pow(lhs, rhs)
 }
 // sqrt(z)
 func sqrt<T>(z:Complex<T>) -> Complex<T> {
@@ -352,7 +352,7 @@ func atan<T>(z:Complex<T>) -> Complex<T> {
 }
 func atan<T:RealType>(r:T) -> T { return atan(Complex(r, T(0))).re }
 // atan2(z, zz)
-func atan2<T>(z:Complex<T>, zz:Complex<T>) -> Complex<T> {
+func atan2<T>(z:Complex<T>, _ zz:Complex<T>) -> Complex<T> {
     return atan(z / zz)
 }
 // asin(z)
@@ -432,4 +432,3 @@ func !~ <T>(lhs:T, rhs:Complex<T>) -> Bool {
 // typealiases
 typealias Complex64 = Complex<Double>
 typealias Complex32 = Complex<Float>
-
