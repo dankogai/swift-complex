@@ -45,7 +45,7 @@ ${SWIFTC} *.swift && ./main
 
 #### with playground
 
-Just drop [complex/complex.swift] to `Sources`.
+Just drop [complex/complex.swift] to `Sources`.  In git `Complex.playground/Sources/complex.swift` is a symlink thereto.
 
 ![](playground.png)
 
