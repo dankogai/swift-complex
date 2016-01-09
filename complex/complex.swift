@@ -38,9 +38,11 @@ public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Compa
     // math functions
     static func abs(_:Self)->Self
     static func cos(_:Self)->Self
+    static func cosh(_:Self)->Self
     static func exp(_:Self)->Self
     static func log(_:Self)->Self
     static func sin(_:Self)->Self
+    static func sinh(_:Self)->Self
     static func sqrt(_:Self)->Self
     static func hypot(_:Self, _:Self)->Self
     static func atan2(_:Self, _:Self)->Self
@@ -58,18 +60,22 @@ extension Double : RealType {
     public static func abs(x:Double)->Double { return abs(x) }
     #if os(Linux)
     public static func cos(x:Double)->Double { return Glibc.cos(x) }
+    public static func cosh(x:Double)->Double { return Glibc.cosh(x) }
     public static func exp(x:Double)->Double { return Glibc.exp(x) }
     public static func log(x:Double)->Double { return Glibc.log(x) }
     public static func sin(x:Double)->Double { return Glibc.sin(x) }
+    public static func sinh(x:Double)->Double { return Glibc.sins(x) }
     public static func sqrt(x:Double)->Double { return Glibc.sqrt(x) }
     public static func hypot(x:Double, _ y:Double)->Double { return Glibc.hypot(x, y) }
     public static func atan2(y:Double, _ x:Double)->Double { return Glibc.atan2(y, x) }
     public static func pow(x:Double, _ y:Double)->Double { return Glibc.pow(x, y) }
     #else
     public static func cos(x:Double)->Double { return Foundation.cos(x) }
+    public static func cosh(x:Double)->Double { return Foundation.cosh(x) }
     public static func exp(x:Double)->Double { return Foundation.exp(x) }
     public static func log(x:Double)->Double { return Foundation.log(x) }
     public static func sin(x:Double)->Double { return Foundation.sin(x) }
+    public static func sinh(x:Double)->Double { return Foundation.sinh(x) }
     public static func sqrt(x:Double)->Double { return Foundation.sqrt(x) }
     public static func hypot(x:Double, _ y:Double)->Double { return Foundation.hypot(x, y) }
     public static func atan2(y:Double, _ x:Double)->Double { return Foundation.atan2(y, x) }
@@ -93,18 +99,22 @@ extension Float : RealType {
     public static func abs(x:Float)->Float { return abs(x) }
     #if os(Linux)
     public static func cos(x:Float)->Float { return Glibc.cosf(x) }
+    public static func cosh(x:Float)->Float { return Glibc.coshf(x) }
     public static func exp(x:Float)->Float { return Glibc.expf(x) }
     public static func log(x:Float)->Float { return Glibc.logf(x) }
     public static func sin(x:Float)->Float { return Glibc.sinf(x) }
+    public static func sinh(x:Float)->Float { return Glibc.sinhf(x) }
     public static func sqrt(x:Float)->Float { return Glibc.sqrtf(x) }
     public static func hypot(x:Float, _ y:Float)->Float { return Glibc.hypotf(x, y) }
     public static func atan2(y:Float, _ x:Float)->Float { return Glibc.atan2f(y, x) }
     public static func pow(x:Float, _ y:Float)->Float { return Glibc.powf(x, y) }
     #else
     public static func cos(x:Float)->Float { return Foundation.cosf(x) }
+    public static func cosh(x:Float)->Float { return Foundation.coshf(x) }
     public static func exp(x:Float)->Float { return Foundation.expf(x) }
     public static func log(x:Float)->Float { return Foundation.logf(x) }
     public static func sin(x:Float)->Float { return Foundation.sinf(x) }
+    public static func sinh(x:Float)->Float { return Foundation.sinhf(x) }
     public static func sqrt(x:Float)->Float { return Foundation.sqrtf(x) }
     public static func hypot(x:Float, _ y:Float)->Float { return Foundation.hypotf(x, y) }
     public static func atan2(y:Float, _ x:Float)->Float { return Foundation.atan2f(y, x) }
@@ -354,26 +364,23 @@ public func sqrt<T>(z:Complex<T>) -> Complex<T> {
 }
 // cos(z)
 public func cos<T>(z:Complex<T>) -> Complex<T> {
-    // return (exp(i*z) + exp(-i*z)) / 2
-    return (exp(z.i) + exp(-z.i)) / T(2)
+    //return (exp(z.i) + exp(-z.i)) / T(2)
+    return Complex(T.cos(z.re)*T.cosh(z.im), -T.sin(z.re)*T.sinh(z.im))
 }
 // sin(z)
 public func sin<T>(z:Complex<T>) -> Complex<T> {
-    // return (exp(i*z) - exp(-i*z)) / (2*i)
-    return -(exp(z.i) - exp(-z.i)).i / T(2)
+    // return -(exp(z.i) - exp(-z.i)).i / T(2)
+    return Complex(T.sin(z.re)*T.cosh(z.im), +T.cos(z.re)*T.sinh(z.im))
 }
 // tan(z)
 public func tan<T>(z:Complex<T>) -> Complex<T> {
-    // return sin(z) / cos(z)
-    let ezi = exp(z.i), e_zi = exp(-z.i)
-    return (ezi - e_zi) / (ezi + e_zi).i
+    return sin(z) / cos(z)
 }
 // atan(z)
 public func atan<T>(z:Complex<T>) -> Complex<T> {
-    let l0 = log(T(1) - z.i), l1 = log(T(1) + z.i)
-    return (l0 - l1).i / T(2)
+    let lp = log(T(1) - z.i), lm = log(T(1) + z.i)
+    return (lp - lm).i / T(2)
 }
-public func atan<T:RealType>(r:T) -> T { return atan(Complex(r, T(0))).re }
 // asin(z)
 public func asin<T>(z:Complex<T>) -> Complex<T> {
     return -log(z.i + sqrt(T(1) - z*z)).i
@@ -384,11 +391,13 @@ public func acos<T>(z:Complex<T>) -> Complex<T> {
 }
 // sinh(z)
 public func sinh<T>(z:Complex<T>) -> Complex<T> {
-    return (exp(z) - exp(-z)) / T(2)
+    // return (exp(z) - exp(-z)) / T(2)
+    return -sin(z.i).i;
 }
 // cosh(z)
 public func cosh<T>(z:Complex<T>) -> Complex<T> {
-    return (exp(z) + exp(-z)) / T(2)
+    // return (exp(z) + exp(-z)) / T(2)
+    return cos(z.i);
 }
 // tanh(z)
 public func tanh<T>(z:Complex<T>) -> Complex<T> {
