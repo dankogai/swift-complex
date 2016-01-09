@@ -135,7 +135,6 @@ public struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable
         self.re = re
         self.im = im
     }
-    public init(){ self.init(T(0), T(0)) }
     public init(abs:T, arg:T) {
         self.re = abs * T.cos(arg)
         self.im = abs * T.sin(arg)

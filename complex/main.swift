@@ -18,7 +18,6 @@ func done_testing(){ print("1..\(tests)") }
     import Foundation
 #endif
 1-1.i == Complex(1,-1) !! "1-1.i == Complex(1,-1)"
-0.i   == Complex()     !! "0.i   == Complex()"
 1+0.i == 1             !! "1+0.i == 1"
 1     == 1+0.i         !! "1     == 1+0.i"
 var z0 = Complex(abs:10.0, arg:atan2(3.0,4.0))
