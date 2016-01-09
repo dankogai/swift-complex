@@ -10,8 +10,6 @@ import Glibc
 #else
 import Foundation
 #endif
-
-import Foundation
 protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, Hashable {
     // Initializers
     init(_ value: UInt8)

@@ -6,15 +6,17 @@
 //  Created by Dan Kogai on 6/12/14.
 //  Copyright (c) 2014 Dan Kogai. All rights reserved.
 //
-
 var tests = 0
 func ok(p:Bool, _ msg:String = "") {
     let result = (p ? "" : "not ") + "ok"
     print("\(result) \(++tests) # \(msg)")
 }
 func done_testing(){ print("1..\(tests)") }
-
-import Foundation
+#if os(Linux)
+    import Glibc
+#else
+    import Foundation
+#endif
 ok(1-1.i == Complex(1,-1), "1-1.i == Complex(1,-1)")
 ok(0.i   == Complex(),     "0.i   == Complex()")
 ok(1+0.i == 1,             "1+0.i == 1")
