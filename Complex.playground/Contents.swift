@@ -18,15 +18,22 @@ let epi = exp(Double.PI.i)
 epi == -1   // sorry, floating point is inexact
 epi =~ -1   // but you can use this!
 log(-1+0.i) // πi
+// let's try some round-trip
 let z2 = sqrt(-1.i)
-tan(z2) == sin(z2)/cos(z2)
+tan(z2) =~ sin(z2)/cos(z2)
 (sin(z2)**2 + cos(z2)**2) =~ 1
 asin(sin(z2)) =~ z2
+sin(asin(z2)) =~ z2
 acos(cos(z2)) =~ z2
+cos(acos(z2)) =~ z2
 atan(tan(z2)) =~ z2
-sinh(z2) == -sin(z2).i
-cosh(z2) == cos(z2.i)
+tan(atan(z2)) =~ z2
+sinh(z2) =~ -sin(z2).i
+cosh(z2) =~ cos(z2.i)
 tanh(z2) =~ -tan(z2.i).i
 asinh(sinh(z2)) =~ z2
+sinh(asinh(z2)) =~ z2
 acosh(cosh(z2)) =~ z2
+cosh(acosh(z2)) =~ z2
 atanh(tanh(z2)) =~ z2
+tanh(atanh(z2)) =~ z2
