@@ -45,8 +45,7 @@ public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Compa
     static func hypot(_:Self, _:Self)->Self
     static func atan2(_:Self, _:Self)->Self
     static func pow(_:Self, _:Self)->Self
-    // for =~ and !~
-    static var epsilon:Self { get }
+    static var EPSILON:Self { get }
 }
 // protocol extension !!!
 public extension RealType {
@@ -80,7 +79,6 @@ extension Double : RealType {
     public static var PI = 3.14159265358979323846264338327950288419716939937510
     public static var π = PI
     public static var E =  2.718281828459045235360287471352662497757247093699
-    public static var e = E
     public static var LN2 =
     0.6931471805599453094172321214581765680755001343602552
     public static var LOG2E = 1 / LN2
@@ -90,7 +88,7 @@ extension Double : RealType {
     public static var SQRT2 =
     1.4142135623730950488016887242096980785696718753769480
     public static var SQRT1_2 = 1/SQRT2
-    public static var epsilon = 0x1p-52
+    public static var EPSILON = 0x1p-52
 }
 // But when explicitly typed you can use Float
 extension Float : RealType {
@@ -119,7 +117,6 @@ extension Float : RealType {
     public static var PI:Float = 3.14159265358979323846264338327950288419716939937510
     public static var π:Float = PI
     public static var E:Float =  2.718281828459045235360287471352662497757247093699
-    public static var e:Float = E
     public static var LN2:Float =
     0.6931471805599453094172321214581765680755001343602552
     public static var LOG2E:Float = 1 / LN2
@@ -129,7 +126,7 @@ extension Float : RealType {
     public static var SQRT2:Float =
     1.4142135623730950488016887242096980785696718753769480
     public static var SQRT1_2:Float = 1/SQRT2
-    public static var epsilon:Float = 0x1p-23
+    public static var EPSILON:Float = 0x1p-23
 }
 // el corazon
 public struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable {
@@ -424,18 +421,21 @@ public func proj<T>(z:Complex<T>) -> Complex<T> { return z.proj }
 //
 public func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     if lhs == rhs { return true }
-    let t = (rhs - lhs) / rhs
-    return abs(t) <= T(2) * T.epsilon
+    let al = abs(lhs)
+    if rhs == 0 { return lhs < T.EPSILON }
+    let ar = abs(rhs)
+    if lhs == 0 { return rhs < T.EPSILON }
+    let da = abs(al - ar) / (al + ar) // delta / average < 2*epsilon
+    return da < T(2)*T.EPSILON
 }
 public func =~ <T>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
-    if lhs == rhs { return true }
     return lhs.abs =~ rhs.abs
 }
 public func =~ <T>(lhs:Complex<T>, rhs:T) -> Bool {
-    return abs(lhs) =~ abs(rhs)
+    return lhs.abs =~ rhs
 }
 public func =~ <T>(lhs:T, rhs:Complex<T>) -> Bool {
-    return abs(lhs) =~ abs(rhs)
+    return lhs =~ rhs.abs
 }
 public func !~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     return !(lhs =~ rhs)
