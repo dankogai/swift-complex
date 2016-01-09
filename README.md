@@ -10,7 +10,7 @@ Complex numbers in [Swift].
 Prerequisite
 ------------
 
-Swift 2.0 or better.
+Swift 2.0 or better, OS X or Linux
 For Swift 1.x and below see the swift-1.x branch 
 (which is no longer maintained).
 
@@ -25,11 +25,23 @@ Just add [complex/complex.swift] to it.
 
 ### via command line:
 
+#### OS X with Xcode
 ````shell
 git clone https://github.com/dankogai/swift-complex.git
 cd swift-complex/complex
 xcrun -sdk macosx swiftc *.swift && ./main
+# or just make test
 ````
+
+#### Linux
+````shell
+git clone https://github.com/dankogai/swift-complex.git
+cd swift-complex/complex
+export SWIFTC=/path/to/your/swiftc # mine: ~/swift/usr/bin/swiftc
+${SWIFTC} *.swift && ./main
+# or just make BUILD=${SWIFTC} test
+````
+
 
 Synopsis
 --------
