@@ -376,10 +376,6 @@ func atan<T>(z:Complex<T>) -> Complex<T> {
     return (l0 - l1).i / T(2)
 }
 func atan<T:RealType>(r:T) -> T { return atan(Complex(r, T(0))).re }
-// atan2(z, zz)
-func atan2<T>(z:Complex<T>, _ zz:Complex<T>) -> Complex<T> {
-    return atan(z / zz)
-}
 // asin(z)
 func asin<T>(z:Complex<T>) -> Complex<T> {
     return -log(z.i + sqrt(T(1) - z*z)).i
