@@ -22,6 +22,13 @@ Usage
 
 Just add [complex/complex.swift] to it.
 
+#### with playground
+
+Just drop [complex/complex.swift] to `Sources`.  In git `Complex.playground/Sources/complex.swift` is a symlink thereto.
+
+![](playground.png)
+
+
 [complex/complex.swift]: ./complex/complex.swift
 
 ### via command line:
@@ -42,12 +49,6 @@ export SWIFTC=/path/to/your/swiftc # mine: ~/swift/usr/bin/swiftc
 ${SWIFTC} *.swift && ./main
 # or just make BUILD=${SWIFTC} test
 ````
-
-#### with playground
-
-Just drop [complex/complex.swift] to `Sources`.  In git `Complex.playground/Sources/complex.swift` is a symlink thereto.
-
-![](playground.png)
 
 Synopsis
 --------
