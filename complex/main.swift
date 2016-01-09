@@ -26,16 +26,14 @@ sizeofValue(z0.re) == sizeof(Double) !! "z0.re is Double"
 z0 - z0 == 0+0.i    !! "z - z = 0+0.i"
 z0 + z0 =~ z0 * 2   !! "z + z = z0 * 2"
 var z1 = z0
-z1 *= z0
-z1 =~ z0*z0 !! "*="
-z1.abs =~ z0.abs ** 2 !! "(z0 * z1).abs = z0.abs * z1.abs"
-z1.arg =~ z0.arg *  2 !! "(z0 * z1).arg = z0.abs + z1.arg"
-z1 /= z0
-z1 == z0 !! "/="
-z0 = exp(Double.PI.i)
-z0 != -1.0 !! "exp(π.i) != -1.0 // blame floating point arithmetics"
-z0 =~ -1.0 !! "exp(π.i) =~ -1.0 // but close enough"
-log(z0) == Double.PI.i !! "log(exp(PI.i)) == PI.i"
+z1 *= z0; z1 =~ z0*z0   !! "*="
+z1.abs =~ z0.abs ** 2   !! "(z0 * z1).abs = z0.abs * z1.abs"
+z1.arg =~ z0.arg *  2   !! "(z0 * z1).arg = z0.abs + z1.arg"
+z1 /= z0; z1 == z0      !! "/="
+let epi = exp(Double.PI.i)
+epi != -1.0             !! "exp(π.i) != -1.0 // blame floating point arithmetics"
+epi =~ -1.0             !! "exp(π.i) =~ -1.0 // but close enough"
+log(epi) == Double.PI.i !! "log(exp(PI.i)) == PI.i"
 2.0 * 3.0 ** 4.0 == 162.0 !! "2.0 * 3.0 ** 4.0 == 2.0 * (3.0 ** 4.0)"
 let zero = 0 + 0.i, one = 1.0 + 0.0.i
 zero ** (42.0 + 0.195.i) == one !! "pow(0, y) == 1.0+0.0i // issue 8"
@@ -90,21 +88,13 @@ proj(0-(1.0/0.0).i) == Complex64(1/0.0, -0.0)   !! "(0,-inf).proj == (inf,-0)"
 proj((1/0.0)+1.i) == Complex64(1/0.0, +0.0)     !! "(inf,+1).proj == (inf,+0)"
 proj(0+(1.0/0.0).i) == Complex64(1/0.0, +0.0)   !! "(0,+inf).proj == (inf,+0)"
 z0 = 0+0.i
-z0.real += 1
-z0 == 1     !! ".real as a setter"
-z0.imag += 1
-z0 == 1+1.i !! ".imag as a setter"
-z0.abs *= 2
-z0 == 2+2.i !! ".abs as a setter"
-z0.arg *= 2
-z0 =~ 0.0+2*sqrt(2).i !! ".arg as a setter"
+z0.real += 1; z0 == 1       !! ".real as a setter"
+z0.imag += 1; z0 == 1+1.i   !! ".imag as a setter"
+z0.abs *= 2;  z0 == 2+2.i   !! ".abs as a setter"
+z0.arg *= 2;  z0 =~ 0.0+2*sqrt(2).i !! ".arg as a setter"
 z0 = 1+1.i
-var (r, i) = z0.tuple
-r == 1 && i == 1 !! "(r, i) = z.tuple"
-//(r, i) = z0
-r == 1 && i == 1 !! "(r, i) = z"
-z0.tuple = (2, 2)
-z0 == 2+2.i !! "z.tuple = (r, i)"
+var (r, i) = z0.tuple; r == 1 && i == 1 !! "(r, i) = z.tuple"
+z0.tuple = (2, 2);     z0 == 2+2.i      !! "z.tuple = (r, i)"
 var dict = [0+0.i:"origin"]
 dict[0+0.i] == "origin" !! "Complex as a dictionary key"
 var z32 = Complex32(4,2);
