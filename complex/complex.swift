@@ -45,8 +45,13 @@ protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, 
     func hypot(_: Self)->Self
     func atan2(_: Self)->Self
     func pow(_: Self)->Self
-    //class var LN10:Self { get }
+    // for =~ and !~
     static var epsilon:Self { get }
+}
+// protocol extension !!!
+extension RealType {
+    /// self * 1.0i
+    var i:Complex<Self>{ return Complex(Self(0), self) }
 }
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
@@ -86,8 +91,6 @@ extension Double : RealType {
     1.4142135623730950488016887242096980785696718753769480
     static var SQRT1_2 = 1/SQRT2
     static var epsilon = 0x1p-52
-    /// self * 1.0i
-    var i:Complex<Double>{ return Complex<Double>(0.0, self) }
 }
 // But when explicitly typed you can use Float
 extension Float : RealType {
@@ -127,10 +130,7 @@ extension Float : RealType {
     1.4142135623730950488016887242096980785696718753769480
     static var SQRT1_2:Float = 1/SQRT2
     static var epsilon:Float = 0x1p-23
-    /// self * 1.0i
-    var i:Complex<Float>{ return Complex<Float>(0.0 as Float, self) }
 }
-
 // el corazon
 struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable {
     var (re, im): (T, T)
