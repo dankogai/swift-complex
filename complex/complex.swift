@@ -347,11 +347,11 @@ func **= <T>(inout lhs:Complex<T>, rhs:T) {
 func sqrt<T>(z:Complex<T>) -> Complex<T> {
     // return z ** 0.5
     let d = T.hypot(z.re, z.im)
-    let re = T.sqrt((z.re + d)/T(2))
+    let r = T.sqrt((z.re + d)/T(2))
     if z.im < T(0) {
-        return Complex(re, -T.sqrt(-z.re + d)/T(2))
+        return Complex(r, -T.sqrt((-z.re + d)/T(2)))
     } else {
-        return Complex(re,  T.sqrt(-z.re + d)/T(2))
+        return Complex(r,  T.sqrt((-z.re + d)/T(2)))
     }
 }
 // cos(z)
