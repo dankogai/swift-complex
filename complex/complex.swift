@@ -45,6 +45,7 @@ public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Compa
     static func hypot(_:Self, _:Self)->Self
     static func atan2(_:Self, _:Self)->Self
     static func pow(_:Self, _:Self)->Self
+    // for =~
     static var EPSILON:Self { get }
 }
 // protocol extension !!!
@@ -79,14 +80,11 @@ extension Double : RealType {
     public static var PI = 3.14159265358979323846264338327950288419716939937510
     public static var π = PI
     public static var E =  2.718281828459045235360287471352662497757247093699
-    public static var LN2 =
-    0.6931471805599453094172321214581765680755001343602552
+    public static var LN2 = 0.6931471805599453094172321214581765680755001343602552
     public static var LOG2E = 1 / LN2
-    public static var LN10 =
-    2.3025850929940456840179914546843642076011014886287729
+    public static var LN10 = 2.3025850929940456840179914546843642076011014886287729
     public static var LOG10E = 1/LN10
-    public static var SQRT2 =
-    1.4142135623730950488016887242096980785696718753769480
+    public static var SQRT2 = 1.4142135623730950488016887242096980785696718753769480
     public static var SQRT1_2 = 1/SQRT2
     public static var EPSILON = 0x1p-52
 }
@@ -117,14 +115,11 @@ extension Float : RealType {
     public static var PI:Float = 3.14159265358979323846264338327950288419716939937510
     public static var π:Float = PI
     public static var E:Float =  2.718281828459045235360287471352662497757247093699
-    public static var LN2:Float =
-    0.6931471805599453094172321214581765680755001343602552
+    public static var LN2:Float = 0.6931471805599453094172321214581765680755001343602552
     public static var LOG2E:Float = 1 / LN2
-    public static var LN10:Float =
-    2.3025850929940456840179914546843642076011014886287729
+    public static var LN10:Float = 2.3025850929940456840179914546843642076011014886287729
     public static var LOG10E:Float = 1/LN10
-    public static var SQRT2:Float =
-    1.4142135623730950488016887242096980785696718753769480
+    public static var SQRT2:Float = 1.4142135623730950488016887242096980785696718753769480
     public static var SQRT1_2:Float = 1/SQRT2
     public static var EPSILON:Float = 0x1p-23
 }
