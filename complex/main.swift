@@ -8,7 +8,8 @@
 var tests = 0
 func ok(p:Bool, _ msg:String = "") {
     let result = (p ? "" : "not ") + "ok"
-    print("\(result) \(++tests) # \(msg)")
+    tests += 1
+    print("\(result) \(tests) # \(msg)")
 }
 func done_testing(){ print("1..\(tests)") }
 #if os(Linux)
