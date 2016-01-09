@@ -11,7 +11,7 @@ import Glibc
 import Foundation
 #endif
 protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, Hashable {
-    // Initializers
+    // Initializers (predefined)
     init(_ value: UInt8)
     init(_ value: Int8)
     init(_ value: UInt16)
@@ -24,7 +24,7 @@ protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, 
     init(_ value: Int)
     init(_ value: Double)
     init(_ value: Float)
-    // Built-in operators
+    // Built-in operators (predefined)
     prefix func + (_: Self)->Self
     prefix func - (_: Self)->Self
     func + (_: Self, _: Self)->Self
@@ -35,16 +35,16 @@ protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, 
     func -= (inout _: Self, _: Self)
     func *= (inout _: Self, _: Self)
     func /= (inout _: Self, _: Self)
-    // methodized functions for protocol's sake
-    var abs:Self { get }
-    func cos()->Self
-    func exp()->Self
-    func log()->Self
-    func sin()->Self
-    func sqrt()->Self
-    func hypot(_: Self)->Self
-    func atan2(_: Self)->Self
-    func pow(_: Self)->Self
+    // math functions
+    static func abs(_:Self)->Self
+    static func cos(_:Self)->Self
+    static func exp(_:Self)->Self
+    static func log(_:Self)->Self
+    static func sin(_:Self)->Self
+    static func sqrt(_:Self)->Self
+    static func hypot(_:Self, _:Self)->Self
+    static func atan2(_:Self, _:Self)->Self
+    static func pow(_:Self, _:Self)->Self
     // for =~ and !~
     static var epsilon:Self { get }
 }
@@ -55,25 +55,25 @@ extension RealType {
 }
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
-    var abs:Double { return Swift.abs(self) }
+    static func abs(x:Double)->Double { return abs(x) }
     #if os(Linux)
-    func cos()->Double { return Glibc.cos(self) }
-    func exp()->Double { return Glibc.exp(self) }
-    func log()->Double { return Glibc.log(self) }
-    func sin()->Double { return Glibc.sin(self) }
-    func sqrt()->Double { return Glibc.sqrt(self) }
-    func atan2(y:Double)->Double { return Glibc.atan2(self, y) }
-    func hypot(y:Double)->Double { return Glibc.hypot(self, y) }
-    func pow(y:Double)->Double { return Glibc.pow(self, y) }
+    static func cos(x:Double)->Double { return Glibc.cos(x) }
+    static func exp(x:Double)->Double { return Glibc.exp(x) }
+    static func log(x:Double)->Double { return Glibc.log(x) }
+    static func sin(x:Double)->Double { return Glibc.sin(x) }
+    static func sqrt(x:Double)->Double { return Glibc.sqrt(x) }
+    static func hypot(x:Double, _ y:Double)->Double { return Glibc.hypot(x, y) }
+    static func atan2(y:Double, _ x:Double)->Double { return Glibc.atan2(y, x) }
+    static func pow(x:Double, _ y:Double)->Double { return Glibc.pow(x, y) }
     #else
-    func cos()->Double { return Foundation.cos(self) }
-    func exp()->Double { return Foundation.exp(self) }
-    func log()->Double { return Foundation.log(self) }
-    func sin()->Double { return Foundation.sin(self) }
-    func sqrt()->Double { return Foundation.sqrt(self) }
-    func atan2(y:Double)->Double { return Foundation.atan2(self, y) }
-    func hypot(y:Double)->Double { return Foundation.hypot(self, y) }
-    func pow(y:Double)->Double { return Foundation.pow(self, y) }
+    static func cos(x:Double)->Double { return Foundation.cos(x) }
+    static func exp(x:Double)->Double { return Foundation.exp(x) }
+    static func log(x:Double)->Double { return Foundation.log(x) }
+    static func sin(x:Double)->Double { return Foundation.sin(x) }
+    static func sqrt(x:Double)->Double { return Foundation.sqrt(x) }
+    static func hypot(x:Double, _ y:Double)->Double { return Foundation.hypot(x, y) }
+    static func atan2(y:Double, _ x:Double)->Double { return Foundation.atan2(y, x) }
+    static func pow(x:Double, _ y:Double)->Double { return Foundation.pow(x, y) }
     #endif
     // these ought to be static let
     // but give users a chance to overwrite it
@@ -94,25 +94,25 @@ extension Double : RealType {
 }
 // But when explicitly typed you can use Float
 extension Float : RealType {
-    var abs:Float { return Swift.abs(self) }
+    static func abs(x:Float)->Float { return abs(x) }
     #if os(Linux)
-    func cos()->Float { return Glibc.cosf(self) }
-    func exp()->Float { return Glibc.expf(self) }
-    func log()->Float { return Glibc.logf(self) }
-    func sin()->Float { return Glibc.sinf(self) }
-    func sqrt()->Float { return Glibc.sqrtf(self) }
-    func hypot(y:Float)->Float { return Glibc.hypotf(self, y) }
-    func atan2(y:Float)->Float { return Glibc.atan2f(self, y) }
-    func pow(y:Float)->Float { return Glibc.powf(self, y) }
+    static func cos(x:Float)->Float { return Glibc.cosf(x) }
+    static func exp(x:Float)->Float { return Glibc.expf(x) }
+    static func log(x:Float)->Float { return Glibc.logf(x) }
+    static func sin(x:Float)->Float { return Glibc.sinf(x) }
+    static func sqrt(x:Float)->Float { return Glibc.sqrtf(x) }
+    static func hypot(x:Float, _ y:Float)->Float { return Glibc.hypotf(x, y) }
+    static func atan2(y:Float, _ x:Float)->Float { return Glibc.atan2f(y, x) }
+    static func pow(x:Float, _ y:Float)->Float { return Glibc.powf(x, y) }
     #else
-    func cos()->Float { return Foundation.cosf(self) }
-    func exp()->Float { return Foundation.expf(self) }
-    func log()->Float { return Foundation.logf(self) }
-    func sin()->Float { return Foundation.sinf(self) }
-    func sqrt()->Float { return Foundation.sqrtf(self) }
-    func hypot(y:Float)->Float { return Foundation.hypotf(self, y) }
-    func atan2(y:Float)->Float { return Foundation.atan2f(self, y) }
-    func pow(y:Float)->Float { return Foundation.powf(self, y) }
+    static func cos(x:Float)->Float { return Foundation.cosf(x) }
+    static func exp(x:Float)->Float { return Foundation.expf(x) }
+    static func log(x:Float)->Float { return Foundation.logf(x) }
+    static func sin(x:Float)->Float { return Foundation.sinf(x) }
+    static func sqrt(x:Float)->Float { return Foundation.sqrtf(x) }
+    static func hypot(x:Float, _ y:Float)->Float { return Foundation.hypotf(x, y) }
+    static func atan2(y:Float, _ x:Float)->Float { return Foundation.atan2f(y, x) }
+    static func pow(x:Float, _ y:Float)->Float { return Foundation.powf(x, y) }
     #endif
     // these ought to be static let
     // but give users a chance to overwrite it
@@ -140,8 +140,8 @@ struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable {
     }
     init(){ self.init(T(0), T(0)) }
     init(abs:T, arg:T) {
-        self.re = abs * arg.cos()
-        self.im = abs * arg.sin()
+        self.re = abs * T.cos(arg)
+        self.im = abs * T.sin(arg)
     }
     /// real part thereof
     var real:T { get{ return re } set(r){ re = r } }
@@ -149,16 +149,16 @@ struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable {
     var imag:T { get{ return im } set(i){ im = i } }
     /// absolute value thereof
     var abs:T {
-        get { return re.hypot(im) }
+        get { return T.hypot(re, im) }
         set(r){ let f = r / abs; re *= f; im *= f }
     }
     /// argument thereof
     var arg:T  {
-        get { return im.atan2(re) }
-        set(t){ let m = abs; re = m * t.cos(); im = m * t.sin() }
+        get { return T.atan2(im, re) }
+        set(t){ let m = abs; re = m * T.cos(t); im = m * T.sin(t) }
     }
     /// norm thereof
-    var norm:T { return re.hypot(im) }
+    var norm:T { return T.hypot(re, im) }
     /// conjugate thereof
     var conj:Complex { return Complex(re, -im) }
     /// projection thereof
@@ -267,7 +267,7 @@ func *= <T>(inout lhs:Complex<T>, rhs:T) {
 // cf. https://github.com/dankogai/swift-complex/issues/3
 //
 func / <T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
-    if rhs.re.abs >= rhs.im.abs {
+    if abs(rhs.re) >= abs(rhs.im) {
         let r = rhs.im / rhs.re
         let d = rhs.re + rhs.im * r
         return Complex (
@@ -298,17 +298,17 @@ func /= <T>(inout lhs:Complex<T>, rhs:T) {
 }
 // exp(z)
 func exp<T>(z:Complex<T>) -> Complex<T> {
-    let abs = z.re.exp()
+    let abs = T.exp(z.re)
     let arg = z.im
-    return Complex(abs * arg.cos(), abs * arg.sin())
+    return Complex(abs * T.cos(arg), abs * T.sin(arg))
 }
 // log(z)
 func log<T>(z:Complex<T>) -> Complex<T> {
-    return Complex(z.abs.log(), z.arg)
+    return Complex(T.log(z.abs), z.arg)
 }
 // log10(z) -- just because C++ has it
-func log10<T>(z:Complex<T>) -> Complex<T> { return log(z) / T(log(10.0)) }
-func log10<T:RealType>(r:T) -> T { return r.log() / T(log(10.0)) }
+func log10<T>(z:Complex<T>) -> Complex<T> { return log(z) / T.log(T(10)) }
+func log10<T:RealType>(r:T) -> T { return T.log(r) / T.log(T(10)) }
 // pow(b, x)
 func pow<T>(lhs:Complex<T>, _ rhs:Complex<T>) -> Complex<T> {
     if lhs == T(0) { return Complex(T(1), T(0)) } // 0 ** 0 == 1
@@ -323,7 +323,7 @@ func pow<T>(lhs:T, _ rhs:Complex<T>) -> Complex<T> {
 }
 // **, **=
 func **<T:RealType>(lhs:T, rhs:T) -> T {
-    return lhs.pow(rhs)
+    return T.pow(lhs, rhs)
 }
 func ** <T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
     return pow(lhs, rhs)
@@ -335,7 +335,7 @@ func ** <T>(lhs:Complex<T>, rhs:T) -> Complex<T> {
     return pow(lhs, rhs)
 }
 func **= <T:RealType>(inout lhs:T, rhs:T) {
-    lhs = lhs.pow(rhs)
+    lhs = T.pow(lhs, rhs)
 }
 func **= <T>(inout lhs:Complex<T>, rhs:Complex<T>) {
     lhs = pow(lhs, rhs)
@@ -346,12 +346,12 @@ func **= <T>(inout lhs:Complex<T>, rhs:T) {
 // sqrt(z)
 func sqrt<T>(z:Complex<T>) -> Complex<T> {
     // return z ** 0.5
-    let d = z.re.hypot(z.im)
-    let re = ((z.re + d)/T(2)).sqrt()
+    let d = T.hypot(z.re, z.im)
+    let re = T.sqrt((z.re + d)/T(2))
     if z.im < T(0) {
-        return Complex(re, -((-z.re + d)/T(2)).sqrt())
+        return Complex(re, -T.sqrt(-z.re + d)/T(2))
     } else {
-        return Complex(re,  ((-z.re + d)/T(2)).sqrt())
+        return Complex(re,  T.sqrt(-z.re + d)/T(2))
     }
 }
 // cos(z)
@@ -425,17 +425,17 @@ func proj<T>(z:Complex<T>) -> Complex<T> { return z.proj }
 func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     if lhs == rhs { return true }
     let t = (rhs - lhs) / rhs
-    return t.abs <= T(2) * T.epsilon
+    return abs(t) <= T(2) * T.epsilon
 }
 func =~ <T>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
     if lhs == rhs { return true }
     return lhs.abs =~ rhs.abs
 }
 func =~ <T>(lhs:Complex<T>, rhs:T) -> Bool {
-    return lhs.abs =~ rhs.abs
+    return abs(lhs) =~ abs(rhs)
 }
 func =~ <T>(lhs:T, rhs:Complex<T>) -> Bool {
-    return lhs.abs =~ rhs.abs
+    return abs(lhs) =~ abs(rhs)
 }
 func !~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     return !(lhs =~ rhs)
