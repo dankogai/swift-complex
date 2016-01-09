@@ -15,7 +15,7 @@ z1 - z0 == z0
 z1 / z0 == z0
 sqrt(z1) == z0
 let epi = exp(Double.PI.i)
-epi == -1   // sorry, floating point is inexact
+epi != -1.0   // sorry, floating point is inexact
 epi =~ -1   // but you can use this!
 log(-1+0.i) // πi
 // let's try some round-trip
@@ -37,3 +37,4 @@ acosh(cosh(z2)) =~ z2
 cosh(acosh(z2)) =~ z2
 atanh(tanh(z2)) =~ z2
 tanh(atanh(z2)) =~ z2
+
