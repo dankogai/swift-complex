@@ -5,6 +5,11 @@
 //  Created by Dan Kogai on 6/12/14.
 //  Copyright (c) 2014 Dan Kogai. All rights reserved.
 //
+#if os(Linux)
+import Glibc
+#else
+import Foundation
+#endif
 
 import Foundation
 protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, Hashable {
@@ -45,10 +50,19 @@ protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, 
     //class var LN10:Self { get }
     //class var epsilon:Self { get }
 }
-
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
     var abs:Double { return Swift.abs(self) }
+    #if os(Linux)
+    func cos()->Double { return Glibc.cos(self) }
+    func exp()->Double { return Glibc.exp(self) }
+    func log()->Double { return Glibc.log(self) }
+    func sin()->Double { return Glibc.sin(self) }
+    func sqrt()->Double { return Glibc.sqrt(self) }
+    func atan2(y:Double)->Double { return Glibc.atan2(self, y) }
+    func hypot(y:Double)->Double { return Glibc.hypot(self, y) }
+    func pow(y:Double)->Double { return Glibc.pow(self, y) }
+    #else
     func cos()->Double { return Foundation.cos(self) }
     func exp()->Double { return Foundation.exp(self) }
     func log()->Double { return Foundation.log(self) }
@@ -57,6 +71,7 @@ extension Double : RealType {
     func atan2(y:Double)->Double { return Foundation.atan2(self, y) }
     func hypot(y:Double)->Double { return Foundation.hypot(self, y) }
     func pow(y:Double)->Double { return Foundation.pow(self, y) }
+    #endif
     // these ought to be static let
     // but give users a chance to overwrite it
     static var PI = 3.14159265358979323846264338327950288419716939937510
@@ -79,14 +94,25 @@ extension Double : RealType {
 // But when explicitly typed you can use Float
 extension Float : RealType {
     var abs:Float { return Swift.abs(self) }
-    func cos()->Float { return Foundation.cos(self) }
-    func exp()->Float { return Foundation.exp(self) }
-    func log()->Float { return Foundation.log(self) }
-    func sin()->Float { return Foundation.sin(self) }
-    func sqrt()->Float { return Foundation.sqrt(self) }
-    func hypot(y:Float)->Float { return Foundation.hypot(self, y) }
-    func atan2(y:Float)->Float { return Foundation.atan2(self, y) }
-    func pow(y:Float)->Float { return Foundation.pow(self, y) }
+    #if os(Linux)
+    func cos()->Float { return Glibc.cosf(self) }
+    func exp()->Float { return Glibc.expf(self) }
+    func log()->Float { return Glibc.logf(self) }
+    func sin()->Float { return Glibc.sinf(self) }
+    func sqrt()->Float { return Glibc.sqrtf(self) }
+    func hypot(y:Float)->Float { return Glibc.hypotf(self, y) }
+    func atan2(y:Float)->Float { return Glibc.atan2f(self, y) }
+    func pow(y:Float)->Float { return Glibc.powf(self, y) }
+    #else
+    func cos()->Float { return Foundation.cosf(self) }
+    func exp()->Float { return Foundation.expf(self) }
+    func log()->Float { return Foundation.logf(self) }
+    func sin()->Float { return Foundation.sinf(self) }
+    func sqrt()->Float { return Foundation.sqrtf(self) }
+    func hypot(y:Float)->Float { return Foundation.hypotf(self, y) }
+    func atan2(y:Float)->Float { return Foundation.atan2f(self, y) }
+    func pow(y:Float)->Float { return Foundation.powf(self, y) }
+    #endif
     // these ought to be static let
     // but give users a chance to overwrite it
     static var PI:Float = 3.14159265358979323846264338327950288419716939937510
@@ -106,6 +132,7 @@ extension Float : RealType {
     /// self * 1.0i
     var i:Complex<Float>{ return Complex<Float>(0.0 as Float, self) }
 }
+
 // el corazon
 struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable {
     var (re, im): (T, T)
