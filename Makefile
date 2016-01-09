@@ -1,10 +1,14 @@
 #ifndef BUILD
 BUILD=xcrun -sdk macosx swiftc
 #endif
+TARGET=main
+SRC=complex/*.swift
+
+all:$(TARGET)
 
 clean:
-	rm main
-main:
+	rm $(TARGET)
+$(TARGET): $(SRC)
 	$(BUILD) complex/*.swift
-test: main
+test: $(TARGET)
 	prove ./main
