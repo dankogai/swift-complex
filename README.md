@@ -43,6 +43,11 @@ ${SWIFTC} *.swift && ./main
 # or just make BUILD=${SWIFTC} test
 ````
 
+#### with playground
+
+Just drop [complex/complex.swift] to `Sources`.
+
+![](playground.png)
 
 Synopsis
 --------
