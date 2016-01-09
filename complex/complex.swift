@@ -46,7 +46,7 @@ protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, 
     func atan2(_: Self)->Self
     func pow(_: Self)->Self
     //class var LN10:Self { get }
-    //class var epsilon:Self { get }
+    static var epsilon:Self { get }
 }
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
@@ -429,8 +429,7 @@ func proj<T>(z:Complex<T>) -> Complex<T> { return z.proj }
 func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     if lhs == rhs { return true }
     let t = (rhs - lhs) / rhs
-    let epsilon = sizeof(T) < 8 ? 0x1p-23 : 0x1p-52
-    return t.abs <= T(2) * T(epsilon)
+    return t.abs <= T(2) * T.epsilon
 }
 func =~ <T>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
     if lhs == rhs { return true }
