@@ -10,7 +10,8 @@ Complex numbers in [Swift].
 Prerequisite
 ------------
 
-Swift 2.0 or better, OS X or Linux
+Swift 2.0 or better, OS X or Linux.
+
 For Swift 1.x and below see the swift-1.x branch 
 (which is no longer maintained).
 
