@@ -34,7 +34,7 @@ z1.arg =~ z0.arg *  2 !! "(z0 * z1).arg = z0.abs + z1.arg"
 z1 /= z0
 z1 == z0 !! "/="
 z0 = exp(Double.PI.i)
-// z0 == -1.0 !! "exp(π.i) != -1.0 // blame floating point arithmetics"
+z0 != -1.0 !! "exp(π.i) != -1.0 // blame floating point arithmetics"
 z0 =~ -1.0 !! "exp(π.i) =~ -1.0 // but close enough"
 log(z0) == Double.PI.i !! "log(exp(PI.i)) == PI.i"
 2.0 * 3.0 ** 4.0 == 162.0 !! "2.0 * 3.0 ** 4.0 == 2.0 * (3.0 ** 4.0)"
