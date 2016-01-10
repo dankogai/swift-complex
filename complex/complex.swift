@@ -66,7 +66,7 @@ extension Double : RealType {
     public static func exp(x:Double)->Double { return Glibc.exp(x) }
     public static func log(x:Double)->Double { return Glibc.log(x) }
     public static func sin(x:Double)->Double { return Glibc.sin(x) }
-    public static func sinh(x:Double)->Double { return Glibc.sins(x) }
+    public static func sinh(x:Double)->Double { return Glibc.sinh(x) }
     public static func sqrt(x:Double)->Double { return Glibc.sqrt(x) }
     public static func hypot(x:Double, _ y:Double)->Double { return Glibc.hypot(x, y) }
     public static func atan2(y:Double, _ x:Double)->Double { return Glibc.atan2(y, x) }
