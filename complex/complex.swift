@@ -36,6 +36,7 @@ public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Compa
     func *= (inout _: Self, _: Self)
     func /= (inout _: Self, _: Self)
     // math functions
+    var int:Int { get }
     static func abs(_:Self)->Self
     static func cos(_:Self)->Self
     static func cosh(_:Self)->Self
@@ -57,6 +58,7 @@ public extension RealType {
 }
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
+    public var int:Int { return Int(self) }
     public static func abs(x:Double)->Double { return abs(x) }
     #if os(Linux)
     public static func cos(x:Double)->Double { return Glibc.cos(x) }
@@ -96,6 +98,7 @@ extension Double : RealType {
 }
 // But when explicitly typed you can use Float
 extension Float : RealType {
+    public var int:Int { return Int(self) }
     public static func abs(x:Float)->Float { return abs(x) }
     #if os(Linux)
     public static func cos(x:Float)->Float { return Glibc.cosf(x) }
@@ -320,11 +323,29 @@ public func log10<T:RealType>(r:T) -> T { return T.log(r) / T.log(T(10)) }
 // pow(b, x)
 public func pow<T>(lhs:Complex<T>, _ rhs:Complex<T>) -> Complex<T> {
     if lhs == T(0) { return Complex(T(1), T(0)) } // 0 ** 0 == 1
+    if rhs.im == T(0) { return pow(lhs, rhs.re) }
     let z = log(lhs) * rhs
     return exp(z)
 }
+public func pow<T>(lhs:Complex<T>, _ rhs:Int) -> Complex<T> {
+    var r = Complex(T(1), T(0))
+    var ux = abs(rhs), b = lhs
+    while (ux > 0) {
+        if ux & 1 == 1 { r *= b }
+        ux >>= 1; b *= b
+    }
+    return rhs < 0 ? T(1) / r : r
+}
 public func pow<T>(lhs:Complex<T>, _ rhs:T) -> Complex<T> {
-    return pow(lhs, Complex(rhs, T(0)))
+    if lhs == T(0) { return Complex(T(1), T(0)) } // 0 ** 0 == 1
+    // integer
+    let ix = rhs.int
+    if T(ix) == rhs { return pow(lhs, ix) }
+    // integer/2
+    let fx = rhs - T(ix)
+    return fx == T(1)/2 ? pow(lhs, ix) * sqrt(lhs)
+        : -fx == T(1)/2 ? pow(lhs, ix) / sqrt(lhs)
+        : pow(lhs, Complex(rhs, T(0)))
 }
 public func pow<T>(lhs:T, _ rhs:Complex<T>) -> Complex<T> {
     return pow(Complex(lhs, T(0)), rhs)
