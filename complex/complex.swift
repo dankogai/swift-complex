@@ -340,8 +340,8 @@ public func pow<T>(lhs:Complex<T>, _ rhs:T) -> Complex<T> {
     if T(ix) == rhs { return pow(lhs, ix) }
     // integer/2
     let fx = rhs - T(ix)
-    return fx == T(1)/2 ? pow(lhs, ix) * sqrt(lhs)
-        : -fx == T(1)/2 ? pow(lhs, ix) / sqrt(lhs)
+    return fx*2 == T(1) ? pow(lhs, ix) * sqrt(lhs)
+        : -fx*2 == T(1) ? pow(lhs, ix) / sqrt(lhs)
         : pow(lhs, Complex(rhs, T(0)))
 }
 public func pow<T>(lhs:T, _ rhs:Complex<T>) -> Complex<T> {
@@ -419,8 +419,9 @@ public func cosh<T>(z:Complex<T>) -> Complex<T> {
 }
 // tanh(z)
 public func tanh<T>(z:Complex<T>) -> Complex<T> {
-    let ez = exp(z), e_z = exp(-z)
-    return (ez - e_z) / (ez + e_z)
+    // let ez = exp(z), e_z = exp(-z)
+    // return (ez - e_z) / (ez + e_z)
+    return sinh(z) / cosh(z)
 }
 // asinh(z)
 public func asinh<T>(z:Complex<T>) -> Complex<T> {
@@ -432,9 +433,8 @@ public func acosh<T>(z:Complex<T>) -> Complex<T> {
 }
 // atanh(z)
 public func atanh<T>(z:Complex<T>) -> Complex<T> {
-    let t0 = T(1) + z
-    let t1 = T(1) - z
-    return log(t0 / t1) / T(2)
+    let tp = T(1) + z, tm = T(1) - z
+    return log(tp / tm) / T(2)
 }
 // for the compatibility's sake w/ C++11
 public func abs<T>(z:Complex<T>) -> T { return z.abs }

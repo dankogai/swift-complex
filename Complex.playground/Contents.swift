@@ -37,3 +37,5 @@ acosh(cosh(z2)) =~ z2
 cosh(acosh(z2)) =~ z2
 atanh(tanh(z2)) =~ z2
 tanh(atanh(z2)) =~ z2
+log10(100.i)
+log10(1.i)

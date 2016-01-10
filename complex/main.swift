@@ -39,6 +39,8 @@ func done_testing(){ print("1..\(tests)") }
     ok(epi != -1.0            , "exp(π.i) != -1.0 // blame floating point arithmetics")
     ok(epi =~ -1.0            , "exp(π.i) =~ -1.0 // but close enough")
     ok(log(epi) == Double.PI.i, "log(exp(PI.i)) == PI.i")
+    ok(log10(100.i).re == 2.0,  "log10(100.i).re == 2.0")
+    ok(log10(100.i).im == log10(1.i).im,  "log10(100.i).im == log10(1.i).im")
     ok(2.0 * 3.0 ** 4.0 == 162.0, "2.0 * 3.0 ** 4.0 == 2.0 * (3.0 ** 4.0)")
     let zero = 0 + 0.i, one = 1.0 + 0.0.i
     ok(zero ** (42.0 + 0.195.i) == one, "pow(0, y) == 1.0+0.0i // issue 8")
