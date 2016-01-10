@@ -83,15 +83,15 @@ extension Double : RealType {
     #endif
     // these ought to be static let
     // but give users a chance to overwrite it
-    public static var PI = 3.14159265358979323846264338327950288419716939937510
+    public static var PI = M_PI
     public static var π = PI
-    public static var E =  2.718281828459045235360287471352662497757247093699
-    public static var LN2 = 0.6931471805599453094172321214581765680755001343602552
-    public static var LOG2E = 1 / LN2
-    public static var LN10 = 2.3025850929940456840179914546843642076011014886287729
-    public static var LOG10E = 1/LN10
-    public static var SQRT2 = 1.4142135623730950488016887242096980785696718753769480
-    public static var SQRT1_2 = 1/SQRT2
+    public static var E =  M_E
+    public static var LN2 = M_LN2
+    public static var LOG2E = M_LOG2E
+    public static var LN10 = M_LN10
+    public static var LOG10E = M_LOG10E
+    public static var SQRT2 = M_SQRT2
+    public static var SQRT1_2 = M_SQRT1_2
     public static var EPSILON = 0x1p-52
 }
 // But when explicitly typed you can use Float
@@ -306,17 +306,17 @@ public func /= <T>(inout lhs:Complex<T>, rhs:T) {
 }
 // exp(z)
 public func exp<T>(z:Complex<T>) -> Complex<T> {
-    let abs = T.exp(z.re)
-    let arg = z.im
-    return Complex(abs * T.cos(arg), abs * T.sin(arg))
+    let r = T.exp(z.re)
+    let a = z.im
+    return Complex(r * T.cos(a), r * T.sin(a))
 }
 // log(z)
 public func log<T>(z:Complex<T>) -> Complex<T> {
     return Complex(T.log(z.abs), z.arg)
 }
 // log10(z) -- just because C++ has it
-public func log10<T>(z:Complex<T>) -> Complex<T> { return log(z) / T.log(T(10)) }
-public func log10<T:RealType>(r:T) -> T { return T.log(r) / T.log(T(10)) }
+public func log10<T>(z:Complex<T>) -> Complex<T> { return log(z) / T(M_LN10) }
+public func log10<T:RealType>(r:T) -> T { return T.log(r) / T(M_LN10) }
 // pow(b, x)
 public func pow<T>(lhs:Complex<T>, _ rhs:Complex<T>) -> Complex<T> {
     if lhs == T(0) { return Complex(T(1), T(0)) } // 0 ** 0 == 1
