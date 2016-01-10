@@ -35,9 +35,8 @@ public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Compa
     func -= (inout _: Self, _: Self)
     func *= (inout _: Self, _: Self)
     func /= (inout _: Self, _: Self)
-    // math functions
+    // math functions - needs extension for each struct
     var int:Int { get }
-    static func abs(_:Self)->Self
     static func cos(_:Self)->Self
     static func cosh(_:Self)->Self
     static func exp(_:Self)->Self
@@ -48,37 +47,36 @@ public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Compa
     static func hypot(_:Self, _:Self)->Self
     static func atan2(_:Self, _:Self)->Self
     static func pow(_:Self, _:Self)->Self
-    // for =~
-    static var EPSILON:Self { get }
+    static var EPSILON:Self { get } // for =~
 }
 // protocol extension !!!
 public extension RealType {
     /// self * 1.0i
     public var i:Complex<Self>{ return Complex(Self(0), self) }
+    public static func abs(x:Self)->Self { return abs(x) }
 }
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
     public var int:Int { return Int(self) }
-    public static func abs(x:Double)->Double { return abs(x) }
     #if os(Linux)
-    public static func cos(x:Double)->Double { return Glibc.cos(x) }
-    public static func cosh(x:Double)->Double { return Glibc.cosh(x) }
-    public static func exp(x:Double)->Double { return Glibc.exp(x) }
-    public static func log(x:Double)->Double { return Glibc.log(x) }
-    public static func sin(x:Double)->Double { return Glibc.sin(x) }
-    public static func sinh(x:Double)->Double { return Glibc.sinh(x) }
-    public static func sqrt(x:Double)->Double { return Glibc.sqrt(x) }
+    public static func cos(x:Double)->Double    { return Glibc.cos(x) }
+    public static func cosh(x:Double)->Double   { return Glibc.cosh(x) }
+    public static func exp(x:Double)->Double    { return Glibc.exp(x) }
+    public static func log(x:Double)->Double    { return Glibc.log(x) }
+    public static func sin(x:Double)->Double    { return Glibc.sin(x) }
+    public static func sinh(x:Double)->Double   { return Glibc.sinh(x) }
+    public static func sqrt(x:Double)->Double   { return Glibc.sqrt(x) }
     public static func hypot(x:Double, _ y:Double)->Double { return Glibc.hypot(x, y) }
     public static func atan2(y:Double, _ x:Double)->Double { return Glibc.atan2(y, x) }
-    public static func pow(x:Double, _ y:Double)->Double { return Glibc.pow(x, y) }
+    public static func pow(x:Double, _ y:Double)->Double   { return Glibc.pow(x, y) }
     #else
-    public static func cos(x:Double)->Double { return Foundation.cos(x) }
-    public static func cosh(x:Double)->Double { return Foundation.cosh(x) }
-    public static func exp(x:Double)->Double { return Foundation.exp(x) }
-    public static func log(x:Double)->Double { return Foundation.log(x) }
-    public static func sin(x:Double)->Double { return Foundation.sin(x) }
-    public static func sinh(x:Double)->Double { return Foundation.sinh(x) }
-    public static func sqrt(x:Double)->Double { return Foundation.sqrt(x) }
+    public static func cos(x:Double)->Double    { return Foundation.cos(x) }
+    public static func cosh(x:Double)->Double   { return Foundation.cosh(x) }
+    public static func exp(x:Double)->Double    { return Foundation.exp(x) }
+    public static func log(x:Double)->Double    { return Foundation.log(x) }
+    public static func sin(x:Double)->Double    { return Foundation.sin(x) }
+    public static func sinh(x:Double)->Double   { return Foundation.sinh(x) }
+    public static func sqrt(x:Double)->Double   { return Foundation.sqrt(x) }
     public static func hypot(x:Double, _ y:Double)->Double { return Foundation.hypot(x, y) }
     public static func atan2(y:Double, _ x:Double)->Double { return Foundation.atan2(y, x) }
     public static func pow(x:Double, _ y:Double)->Double { return Foundation.pow(x, y) }
@@ -99,41 +97,40 @@ extension Double : RealType {
 // But when explicitly typed you can use Float
 extension Float : RealType {
     public var int:Int { return Int(self) }
-    public static func abs(x:Float)->Float { return abs(x) }
     #if os(Linux)
-    public static func cos(x:Float)->Float { return Glibc.cosf(x) }
+    public static func cos(x:Float)->Float  { return Glibc.cosf(x) }
     public static func cosh(x:Float)->Float { return Glibc.coshf(x) }
-    public static func exp(x:Float)->Float { return Glibc.expf(x) }
-    public static func log(x:Float)->Float { return Glibc.logf(x) }
-    public static func sin(x:Float)->Float { return Glibc.sinf(x) }
+    public static func exp(x:Float)->Float  { return Glibc.expf(x) }
+    public static func log(x:Float)->Float  { return Glibc.logf(x) }
+    public static func sin(x:Float)->Float  { return Glibc.sinf(x) }
     public static func sinh(x:Float)->Float { return Glibc.sinhf(x) }
     public static func sqrt(x:Float)->Float { return Glibc.sqrtf(x) }
     public static func hypot(x:Float, _ y:Float)->Float { return Glibc.hypotf(x, y) }
     public static func atan2(y:Float, _ x:Float)->Float { return Glibc.atan2f(y, x) }
-    public static func pow(x:Float, _ y:Float)->Float { return Glibc.powf(x, y) }
+    public static func pow(x:Float, _ y:Float)->Float   { return Glibc.powf(x, y) }
     #else
-    public static func cos(x:Float)->Float { return Foundation.cosf(x) }
+    public static func cos(x:Float)->Float  { return Foundation.cosf(x) }
     public static func cosh(x:Float)->Float { return Foundation.coshf(x) }
-    public static func exp(x:Float)->Float { return Foundation.expf(x) }
-    public static func log(x:Float)->Float { return Foundation.logf(x) }
-    public static func sin(x:Float)->Float { return Foundation.sinf(x) }
+    public static func exp(x:Float)->Float  { return Foundation.expf(x) }
+    public static func log(x:Float)->Float  { return Foundation.logf(x) }
+    public static func sin(x:Float)->Float  { return Foundation.sinf(x) }
     public static func sinh(x:Float)->Float { return Foundation.sinhf(x) }
     public static func sqrt(x:Float)->Float { return Foundation.sqrtf(x) }
     public static func hypot(x:Float, _ y:Float)->Float { return Foundation.hypotf(x, y) }
     public static func atan2(y:Float, _ x:Float)->Float { return Foundation.atan2f(y, x) }
-    public static func pow(x:Float, _ y:Float)->Float { return Foundation.powf(x, y) }
+    public static func pow(x:Float, _ y:Float)->Float   { return Foundation.powf(x, y) }
     #endif
     // these ought to be static let
     // but give users a chance to overwrite it
-    public static var PI:Float = 3.14159265358979323846264338327950288419716939937510
-    public static var π:Float = PI
-    public static var E:Float =  2.718281828459045235360287471352662497757247093699
-    public static var LN2:Float = 0.6931471805599453094172321214581765680755001343602552
-    public static var LOG2E:Float = 1 / LN2
-    public static var LN10:Float = 2.3025850929940456840179914546843642076011014886287729
-    public static var LOG10E:Float = 1/LN10
-    public static var SQRT2:Float = 1.4142135623730950488016887242096980785696718753769480
-    public static var SQRT1_2:Float = 1/SQRT2
+    public static var PI = Float(Double.PI)
+    public static var π = PI
+    public static var E =  Float(Double.E)
+    public static var LN2 = Float(Double.LN2)
+    public static var LOG2E = Float(Double.LOG2E)
+    public static var LN10 = Float(Double.LN10)
+    public static var LOG10E = Float(Double.LOG10E)
+    public static var SQRT2 = Float(Double.SQRT2)
+    public static var SQRT1_2 = Float(Double.SQRT1_2)
     public static var EPSILON:Float = 0x1p-23
 }
 // el corazon
