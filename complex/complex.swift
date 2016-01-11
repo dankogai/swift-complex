@@ -187,8 +187,8 @@ public struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable
     public var i:Complex { return Complex(-im, re) }
     /// .description -- conforms to Printable
     public var description:String {
-        let plus = im.isSignMinus ? "" : "+"
-        return "(\(re)\(plus)\(im).i)"
+        let plus = im.isSignMinus ? "-" : "+"
+        return "(\(re)\(plus)\(T.abs(im)).i)"
     }
     /// .hashValue -- conforms to Hashable
     public var hashValue:Int { // take most significant halves and join
@@ -323,16 +323,16 @@ public func log<T>(z:Complex<T>) -> Complex<T> {
 /// - returns: log 10 of z in Complex
 public func log10<T>(z:Complex<T>) -> Complex<T> { return log(z) / T(M_LN10) }
 public func log10<T:RealType>(r:T) -> T { return T.log(r) / T(M_LN10) }
-/// pow(zb, zx)
+/// - returns: lhs ** rhs in Complex
 public func pow<T>(lhs:Complex<T>, _ rhs:Complex<T>) -> Complex<T> {
-    if lhs == T(0) { return Complex(T(1), T(0)) } // 0 ** 0 == 1
-    if rhs.im == T(0) { return pow(lhs, rhs.re) }
-    let z = log(lhs) * rhs
-    return exp(z)
+    return exp(log(lhs) * rhs)
 }
 /// - returns: lhs ** rhs in Complex
 public func pow<T>(lhs:Complex<T>, _ rhs:Int) -> Complex<T> {
+    if rhs == 1 { return lhs }
     var r = Complex(T(1), T(0))
+    if rhs == 0 { return r }
+    if lhs == 0 { return Complex(T(1)/T(0), T(0)) }
     var ux = abs(rhs), b = lhs
     while (ux > 0) {
         if ux & 1 == 1 { r *= b }
@@ -342,7 +342,10 @@ public func pow<T>(lhs:Complex<T>, _ rhs:Int) -> Complex<T> {
 }
 /// - returns: lhs ** rhs in Complex
 public func pow<T>(lhs:Complex<T>, _ rhs:T) -> Complex<T> {
-    if lhs == T(0) { return Complex(T(1), T(0)) } // 0 ** 0 == 1
+    if lhs == T(1) || rhs == T(0) {
+        return Complex(T(1), T(0)) // x ** 0 == 1 for any x; 1 ** y == 1 for any y
+    }
+    if lhs == T(0) { return Complex(T.pow(lhs.re, rhs), T(0)) } // 0 ** y for any y
     // integer
     let ix = rhs.int
     if T(ix) == rhs { return pow(lhs, ix) }
