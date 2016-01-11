@@ -35,6 +35,18 @@ func done_testing(){ print("1..\(tests)") }
     z1 /= z0;   ok(z1 == z0     , "/=")
 })()
 ({
+    let z0 = 0.0 + 0.0.i, zm0 = -z0
+    let z1 = 1.0 + 0.0.i, z42_195 = 42.0 + 0.195.i
+    ok(z0  ** -1.0 == +1.0/0.0, "\(z0 ) ** -1.0 == \(+1.0/0.0)")
+    ok(zm0 ** -1.0 == -1.0/0.0, "\(zm0) ** -1.0 == \(-1.0/0.0)")
+    ok(z0  ** -2.0 == +1.0/0.0, "\(z0 ) ** -2.0 == \(+1.0/0.0)")
+    ok(zm0 ** -2.0 == +1.0/0.0, "\(zm0) ** -2.0 == \(+1.0/0.0)")
+    ok(z1 ** z42_195 == z1,  "\(z1) ** y  == \(z1) // for any y")
+    ok(z42_195 ** z0 == z1,  "x ** \(z0 ) == \(z1) // for any x")
+    ok(z42_195 ** zm0 == z1, "x ** \(zm0) == \(z1) // for any x")
+
+})()
+({
     let epi = exp(Double.PI.i)
     ok(epi != -1.0            , "exp(π.i) != -1.0 // blame floating point arithmetics")
     ok(epi =~ -1.0            , "exp(π.i) =~ -1.0 // but close enough")
@@ -42,8 +54,6 @@ func done_testing(){ print("1..\(tests)") }
     ok(log10(100.i).re == 2.0,  "log10(100.i).re == 2.0")
     ok(log10(100.i).im == log10(1.i).im,  "log10(100.i).im == log10(1.i).im")
     ok(2.0 * 3.0 ** 4.0 == 162.0, "2.0 * 3.0 ** 4.0 == 2.0 * (3.0 ** 4.0)")
-    let zero = 0 + 0.i, one = 1.0 + 0.0.i
-    ok(zero ** (42.0 + 0.195.i) == one, "pow(0, y) == 1.0+0.0i // issue 8")
     ok(Double.E ** Double.PI.i == exp(Double.PI.i), "exp(z) == e ** z")
     ok(sqrt(-1+0.i) == 1.i          , "sqrt(-1) == i")
     ok(sqrt(2.i) == 1+1.i           , "sqrt(2i) == 1+i")
