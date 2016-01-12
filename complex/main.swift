@@ -21,6 +21,7 @@ func done_testing(){ print("1..\(tests)") }
     ok(1-1.i == Complex(1,-1), "1-1.i == Complex(1,-1)")
     ok(1+0.i == 1            , "1+0.i == 1")
     ok(1     == 1+0.i        , "1     == 1+0.i")
+    ok(Complex() == 0+0.i    , "Complex() == 0+0.i")
 })()
 ({
     var z0 = Complex(abs:10.0, arg:atan2(3.0,4.0))
