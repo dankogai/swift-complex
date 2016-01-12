@@ -50,6 +50,7 @@ git clone https://github.com/dankogai/swift-complex.git
 cd swift-complex/complex
 export SWIFTC=/path/to/your/swiftc # mine: ~/swift/usr/bin/swiftc
 ${SWIFTC} *.swift && ./main
+````
 ````shell
 # or just
 make SWIFTC=${SWIFTC} test
