@@ -38,7 +38,10 @@ Just drop [complex/complex.swift] to `Sources`.  In git `Complex.playground/Sour
 git clone https://github.com/dankogai/swift-complex.git
 cd swift-complex/complex
 xcrun -sdk macosx swiftc *.swift && ./main
-# or just make test
+````
+````shell
+# or just
+make test
 ````
 
 #### Linux
@@ -47,7 +50,9 @@ git clone https://github.com/dankogai/swift-complex.git
 cd swift-complex/complex
 export SWIFTC=/path/to/your/swiftc # mine: ~/swift/usr/bin/swiftc
 ${SWIFTC} *.swift && ./main
-# or just make SWIFTC=${SWIFTC} test
+````shell
+# or just
+make SWIFTC=${SWIFTC} test
 ````
 
 Synopsis
