@@ -15,7 +15,7 @@ import Foundation
 /// Curently `Double` and `Float` are extented to conform this.
 ///
 public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, Hashable {
-    // Initializers (predefined)
+    // Initializers (predefined for FloatingPointType)
     init(_ value: UInt8)
     init(_ value: Int8)
     init(_ value: UInt16)
@@ -28,7 +28,7 @@ public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Compa
     init(_ value: Int)
     init(_ value: Double)
     init(_ value: Float)
-    // Built-in operators (predefined)
+    // Built-in operators (predefined for FloatingPointType)
     prefix func + (_: Self)->Self
     prefix func - (_: Self)->Self
     func + (_: Self, _: Self)->Self
@@ -86,8 +86,9 @@ extension Double : RealType {
     public static func atan2(y:Double, _ x:Double)->Double { return Foundation.atan2(y, x) }
     public static func pow(x:Double, _ y:Double)->Double { return Foundation.pow(x, y) }
     #endif
-    // these ought to be static let
-    // but give users a chance to overwrite it
+    public static var EPSILON = 0x1p-52
+    // The following values are for convenience,
+    // not strictly needed for protocol conformance.
     public static var PI = M_PI
     public static var π = PI
     public static var E =  M_E
@@ -97,7 +98,6 @@ extension Double : RealType {
     public static var LOG10E = M_LOG10E
     public static var SQRT2 = M_SQRT2
     public static var SQRT1_2 = M_SQRT1_2
-    public static var EPSILON = 0x1p-52
 }
 // But when explicitly typed you can use Float
 extension Float : RealType {
@@ -125,8 +125,9 @@ extension Float : RealType {
     public static func atan2(y:Float, _ x:Float)->Float { return Foundation.atan2f(y, x) }
     public static func pow(x:Float, _ y:Float)->Float   { return Foundation.powf(x, y) }
     #endif
-    // these ought to be static let
-    // but give users a chance to overwrite it
+    public static var EPSILON:Float = 0x1p-23
+    // The following values are for convenience,
+    // not strictly needed for protocol conformance.
     public static var PI = Float(Double.PI)
     public static var π = PI
     public static var E =  Float(Double.E)
@@ -136,8 +137,8 @@ extension Float : RealType {
     public static var LOG10E = Float(Double.LOG10E)
     public static var SQRT2 = Float(Double.SQRT2)
     public static var SQRT1_2 = Float(Double.SQRT1_2)
-    public static var EPSILON:Float = 0x1p-23
 }
+///
 /// Complex number of `RealType`
 ///
 public struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable {
