@@ -10,25 +10,27 @@ import Glibc
 #else
 import Foundation
 #endif
+///
 /// The protocol that `T` of Complex<T> needs to conform.
 ///
-/// Curently `Double` and `Float` are extented to conform this.
+/// Curently `Int`, `Double` and `Float` are extented to conform this.
 ///
-public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Comparable, Hashable {
-    // Initializers (predefined for FloatingPointType)
-    init(_ value: UInt8)
-    init(_ value: Int8)
-    init(_ value: UInt16)
-    init(_ value: Int16)
-    init(_ value: UInt32)
-    init(_ value: Int32)
-    init(_ value: UInt64)
-    init(_ value: Int64)
-    init(_ value: UInt)
-    init(_ value: Int)
-    init(_ value: Double)
-    init(_ value: Float)
-    // Built-in operators (predefined for FloatingPointType)
+public protocol ArithmeticType: AbsoluteValuable, Equatable, Comparable, Hashable {
+    // Initializers (predefined)
+    init(_: Int)
+    init(_: Int16)
+    init(_: Int32)
+    init(_: Int64)
+    init(_: Int8)
+    init(_: UInt)
+    init(_: UInt16)
+    init(_: UInt32)
+    init(_: UInt64)
+    init(_: UInt8)
+    init(_: Double)
+    init(_: Float)
+    init(_: Self)
+    // Operators (predefined)
     prefix func + (_: Self)->Self
     prefix func - (_: Self)->Self
     func + (_: Self, _: Self)->Self
@@ -39,8 +41,75 @@ public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Compa
     func -= (inout _: Self, _: Self)
     func *= (inout _: Self, _: Self)
     func /= (inout _: Self, _: Self)
+    // Converters (extension needed
+    static func toInt(_:Self)->Int
+    static func toDouble(_:Self)->Double
+}
+// protocol extension !!!
+public extension ArithmeticType {
+    /// self * 1.0i
+    public var i:Complex<Self>{ return Complex(Self(0), self) }
+    /// abs(z)
+    public static func abs(z:Self)->Self { return Swift.abs(z) }
+}
+extension Int : ArithmeticType {
+    public static func toInt(x:Int)->Int { return x }
+    public static func toDouble(x:Int)->Double { return Double(x) }
+}
+///
+/// Complex of Integers or Floating-Point Numbers
+///
+public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Hashable {
+    public var (re, im): (T, T)
+    public init(_ re:T, _ im:T) {
+        self.re = re
+        self.im = im
+    }
+    public init() {
+        re = T(0); im = T(0)
+    }
+    /// self * i in Complex
+    public var i:Complex { return Complex(-im, re) }
+    /// real part of self in T:RealType
+    public var real:T { get{ return re } set(r){ re = r } }
+    /// imaginary part of self in T:RealType
+    public var imag:T { get{ return im } set(i){ im = i } }
+    /// norm of self in T:RealType
+    public var norm:T { return re*re + im*im }
+    /// conjugate of self in Complex
+    /// .description -- conforms to Printable
+    public var description:String {
+        let plus = T.toDouble(im).isSignMinus ? "-" : "+"
+        return "(\(re)\(plus)\(T.abs(im)).i)"
+    }
+    public var conj:Complex { return Complex(re, -im) }
+    /// .hashValue -- conforms to Hashable
+    public var hashValue:Int { // take most significant halves and join
+        let bits = sizeof(Int) * 4
+        let mask = bits == 16 ? 0xffff : 0xffffFFFF
+        return T.toInt(re) == re.hashValue && T.toInt(im) == im.hashValue
+            ? ((re.hashValue & mask) << bits) | (im.hashValue & mask) // Complex<Int>
+            :  (re.hashValue & ~mask) | (im.hashValue >> bits)        // Complex<RealType>
+    }
+    /// (real, imag)
+    public var tuple:(T, T) {
+        get { return (re, im) }
+        set(t){ (re, im) = t}
+    }
+}
+/// real part of z
+public func real<T>(z:Complex<T>) -> T { return z.re }
+/// imaginary part of z
+public func imag<T>(z:Complex<T>) -> T { return z.im }
+/// norm of z
+public func norm<T>(z:Complex<T>) -> T { return z.norm }
+/// conjugate of z
+public func conj<T>(z:Complex<T>) -> Complex<T> { return Complex(z.re, -z.im) }
+///
+/// Curently `Double` and `Float` are extented to conform this.
+///
+public protocol RealType : ArithmeticType, FloatingPointType {
     // math functions - needs extension for each struct
-    var int:Int { get }
     static func cos(_:Self)->Self
     static func cosh(_:Self)->Self
     static func exp(_:Self)->Self
@@ -53,16 +122,10 @@ public protocol RealType : FloatingPointType, AbsoluteValuable, Equatable, Compa
     static func pow(_:Self, _:Self)->Self
     static var EPSILON:Self { get } // for =~
 }
-// protocol extension !!!
-public extension RealType {
-    /// self * 1.0i
-    public var i:Complex<Self>{ return Complex(Self(0), self) }
-    /// abs(z)
-    public static func abs(z:Self)->Self { return abs(z) }
-}
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
-    public var int:Int { return Int(self) }
+    public static func toInt(x:Double)->Int { return Int(x) }
+    public static func toDouble(x:Double)->Double { return x }
     #if os(Linux)
     public static func cos(x:Double)->Double    { return Glibc.cos(x) }
     public static func cosh(x:Double)->Double   { return Glibc.cosh(x) }
@@ -87,8 +150,7 @@ extension Double : RealType {
     public static func pow(x:Double, _ y:Double)->Double { return Foundation.pow(x, y) }
     #endif
     public static var EPSILON = 0x1p-52
-    // The following values are for convenience,
-    // not strictly needed for protocol conformance.
+    // The following values are for convenience, not really needed for protocol conformance.
     public static var PI = M_PI
     public static var π = PI
     public static var E =  M_E
@@ -101,7 +163,8 @@ extension Double : RealType {
 }
 // But when explicitly typed you can use Float
 extension Float : RealType {
-    public var int:Int { return Int(self) }
+    public static func toInt(x:Float)->Int { return Int(x) }
+    public static func toDouble(x:Float)->Double { return Double(x) }
     #if os(Linux)
     public static func cos(x:Float)->Float  { return Glibc.cosf(x) }
     public static func cosh(x:Float)->Float { return Glibc.coshf(x) }
@@ -126,8 +189,7 @@ extension Float : RealType {
     public static func pow(x:Float, _ y:Float)->Float   { return Foundation.powf(x, y) }
     #endif
     public static var EPSILON:Float = 0x1p-23
-    // The following values are for convenience,
-    // not strictly needed for protocol conformance.
+    // The following values are for convenience, not really needed for protocol conformance.
     public static var PI = Float(Double.PI)
     public static var π = PI
     public static var E =  Float(Double.E)
@@ -138,26 +200,12 @@ extension Float : RealType {
     public static var SQRT2 = Float(Double.SQRT2)
     public static var SQRT1_2 = Float(Double.SQRT1_2)
 }
-///
-/// Complex number of `RealType`
-///
-public struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable {
-    public var (re, im): (T, T)
-    public init(_ re:T, _ im:T) {
-        self.re = re
-        self.im = im
-    }
-    public init() {
-        re = T(0); im = T(0)
-    }
+/// Complex of Floting Point Numbers
+extension Complex where T:RealType {
     public init(abs:T, arg:T) {
         self.re = abs * T.cos(arg)
         self.im = abs * T.sin(arg)
     }
-    /// real part of self in T:RealType
-    public var real:T { get{ return re } set(r){ re = r } }
-    /// imaginary part of self in T:RealType
-    public var imag:T { get{ return im } set(i){ im = i } }
     /// absolute value of self in T:RealType
     public var abs:T {
         get { return T.hypot(re, im) }
@@ -168,10 +216,6 @@ public struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable
         get { return T.atan2(im, re) }
         set(t){ let m = abs; re = m * T.cos(t); im = m * T.sin(t) }
     }
-    /// norm of self in T:RealType
-    public var norm:T { return T.hypot(re, im) }
-    /// conjugate of self in Complex
-    public var conj:Complex { return Complex(re, -im) }
     /// projection of self in Complex
     public var proj:Complex {
         if re.isFinite && im.isFinite {
@@ -182,30 +226,13 @@ public struct Complex<T:RealType> : Equatable, CustomStringConvertible, Hashable
             )
         }
     }
-    /// (real, imag)
-    public var tuple:(T, T) {
-        get { return (re, im) }
-        set(t){ (re, im) = t}
-    }
-    /// self * i in Complex
-    public var i:Complex { return Complex(-im, re) }
-    /// .description -- conforms to Printable
-    public var description:String {
-        let plus = im.isSignMinus ? "-" : "+"
-        return "(\(re)\(plus)\(T.abs(im)).i)"
-    }
-    /// .hashValue -- conforms to Hashable
-    public var hashValue:Int { // take most significant halves and join
-        let bits = sizeof(Int) * 4
-        let mask = bits == 16 ? 0xffff : 0xffffFFFF
-        return (re.hashValue & ~mask) | (im.hashValue >> bits)
-    }
 }
-// operator definitions
-infix operator ** { associativity right precedence 170 }
-infix operator **= { associativity right precedence 90 }
-infix operator =~ { associativity none precedence 130 }
-infix operator !~ { associativity none precedence 130 }
+/// absolute value of z
+public func abs<T:RealType>(z:Complex<T>) -> T { return z.abs }
+/// argument of z
+public func arg<T:RealType>(z:Complex<T>) -> T { return z.arg }
+/// projection of z
+public func proj<T:RealType>(z:Complex<T>) -> Complex<T> { return z.proj }
 // ==
 public func == <T>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
     return lhs.re == rhs.re && lhs.im == rhs.im
@@ -261,7 +288,7 @@ public func -= <T>(inout lhs:Complex<T>, rhs:Complex<T>) {
 public func -= <T>(inout lhs:Complex<T>, rhs:T) {
     lhs.re -= rhs
 }
-// *, *=
+// *
 public func * <T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
     return Complex(
         lhs.re * rhs.re - lhs.im * rhs.im,
@@ -274,6 +301,7 @@ public func * <T>(lhs:Complex<T>, rhs:T) -> Complex<T> {
 public func * <T>(lhs:T, rhs:Complex<T>) -> Complex<T> {
     return Complex(lhs * rhs.re, lhs * rhs.im)
 }
+// *=
 public func *= <T>(inout lhs:Complex<T>, rhs:Complex<T>) {
     lhs = lhs * rhs
 }
@@ -315,24 +343,24 @@ public func /= <T>(inout lhs:Complex<T>, rhs:T) {
     lhs = lhs / rhs
 }
 /// - returns: e ** z in Complex
-public func exp<T>(z:Complex<T>) -> Complex<T> {
+public func exp<T:RealType>(z:Complex<T>) -> Complex<T> {
     let r = T.exp(z.re)
     let a = z.im
     return Complex(r * T.cos(a), r * T.sin(a))
 }
 /// - returns: natural log of z in Complex
-public func log<T>(z:Complex<T>) -> Complex<T> {
+public func log<T:RealType>(z:Complex<T>) -> Complex<T> {
     return Complex(T.log(z.abs), z.arg)
 }
 /// - returns: log 10 of z in Complex
-public func log10<T>(z:Complex<T>) -> Complex<T> { return log(z) / T(M_LN10) }
+public func log10<T:RealType>(z:Complex<T>) -> Complex<T> { return log(z) / T(M_LN10) }
 public func log10<T:RealType>(r:T) -> T { return T.log(r) / T(M_LN10) }
 /// - returns: lhs ** rhs in Complex
-public func pow<T>(lhs:Complex<T>, _ rhs:Complex<T>) -> Complex<T> {
+public func pow<T:RealType>(lhs:Complex<T>, _ rhs:Complex<T>) -> Complex<T> {
     return exp(log(lhs) * rhs)
 }
 /// - returns: lhs ** rhs in Complex
-public func pow<T>(lhs:Complex<T>, _ rhs:Int) -> Complex<T> {
+public func pow<T:RealType>(lhs:Complex<T>, _ rhs:Int) -> Complex<T> {
     if rhs == 1 { return lhs }
     var r = Complex(T(1), T(0))
     if rhs == 0 { return r }
@@ -345,13 +373,13 @@ public func pow<T>(lhs:Complex<T>, _ rhs:Int) -> Complex<T> {
     return rhs < 0 ? T(1) / r : r
 }
 /// - returns: lhs ** rhs in Complex
-public func pow<T>(lhs:Complex<T>, _ rhs:T) -> Complex<T> {
+public func pow<T:RealType>(lhs:Complex<T>, _ rhs:T) -> Complex<T> {
     if lhs == T(1) || rhs == T(0) {
         return Complex(T(1), T(0)) // x ** 0 == 1 for any x; 1 ** y == 1 for any y
     }
     if lhs == T(0) { return Complex(T.pow(lhs.re, rhs), T(0)) } // 0 ** y for any y
     // integer
-    let ix = rhs.int
+    let ix = T.toInt(rhs)
     if T(ix) == rhs { return pow(lhs, ix) }
     // integer/2
     let fx = rhs - T(ix)
@@ -360,33 +388,36 @@ public func pow<T>(lhs:Complex<T>, _ rhs:T) -> Complex<T> {
         : pow(lhs, Complex(rhs, T(0)))
 }
 /// - returns: lhs ** rhs in Complex
-public func pow<T>(lhs:T, _ rhs:Complex<T>) -> Complex<T> {
+public func pow<T:RealType>(lhs:T, _ rhs:Complex<T>) -> Complex<T> {
     return pow(Complex(lhs, T(0)), rhs)
 }
 // **, **=
+// operator definitions
+infix operator ** { associativity right precedence 170 }
+infix operator **= { associativity right precedence 90 }
 public func **<T:RealType>(lhs:T, rhs:T) -> T {
     return T.pow(lhs, rhs)
 }
-public func ** <T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
+public func ** <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
     return pow(lhs, rhs)
 }
-public func ** <T>(lhs:T, rhs:Complex<T>) -> Complex<T> {
+public func ** <T:RealType>(lhs:T, rhs:Complex<T>) -> Complex<T> {
     return pow(lhs, rhs)
 }
-public func ** <T>(lhs:Complex<T>, rhs:T) -> Complex<T> {
+public func ** <T:RealType>(lhs:Complex<T>, rhs:T) -> Complex<T> {
     return pow(lhs, rhs)
 }
 public func **= <T:RealType>(inout lhs:T, rhs:T) {
     lhs = T.pow(lhs, rhs)
 }
-public func **= <T>(inout lhs:Complex<T>, rhs:Complex<T>) {
+public func **= <T:RealType>(inout lhs:Complex<T>, rhs:Complex<T>) {
     lhs = pow(lhs, rhs)
 }
-public func **= <T>(inout lhs:Complex<T>, rhs:T) {
+public func **= <T:RealType>(inout lhs:Complex<T>, rhs:T) {
     lhs = pow(lhs, rhs)
 }
 /// - returns: square root of z in Complex
-public func sqrt<T>(z:Complex<T>) -> Complex<T> {
+public func sqrt<T:RealType>(z:Complex<T>) -> Complex<T> {
     // return z ** 0.5
     let d = T.hypot(z.re, z.im)
     let r = T.sqrt((z.re + d)/T(2))
@@ -397,81 +428,63 @@ public func sqrt<T>(z:Complex<T>) -> Complex<T> {
     }
 }
 /// - returns: cosine of z in Complex
-public func cos<T>(z:Complex<T>) -> Complex<T> {
+public func cos<T:RealType>(z:Complex<T>) -> Complex<T> {
     //return (exp(z.i) + exp(-z.i)) / T(2)
     return Complex(T.cos(z.re)*T.cosh(z.im), -T.sin(z.re)*T.sinh(z.im))
 }
 /// - returns: sine of z in Complex
-public func sin<T>(z:Complex<T>) -> Complex<T> {
+public func sin<T:RealType>(z:Complex<T>) -> Complex<T> {
     // return -(exp(z.i) - exp(-z.i)).i / T(2)
     return Complex(T.sin(z.re)*T.cosh(z.im), +T.cos(z.re)*T.sinh(z.im))
 }
 /// - returns: tangent of z in Complex
-public func tan<T>(z:Complex<T>) -> Complex<T> {
+public func tan<T:RealType>(z:Complex<T>) -> Complex<T> {
     return sin(z) / cos(z)
 }
 /// - returns: arc tangent of z in Complex
-public func atan<T>(z:Complex<T>) -> Complex<T> {
+public func atan<T:RealType>(z:Complex<T>) -> Complex<T> {
     let lp = log(T(1) - z.i), lm = log(T(1) + z.i)
     return (lp - lm).i / T(2)
 }
 /// - returns: arc sine of z in Complex
-public func asin<T>(z:Complex<T>) -> Complex<T> {
+public func asin<T:RealType>(z:Complex<T>) -> Complex<T> {
     return -log(z.i + sqrt(T(1) - z*z)).i
 }
 /// - returns: arc cosine of z in Complex
-public func acos<T>(z:Complex<T>) -> Complex<T> {
+public func acos<T:RealType>(z:Complex<T>) -> Complex<T> {
     return log(z - sqrt(T(1) - z*z).i).i
 }
 /// - returns: hyperbolic sine of z in Complex
-public func sinh<T>(z:Complex<T>) -> Complex<T> {
+public func sinh<T:RealType>(z:Complex<T>) -> Complex<T> {
     // return (exp(z) - exp(-z)) / T(2)
     return -sin(z.i).i;
 }
 /// - returns: hyperbolic cosine of z in Complex
-public func cosh<T>(z:Complex<T>) -> Complex<T> {
+public func cosh<T:RealType>(z:Complex<T>) -> Complex<T> {
     // return (exp(z) + exp(-z)) / T(2)
     return cos(z.i);
 }
 /// - returns: hyperbolic tangent of z in Complex
-public func tanh<T>(z:Complex<T>) -> Complex<T> {
+public func tanh<T:RealType>(z:Complex<T>) -> Complex<T> {
     // let ez = exp(z), e_z = exp(-z)
     // return (ez - e_z) / (ez + e_z)
     return sinh(z) / cosh(z)
 }
 /// - returns: inverse hyperbolic sine of z in Complex
-public func asinh<T>(z:Complex<T>) -> Complex<T> {
+public func asinh<T:RealType>(z:Complex<T>) -> Complex<T> {
     return log(z + sqrt(z*z + T(1)))
 }
 /// - returns: inverse hyperbolic cosine of z in Complex
-public func acosh<T>(z:Complex<T>) -> Complex<T> {
+public func acosh<T:RealType>(z:Complex<T>) -> Complex<T> {
     return log(z + sqrt(z*z - T(1)))
 }
 /// - returns: inverse hyperbolic tangent of z in Complex
-public func atanh<T>(z:Complex<T>) -> Complex<T> {
+public func atanh<T:RealType>(z:Complex<T>) -> Complex<T> {
     let tp = T(1) + z, tm = T(1) - z
     return log(tp / tm) / T(2)
 }
-/*
- * for the compatibility's sake w/ C++11
- */
-/// absolute value of z in T:RealType
-public func abs<T>(z:Complex<T>) -> T { return z.abs }
-/// argument of z in T:RealType
-public func arg<T>(z:Complex<T>) -> T { return z.arg }
-/// real part of z in T:RealType
-public func real<T>(z:Complex<T>) -> T { return z.real }
-/// imaginary part of z in T:RealType
-public func imag<T>(z:Complex<T>) -> T { return z.imag }
-/// norm of z in T:RealType
-public func norm<T>(z:Complex<T>) -> T { return z.norm }
-/// conjugate of z in Complex
-public func conj<T>(z:Complex<T>) -> Complex<T> { return z.conj }
-/// projection of z in Complex
-public func proj<T>(z:Complex<T>) -> Complex<T> { return z.proj }
-//
-// approximate comparisons
-//
+// =~ // approximate comparisons
+infix operator =~ { associativity none precedence 130 }
 public func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     if lhs == rhs { return true }
     let al = abs(lhs)
@@ -481,27 +494,30 @@ public func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     let da = abs(al - ar) / (al + ar) // delta / average < 2*epsilon
     return da < T(2)*T.EPSILON
 }
-public func =~ <T>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
+public func =~ <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
     return lhs.abs =~ rhs.abs
 }
-public func =~ <T>(lhs:Complex<T>, rhs:T) -> Bool {
+public func =~ <T:RealType>(lhs:Complex<T>, rhs:T) -> Bool {
     return lhs.abs =~ rhs
 }
-public func =~ <T>(lhs:T, rhs:Complex<T>) -> Bool {
+public func =~ <T:RealType>(lhs:T, rhs:Complex<T>) -> Bool {
     return lhs =~ rhs.abs
 }
+// !~
+infix operator !~ { associativity none precedence 130 }
 public func !~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     return !(lhs =~ rhs)
 }
-public func !~ <T>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
+public func !~ <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
     return !(lhs =~ rhs)
 }
-public func !~ <T>(lhs:Complex<T>, rhs:T) -> Bool {
+public func !~ <T:RealType>(lhs:Complex<T>, rhs:T) -> Bool {
     return !(lhs =~ rhs)
 }
-public func !~ <T>(lhs:T, rhs:Complex<T>) -> Bool {
+public func !~ <T:RealType>(lhs:T, rhs:Complex<T>) -> Bool {
     return !(lhs =~ rhs)
 }
 // typealiases
+public typealias ComplexI  = Complex<Int>
 public typealias Complex64 = Complex<Double>
 public typealias Complex32 = Complex<Float>

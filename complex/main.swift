@@ -18,10 +18,14 @@ func done_testing(){ print("1..\(tests)") }
     import Foundation
 #endif
 ({
-    ok(1-1.i == Complex(1,-1), "1-1.i == Complex(1,-1)")
-    ok(1+0.i == 1            , "1+0.i == 1")
-    ok(1     == 1+0.i        , "1     == 1+0.i")
-    ok(Complex() == 0+0.i    , "Complex() == 0+0.i")
+    ok(1.0-1.0.i == Complex(1.0,-1.0)           , "1.0-1.0.i == Complex(1.0,-1.0)")
+    ok(1.0+0.0.i == 1.0                         , "1.0+0.0.i == 1")
+    ok(    0.0.i == 0.0                         , "    0.0.i == 0")
+    ok(Complex() == 0+0.i                       , "Complex() == 0+0.i")
+    ok(Complex() == 0.0+0.0.i                   , "Complex() == 0.0+0.0.i")
+    ok("\(Complex(0,0))" == "(0+0.i)"           , "0+0.i")
+    ok("\(Complex(0.0,+0.0))" == "(0.0+0.0.i)"  , "0.0+0.0.i")
+    ok("\(Complex(0.0,-0.0))" == "(0.0-0.0.i)"  , "0.0-0.0.i")
 })()
 ({
     var z0 = Complex(abs:10.0, arg:atan2(3.0,4.0))
@@ -71,6 +75,23 @@ func done_testing(){ print("1..\(tests)") }
     ok(2.i ** -2.5 == (-1+1.i)/8    , "z ** -2.5 == 1/(z*z*sqrt(z))")
 })()
 ({
+    let z = -1.0.i
+    ok(abs(z) =~ z.abs          , "abs(z) =~ z.abs")
+    ok(abs(z) == abs(-1)        , "abs(-i) == abs(-1)")
+    ok(arg(z) =~ z.arg          , "arg(z) =~ z.arg")
+    ok(arg(z) == -Double.PI/2   , "arg(-i) == -π/2")
+    ok(real(z) == z.real        , "real(z) == z.real")
+    ok(imag(z) == z.imag        , "imag(z) == z.imag")
+    ok(norm(z) == z.norm        , "norm(z) == z.norm")
+    ok(norm(z) == z.abs ** 2    , "norm(z) == z.abs ** 2")
+    ok(conj(z) == z.conj        , "conj(z) == z.conj")
+    ok(proj(z) == z.proj        , "proj(z) == z.proj")
+    ok(proj((1/0.0)-1.i)   == Complex64(1/0.0, -0.0)    , "(inf,-1).proj == (inf,-0)")
+    ok(proj(0-(1.0/0.0).i) == Complex64(1/0.0, -0.0)    , "(0,-inf).proj == (inf,-0)")
+    ok(proj((1/0.0)+1.i)   == Complex64(1/0.0, +0.0)    , "(inf,+1).proj == (inf,+0)")
+    ok(proj(0+(1.0/0.0).i) == Complex64(1/0.0, +0.0)    , "(0,+inf).proj == (inf,+0)")
+})()
+({
     let r = 0.5, z = sqrt(-1.i)
     ok(sin(r)**2+cos(r)**2 =~ 1 , "sin(r)**2+cos(r)**2 =~ 1")
     ok(sin(z)**2+cos(z)**2 =~ 1 , "sin(z)**2+cos(z)**2 =~ 1")
@@ -106,24 +127,7 @@ func done_testing(){ print("1..\(tests)") }
     ok(tanh(atanh(z)) =~ z      , "tanh(atanh(z)) =~ z")
 })()
 ({
-    let z = -1.i
-    ok(abs(z) =~ z.abs          , "abs(z) =~ z.abs")
-    ok(abs(z) == abs(-1)        , "abs(-i) == abs(-1)")
-    ok(arg(z) =~ z.arg          , "arg(z) =~ z.arg")
-    ok(arg(z) == -Double.PI/2   , "arg(-i) == -π/2")
-    ok(real(z) == z.real        , "real(z) == z.real")
-    ok(imag(z) == z.imag        , "imag(z) == z.imag")
-    ok(norm(z) == z.norm        , "norm(z) == z.norm")
-    ok(norm(z) == z.abs ** 2    , "norm(z) == z.abs ** 2")
-    ok(conj(z) == z.conj        , "conj(z) == z.conj")
-    ok(proj(z) == z.proj        , "proj(z) == z.proj")
-    ok(proj((1/0.0)-1.i) == Complex64(1/0.0, -0.0)    , "(inf,-1).proj == (inf,-0)")
-    ok(proj(0-(1.0/0.0).i) == Complex64(1/0.0, -0.0)  , "(0,-inf).proj == (inf,-0)")
-    ok(proj((1/0.0)+1.i) == Complex64(1/0.0, +0.0)    , "(inf,+1).proj == (inf,+0)")
-    ok(proj(0+(1.0/0.0).i) == Complex64(1/0.0, +0.0)  , "(0,+inf).proj == (inf,+0)")
-})()
-({
-    var z = 0+0.i
+    var z = 0.0+0.0.i
     z.real += 1; ok(z == 1      , ".real as a setter")
     z.imag += 1; ok(z == 1+1.i  , ".imag as a setter")
     z.abs *= 2;  ok(z == 2+2.i  , ".abs as a setter")
