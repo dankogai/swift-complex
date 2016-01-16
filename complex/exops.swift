@@ -40,11 +40,11 @@ infix operator =~ { associativity none precedence 130 }
 public func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     if lhs == rhs { return true }
     let al = abs(lhs)
-    if rhs == 0 { return lhs < T.EPSILON }
+    if rhs == 0 { return al < T.EPSILON }
     let ar = abs(rhs)
-    if lhs == 0 { return rhs < T.EPSILON }
-    let da = abs(al - ar) / (al + ar) // delta / average < 2*epsilon
-    return da < T(2)*T.EPSILON
+    if lhs == 0 { return ar < T.EPSILON }
+    let da = (al - ar) / (al + ar) // delta / average < 2*epsilon
+    return abs(da) < T(2)*T.EPSILON
 }
 public func =~ <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
     return lhs.abs =~ rhs.abs
