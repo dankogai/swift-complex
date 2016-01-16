@@ -32,8 +32,8 @@ To use `**` and `=~` operators, add [complex/exops.swift] as well.
 
 ![](playground.png)
 
-
 [complex/complex.swift]: ./complex/complex.swift
+[complex/exops.swift]: ./complex/exops.swift
 
 ### via command line:
 
@@ -76,10 +76,15 @@ Description
 
 complex.swift implements all the functionality of [std::complex in c++11], arguably more intuitively. 
 
-
 [std::complex in c++11]: http://www.cplusplus.com/reference/complex/
 
-### Difference from C++11
+### like C++11
+
+* Generic! (Since version 0.3.0. `Int` support introduced in 0.5.0)
+  * Complex numbers are `Complex<T>` where `T` is a type of `.re` and `.im` that conforms to the `ArithmeticType` protocol.
+  * In addition to basic arithmetic operations like `+`, `-`, `*`, `/` and `abs()`, `Complex<T:RealType>` gets `libm` functions like `exp()`, `log()`, `sin()`, `cos()`.
+
+### unlike C++11
 
 * Instead of defining the constant `i`, `Double` and `Complex` have a property `.i` which returns `self * Complex(0,1)` so it does not pollute the identifier `i`, too popularly used for iteration to make it a constant.
 * Following functions are also provided as properties:
@@ -92,7 +97,5 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
   * `z.proj` for `proj(z)`
 * Construct a complex number via polar notation as:
   * `Complex(abs:magnitude, arg:argument)`
-* In addition to `pow()`, it comes with the `**` operator
-* Generic! (Since version 0.3.0. `Int` support introduced in 0.5.0)
-  * Complex numbers are `Complex<T>` where `T` is a type of `.re` and `.im` that conforms to the `ArithmeticType` protocol.
-  * In addition to basic arithmetic operations like `+`, `-`, `*`, `/` and `abs()`, `Complex<T:RealType>` gets `libm` functions like `exp()`, `log()`, `sin()`, `cos()`.
+  * In addition to `pow()`, it comes with the `**` and `=~` operators. See [complex/exops.swift] for details.
+
