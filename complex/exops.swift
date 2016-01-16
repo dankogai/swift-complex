@@ -1,0 +1,71 @@
+//
+//  exops.swift
+//  complex
+//
+//  Created by Dan Kogai on 1/16/16.
+//  Copyright © 2016 Dan Kogai. All rights reserved.
+//
+// Non-builtin operators
+#if os(Linux)
+    import Glibc
+#else
+    import Foundation
+#endif
+// **, **= // pow(lhs, rhs)
+infix operator ** { associativity right precedence 170 }
+infix operator **= { associativity right precedence 90 }
+public func **<T:RealType>(lhs:T, rhs:T) -> T {
+    return T.pow(lhs, rhs)
+}
+public func ** <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
+    return pow(lhs, rhs)
+}
+public func ** <T:RealType>(lhs:T, rhs:Complex<T>) -> Complex<T> {
+    return pow(lhs, rhs)
+}
+public func ** <T:RealType>(lhs:Complex<T>, rhs:T) -> Complex<T> {
+    return pow(lhs, rhs)
+}
+public func **= <T:RealType>(inout lhs:T, rhs:T) {
+    lhs = T.pow(lhs, rhs)
+}
+public func **= <T:RealType>(inout lhs:Complex<T>, rhs:Complex<T>) {
+    lhs = pow(lhs, rhs)
+}
+public func **= <T:RealType>(inout lhs:Complex<T>, rhs:T) {
+    lhs = pow(lhs, rhs)
+}
+// =~ // approximate comparisons
+infix operator =~ { associativity none precedence 130 }
+public func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
+    if lhs == rhs { return true }
+    let al = abs(lhs)
+    if rhs == 0 { return lhs < T.EPSILON }
+    let ar = abs(rhs)
+    if lhs == 0 { return rhs < T.EPSILON }
+    let da = abs(al - ar) / (al + ar) // delta / average < 2*epsilon
+    return da < T(2)*T.EPSILON
+}
+public func =~ <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
+    return lhs.abs =~ rhs.abs
+}
+public func =~ <T:RealType>(lhs:Complex<T>, rhs:T) -> Bool {
+    return lhs.abs =~ rhs
+}
+public func =~ <T:RealType>(lhs:T, rhs:Complex<T>) -> Bool {
+    return lhs =~ rhs.abs
+}
+// !~
+infix operator !~ { associativity none precedence 130 }
+public func !~ <T:RealType>(lhs:T, rhs:T) -> Bool {
+    return !(lhs =~ rhs)
+}
+public func !~ <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
+    return !(lhs =~ rhs)
+}
+public func !~ <T:RealType>(lhs:Complex<T>, rhs:T) -> Bool {
+    return !(lhs =~ rhs)
+}
+public func !~ <T:RealType>(lhs:T, rhs:Complex<T>) -> Bool {
+    return !(lhs =~ rhs)
+}

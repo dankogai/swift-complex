@@ -70,19 +70,20 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     }
     /// self * i in Complex
     public var i:Complex { return Complex(-im, re) }
-    /// real part of self in T:RealType
+    /// real part of self
     public var real:T { get{ return re } set(r){ re = r } }
-    /// imaginary part of self in T:RealType
+    /// imaginary part of self
     public var imag:T { get{ return im } set(i){ im = i } }
-    /// norm of self in T:RealType
+    /// norm of self
     public var norm:T { return re*re + im*im }
-    /// conjugate of self in Complex
+    /// conjugate of self
+    public var conj:Complex { return Complex(re, -im) }
     /// .description -- conforms to Printable
     public var description:String {
-        let plus = T.toDouble(im).isSignMinus ? "-" : "+"
-        return "(\(re)\(plus)\(T.abs(im)).i)"
+        let ims = "\(self.im)"
+        let sig = ims.hasPrefix("-") ? "" : "+"
+        return "(\(re)\(sig)\(ims).i)"
     }
-    public var conj:Complex { return Complex(re, -im) }
     /// .hashValue -- conforms to Hashable
     public var hashValue:Int { // take most significant halves and join
         let bits = sizeof(Int) * 4
@@ -93,8 +94,15 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     }
     /// (real, imag)
     public var tuple:(T, T) {
-        get { return (re, im) }
-        set(t){ (re, im) = t}
+        get{ return (re, im) }
+        set(t){ (re, im) = t }
+    }
+    /// Type Conversion
+    public var asComplexInt:Complex<Int> {
+        return Complex<Int>(T.toInt(re), T.toInt(im))
+    }
+    public var asComplexDouble:Complex<Double> {
+        return Complex<Double>(T.toDouble(re), T.toDouble(im))
     }
 }
 /// real part of z
@@ -391,31 +399,6 @@ public func pow<T:RealType>(lhs:Complex<T>, _ rhs:T) -> Complex<T> {
 public func pow<T:RealType>(lhs:T, _ rhs:Complex<T>) -> Complex<T> {
     return pow(Complex(lhs, T(0)), rhs)
 }
-// **, **=
-// operator definitions
-infix operator ** { associativity right precedence 170 }
-infix operator **= { associativity right precedence 90 }
-public func **<T:RealType>(lhs:T, rhs:T) -> T {
-    return T.pow(lhs, rhs)
-}
-public func ** <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
-    return pow(lhs, rhs)
-}
-public func ** <T:RealType>(lhs:T, rhs:Complex<T>) -> Complex<T> {
-    return pow(lhs, rhs)
-}
-public func ** <T:RealType>(lhs:Complex<T>, rhs:T) -> Complex<T> {
-    return pow(lhs, rhs)
-}
-public func **= <T:RealType>(inout lhs:T, rhs:T) {
-    lhs = T.pow(lhs, rhs)
-}
-public func **= <T:RealType>(inout lhs:Complex<T>, rhs:Complex<T>) {
-    lhs = pow(lhs, rhs)
-}
-public func **= <T:RealType>(inout lhs:Complex<T>, rhs:T) {
-    lhs = pow(lhs, rhs)
-}
 /// - returns: square root of z in Complex
 public func sqrt<T:RealType>(z:Complex<T>) -> Complex<T> {
     // return z ** 0.5
@@ -483,41 +466,8 @@ public func atanh<T:RealType>(z:Complex<T>) -> Complex<T> {
     let tp = T(1) + z, tm = T(1) - z
     return log(tp / tm) / T(2)
 }
-// =~ // approximate comparisons
-infix operator =~ { associativity none precedence 130 }
-public func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
-    if lhs == rhs { return true }
-    let al = abs(lhs)
-    if rhs == 0 { return lhs < T.EPSILON }
-    let ar = abs(rhs)
-    if lhs == 0 { return rhs < T.EPSILON }
-    let da = abs(al - ar) / (al + ar) // delta / average < 2*epsilon
-    return da < T(2)*T.EPSILON
-}
-public func =~ <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
-    return lhs.abs =~ rhs.abs
-}
-public func =~ <T:RealType>(lhs:Complex<T>, rhs:T) -> Bool {
-    return lhs.abs =~ rhs
-}
-public func =~ <T:RealType>(lhs:T, rhs:Complex<T>) -> Bool {
-    return lhs =~ rhs.abs
-}
-// !~
-infix operator !~ { associativity none precedence 130 }
-public func !~ <T:RealType>(lhs:T, rhs:T) -> Bool {
-    return !(lhs =~ rhs)
-}
-public func !~ <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
-    return !(lhs =~ rhs)
-}
-public func !~ <T:RealType>(lhs:Complex<T>, rhs:T) -> Bool {
-    return !(lhs =~ rhs)
-}
-public func !~ <T:RealType>(lhs:T, rhs:Complex<T>) -> Bool {
-    return !(lhs =~ rhs)
-}
 // typealiases
-public typealias ComplexI  = Complex<Int>
-public typealias Complex64 = Complex<Double>
-public typealias Complex32 = Complex<Float>
+public typealias ComplexInt     = Complex<Int>
+public typealias ComplexDouble  = Complex<Double>
+public typealias Complex64      = Complex<Double>
+public typealias Complex32      = Complex<Float>
