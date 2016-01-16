@@ -1,8 +1,9 @@
 //: Playground - noun: a place where people can play
+// Foundation or Glibc needed for atan2()
 #if os(Linux)
-    import Glibc
+import Glibc
 #else
-    import Foundation
+import Foundation
 #endif
 1-1.i
 0.i == Complex(0, 0)
@@ -38,3 +39,4 @@ acosh(cosh(z2)) =~ z2
 cosh(acosh(z2)) =~ z2
 atanh(tanh(z2)) =~ z2
 tanh(atanh(z2)) =~ z2
+//: [Next](@next)
