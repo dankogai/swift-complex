@@ -16,7 +16,7 @@ let sx = 2.5 / 80;
 for y in (-19...19).map({Double($0)*sy}) {
     var line = ""
     for x in (-64..<16).map({Double($0)*sx}) {
-        line += mandelbrot(x + y.i).abs < 2.0 ? "*" : "."
+        line += mandelbrot(x + y.i).abs > 2.0 ? "*" : "."
     }
     print(line)
 }
