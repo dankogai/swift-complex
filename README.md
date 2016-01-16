@@ -22,9 +22,13 @@ Usage
 
 Just add [complex/complex.swift] to it.
 
+To use `**` and `=~` operators, add [complex/exops.swift] as well.
+
 #### with playground
 
 Just drop [complex/complex.swift] to `Sources`.  In git `Complex.playground/Sources/complex.swift` is a symlink thereto.
+
+To use `**` and `=~` operators, add [complex/exops.swift] as well.
 
 ![](playground.png)
 
