@@ -38,7 +38,3 @@ acosh(cosh(z2)) =~ z2
 cosh(acosh(z2)) =~ z2
 atanh(tanh(z2)) =~ z2
 tanh(atanh(z2)) =~ z2
-Double.toInt(1.0) == 1.0.hashValue
-Int.toInt(1) == 1.hashValue
-Complex(1,0).hashValue
-Complex(1.0,1.0).hashValue

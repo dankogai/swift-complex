@@ -87,7 +87,7 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     public var hashValue:Int { // take most significant halves and join
         let bits = sizeof(Int) * 4
         let mask = bits == 16 ? 0xffff : 0xffffFFFF
-        return T.toInt(re) == re.hashValue && T.toInt(im) == im.hashValue
+        return re is Int
             ? ((re.hashValue & mask) << bits) | (im.hashValue & mask) // Complex<Int>
             :  (re.hashValue & ~mask) | (im.hashValue >> bits)        // Complex<RealType>
     }
