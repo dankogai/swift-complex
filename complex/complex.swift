@@ -467,6 +467,7 @@ public func atanh<T:RealType>(z:Complex<T>) -> Complex<T> {
     return log(tp / tm) / T(2)
 }
 // typealiases
+public typealias GaussianInt    = Complex<Int>
 public typealias ComplexInt     = Complex<Int>
 public typealias ComplexDouble  = Complex<Double>
 public typealias Complex64      = Complex<Double>
