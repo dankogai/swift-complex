@@ -81,7 +81,7 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     /// .description -- conforms to Printable
     public var description:String {
         let ims = "\(self.im)"
-        let sig = ims.hasPrefix("-") ? "" : "+"
+        let sig = ims[ims.startIndex] == Character("-") ? "" : "+"
         return "(\(re)\(sig)\(ims).i)"
     }
     /// .hashValue -- conforms to Hashable
