@@ -93,5 +93,6 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 * Construct a complex number via polar notation as:
   * `Complex(abs:magnitude, arg:argument)`
 * In addition to `pow()`, it comes with the `**` operator
-* Generic! (as of version 0.3.0)
-  * Complex numbers are `Complex<T>` where `T` is a type of `.re` and `.im` that conforms to the `RealType` protocol.  See the source to find what `RealType` is doing.
+* Generic! (Since version 0.3.0. `Int` support introduced in 0.5.0)
+  * Complex numbers are `Complex<T>` where `T` is a type of `.re` and `.im` that conforms to the `ArithmeticType` protocol.
+  * In addition to basic arithmetic operations like `+`, `-`, `*`, `/` and `abs()`, `Complex<T:RealType>` gets `libm` functions like `exp()`, `log()`, `sin()`, `cos()`.
