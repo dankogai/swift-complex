@@ -51,10 +51,10 @@ public func =~ <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
     return lhs.abs =~ rhs.abs
 }
 public func =~ <T:RealType>(lhs:Complex<T>, rhs:T) -> Bool {
-    return lhs.abs =~ rhs
+    return lhs.abs =~ abs(rhs)
 }
 public func =~ <T:RealType>(lhs:T, rhs:Complex<T>) -> Bool {
-    return lhs =~ rhs.abs
+    return abs(lhs) =~ rhs.abs
 }
 // !~
 infix operator !~ { associativity none precedence 130 }
