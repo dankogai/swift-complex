@@ -39,12 +39,13 @@ public func **= <T:RealType>(inout lhs:Complex<T>, rhs:T) {
 infix operator =~ { associativity none precedence 130 }
 public func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     if lhs == rhs { return true }
-    let al = abs(lhs)
-    if rhs == 0 { return al < T.EPSILON }
-    let ar = abs(rhs)
-    if lhs == 0 { return ar < T.EPSILON }
-    let da = (al - ar) / (al + ar) // delta / average < 2*epsilon
-    return abs(da) < T(2)*T.EPSILON
+    // if either side is zero, simply compare to epsilon
+    if rhs == 0 { return abs(lhs) < T.EPSILON }
+    if lhs == 0 { return abs(rhs) < T.EPSILON }
+    // sign must match
+    if lhs.isSignMinus != rhs.isSignMinus { return false }
+    // delta / average < epsilon
+    return (lhs - rhs)/(lhs + rhs) < T(2)*T.EPSILON
 }
 public func =~ <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
     return lhs.abs =~ rhs.abs
