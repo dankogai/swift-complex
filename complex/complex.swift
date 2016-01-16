@@ -68,7 +68,7 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     public init() {
         re = T(0); im = T(0)
     }
-    /// self * i in Complex
+    /// self * i
     public var i:Complex { return Complex(-im, re) }
     /// real part of self
     public var real:T { get{ return re } set(r){ re = r } }
@@ -97,10 +97,11 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
         get{ return (re, im) }
         set(t){ (re, im) = t }
     }
-    /// Type Conversion
+    /// converts to Complex<Int>
     public var asComplexInt:Complex<Int> {
         return Complex<Int>(T.toInt(re), T.toInt(im))
     }
+    /// converts to Complex<Double>
     public var asComplexDouble:Complex<Double> {
         return Complex<Double>(T.toDouble(re), T.toDouble(im))
     }
