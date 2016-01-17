@@ -42,8 +42,13 @@ func done_testing(){ print("1..\(tests)") }
     same(sizeofValue(Float(1).i),  2*sizeof(Float)  , "sizeofValue(Float(1).i) == 2*sizeof(Float)")
     same(ComplexInt(1,-1).asComplexDouble, Complex(1.0,-1.0), ".asComplexDouble")
     same(ComplexDouble(1.0,-1.0).asComplexInt, Complex(1,-1), ".asComplexInt")
-
 })()
+#if os(Linux)
+#else
+({
+    same(ComplexInt(1, 1).asComplexCGFloat, ComplexCGFloat(1, 1), ".asComplexCGFloat")
+})()
+#endif
 ({
     var z0 = Complex(abs:10.0, arg:atan2(3.0,4.0))
     same(z0, 8.0+6.0.i      , "Complex(abs:10, arg:atan2(3,4)) == 8.0+6.0.i")

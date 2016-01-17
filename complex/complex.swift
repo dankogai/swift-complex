@@ -11,9 +11,7 @@ import Glibc
 import Foundation
 #endif
 ///
-/// The protocol that `T` of Complex<T> needs to conform.
-///
-/// Curently `Int`, `Double` and `Float` are extented to conform this.
+/// Minimum requirement for `T` of `Complex<T>` -- currently `Int`, `Double` and `Float`
 ///
 public protocol ArithmeticType: AbsoluteValuable, Equatable, Comparable, Hashable {
     // Initializers (predefined)
@@ -41,7 +39,7 @@ public protocol ArithmeticType: AbsoluteValuable, Equatable, Comparable, Hashabl
     func -= (inout _: Self, _: Self)
     func *= (inout _: Self, _: Self)
     func /= (inout _: Self, _: Self)
-    // Converters (extension needed
+    // Converters (extension needed)
     static func toInt(_:Self)->Int
     static func toDouble(_:Self)->Double
     static func toFloat(_:Self)->Float
@@ -121,7 +119,7 @@ public func norm<T>(z:Complex<T>) -> T { return z.norm }
 /// conjugate of z
 public func conj<T>(z:Complex<T>) -> Complex<T> { return Complex(z.re, -z.im) }
 ///
-/// Curently `Double` and `Float` are extented to conform this.
+///  Real numbers -- currently `Double` and `Float`
 ///
 public protocol RealType : ArithmeticType, FloatingPointType {
     // math functions - needs extension for each struct
@@ -217,6 +215,7 @@ extension Float : RealType {
     public static var SQRT2 = Float(Double.SQRT2)
     public static var SQRT1_2 = Float(Double.SQRT1_2)
 }
+
 /// Complex of Floting Point Numbers
 extension Complex where T:RealType {
     public init(abs:T, arg:T) {
@@ -344,7 +343,6 @@ public func / <T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
             (lhs.re * r + lhs.im) / d,
             (lhs.im * r - lhs.re) / d
         )
-        
     }
 }
 public func / <T>(lhs:Complex<T>, rhs:T) -> Complex<T> {
@@ -482,3 +480,47 @@ public typealias ComplexDouble  = Complex<Double>
 public typealias ComplexFloat   = Complex<Float>
 public typealias Complex64      = Complex<Double>
 public typealias Complex32      = Complex<Float>
+/// CGFloat
+#if os(Linux)
+/// not yet :(
+#else
+extension CGFloat : RealType {
+    public init(_ value: CGFloat) {
+        self.native = value.native
+    }
+    public static func toInt(x:CGFloat)->Int { return Int(x) }
+    public static func toDouble(x:CGFloat)->Double { return Double(x) }
+    public static func toFloat(x:CGFloat)->Float { return Float(x) }
+    //
+    public static func cos(x:CGFloat)->CGFloat  { return Foundation.cos(x) }
+    public static func cosh(x:CGFloat)->CGFloat { return Foundation.cosh(x) }
+    public static func exp(x:CGFloat)->CGFloat  { return Foundation.exp(x) }
+    public static func log(x:CGFloat)->CGFloat  { return Foundation.log(x) }
+    public static func sin(x:CGFloat)->CGFloat  { return Foundation.sin(x) }
+    public static func sinh(x:CGFloat)->CGFloat { return Foundation.sinh(x) }
+    public static func sqrt(x:CGFloat)->CGFloat { return Foundation.sqrt(x) }
+    public static func hypot(x:CGFloat, _ y:CGFloat)->CGFloat { return Foundation.hypot(x, y) }
+    public static func atan2(y:CGFloat, _ x:CGFloat)->CGFloat { return Foundation.atan2(y, x) }
+    public static func pow(x:CGFloat, _ y:CGFloat)->CGFloat   { return Foundation.pow(x, y) }
+    //
+    public static var EPSILON = CGFloat(Double.EPSILON)
+    // The following values are for convenience, not really needed for protocol conformance.
+    public static var PI = CGFloat(Double.PI)
+    public static var π = PI
+    public static var E =  CGFloat(Double.E)
+    public static var LN2 = CGFloat(Double.LN2)
+    public static var LOG2E = CGFloat(Double.LOG2E)
+    public static var LN10 = CGFloat(Double.LN10)
+    public static var LOG10E = CGFloat(Double.LOG10E)
+    public static var SQRT2 = CGFloat(Double.SQRT2)
+    public static var SQRT1_2 = CGFloat(Double.SQRT1_2)
+}
+extension Complex {
+    /// converts to Complex<Float>
+    public var asComplexCGFloat:Complex<CGFloat> {
+        return Complex<CGFloat>(CGFloat(T.toDouble(re)), CGFloat(T.toDouble(im)))
+    }
+}
+public typealias ComplexCGFloat = Complex<CGFloat>
+#endif
+ 
