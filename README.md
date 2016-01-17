@@ -24,16 +24,25 @@ Just add [complex/complex.swift] to it.
 
 To use `**` and `=~` operators, add [complex/exops.swift] as well.
 
-#### with playground
+[complex/complex.swift]: ./complex/complex.swift
+[complex/exops.swift]: ./complex/exops.swift
+
+### with playground
+
+Have fun with [Complex.playground] that is a part of this git repo.
+
+![](playground.png)
+
+[Complex.playground]: ./Complex.playground
+
+When you use it, make sure you turn on the left pane (it's off right after you pulled since UI settings are `.gitignore`d).  As you see above, this playground consists of multiple pages and sources.
+
+#### with your playground
 
 Just drop [complex/complex.swift] to `Sources`.  In git `Complex.playground/Sources/complex.swift` is a symlink thereto.
 
 To use `**` and `=~` operators, add [complex/exops.swift] as well.
 
-![](playground.png)
-
-[complex/complex.swift]: ./complex/complex.swift
-[complex/exops.swift]: ./complex/exops.swift
 
 ### via command line:
 
