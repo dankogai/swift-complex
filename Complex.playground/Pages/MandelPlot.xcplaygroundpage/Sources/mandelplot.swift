@@ -1,43 +1,59 @@
 import Cocoa
 
-public typealias F = Float // or Double
-
-let maxDepth = 256
-let maxIter = 64
-let white = Pixel(a: 255, r:255, g:255, b:255)
-let black = Pixel(a: 255, r:0, g:0, b:0)
-func mandelbrot<T:RealType>(c:Complex<T>, iter:Int = maxIter)->Int {
-    var z = c
-    for i in 0..<iter {
-        if z.norm > T(4.0) { return i }
-        z = z * z + c
-    }
-    return iter;
-}
-/// plots Mandelbrot Set
-///
-/// - parameter re: range of real part
-/// - parameter im: range of imag part
-/// - parameter mag=128 : magnification
-/// - returns: NSImage of Mandelbrot Set
-public func mandelPlot(re re:(F,F), im:(F,F), mag:Int=128) -> NSImage {
-    let dx = re.1 - re.0
-    let dy = im.1 - im.0
-    let w = Int(dx * F(mag))
-    let h = Int(dy * F(mag))
-    let sx = dx / F(w)
-    let sy = dy / F(h)
-    let xoff = F(w) * re.0/dx
-    let yoff = F(h) * im.0/dy
-    var pixels = [Pixel](count:w*h, repeatedValue:white)
-    for y in (0..<h).reverse() {
-        for x in 0..<w {
-            let z = (F(x) + xoff)*sx + (F(y) + yoff)*sy.i
-            let m = mandelbrot(z)
-            let c = 255 * m / maxIter
-            pixels[y * w + x] = m == maxIter ? black
-                : Pixel(a:255, r:c, g:c, b:(128+c)&255)
+public class MandelPlot<T:RealType> {
+    let white = Pixel(a: 255, r:255, g:255, b:255)
+    let black = Pixel(a: 255, r:0, g:0, b:0)
+    var maxIter = 64
+    var mandelbrot:(Complex<T>, Int)->Int
+    public init(){
+        mandelbrot = { (c:Complex<T>, iter:Int)->Int in
+            var z = Complex<T>(0, 0)
+            for i in 0..<iter {
+                if z.norm > T(4.0) { return i }
+                z = z * z + c
+            }
+            return iter;
         }
     }
-    return imageFromARGB32Bitmap(&pixels, width:w, height:h)
+    public init(_ f:(Complex<T>, Int)->Int) {
+        mandelbrot = f
+    }
+    public init(dimension:T) {
+        mandelbrot = { (c, iter) in
+            var z = Complex<T>(0, 0)
+            for i in 0..<iter {
+                if z.norm > T(4.0) { return i }
+                z = z ** dimension + c
+            }
+            return iter;
+        }
+    }
+    /// plots Mandelbrot Set
+    ///
+    /// - parameter center: center in Complex<T>
+    /// - parameter radius: radius in T
+    /// - parameter mag=128 : number of pixels per radius
+    /// - returns: NSImage of Mandelbrot Set
+    public func plot(center center: Complex<T>, radius:T, mag:Int=128) -> NSImage {
+        let w = T.toInt(2 * T(mag))
+        let h = T.toInt(2 * T(mag))
+        let sx = radius / T(w)
+        let sy = radius / T(h)
+        let ox = T(mag)
+        let oy = T(mag)
+        let palette = (0..<maxIter)
+            .map{ $0 * 256 / maxIter }
+            .map { Pixel(a:255, r:$0, g:$0, b:(128+$0)&255) }
+        var pixels = [Pixel](count:w*h, repeatedValue:white)
+        for y in (0..<h) {
+            for x in 0..<w {
+                let re = (T(x) - ox)*sx
+                let im = (T(y) - oy)*sy
+                let z = center + re-im.i
+                let m = mandelbrot(z, maxIter)
+                pixels[y * w + x] = m == maxIter ? black : palette[m]
+            }
+        }
+        return imageFromARGB32Bitmap(&pixels, width:w, height:h)
+    }
 }
