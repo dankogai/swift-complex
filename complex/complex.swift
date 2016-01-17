@@ -44,6 +44,7 @@ public protocol ArithmeticType: AbsoluteValuable, Equatable, Comparable, Hashabl
     // Converters (extension needed
     static func toInt(_:Self)->Int
     static func toDouble(_:Self)->Double
+    static func toFloat(_:Self)->Float
 }
 // protocol extension !!!
 public extension ArithmeticType {
@@ -55,6 +56,7 @@ public extension ArithmeticType {
 extension Int : ArithmeticType {
     public static func toInt(x:Int)->Int { return x }
     public static func toDouble(x:Int)->Double { return Double(x) }
+    public static func toFloat(x:Int)->Float { return Float(x) }
 }
 ///
 /// Complex of Integers or Floating-Point Numbers
@@ -105,6 +107,10 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     public var asComplexDouble:Complex<Double> {
         return Complex<Double>(T.toDouble(re), T.toDouble(im))
     }
+    /// converts to Complex<Float>
+    public var asComplexFloat:Complex<Float> {
+        return Complex<Float>(T.toFloat(re), T.toFloat(im))
+    }
 }
 /// real part of z
 public func real<T>(z:Complex<T>) -> T { return z.re }
@@ -135,6 +141,7 @@ public protocol RealType : ArithmeticType, FloatingPointType {
 extension Double : RealType {
     public static func toInt(x:Double)->Int { return Int(x) }
     public static func toDouble(x:Double)->Double { return x }
+    public static func toFloat(x:Double)->Float { return Float(x) }
     #if os(Linux)
     public static func cos(x:Double)->Double    { return Glibc.cos(x) }
     public static func cosh(x:Double)->Double   { return Glibc.cosh(x) }
@@ -174,6 +181,7 @@ extension Double : RealType {
 extension Float : RealType {
     public static func toInt(x:Float)->Int { return Int(x) }
     public static func toDouble(x:Float)->Double { return Double(x) }
+    public static func toFloat(x:Float)->Float { return x }
     #if os(Linux)
     public static func cos(x:Float)->Float  { return Glibc.cosf(x) }
     public static func cosh(x:Float)->Float { return Glibc.coshf(x) }
@@ -471,5 +479,6 @@ public func atanh<T:RealType>(z:Complex<T>) -> Complex<T> {
 public typealias GaussianInt    = Complex<Int>
 public typealias ComplexInt     = Complex<Int>
 public typealias ComplexDouble  = Complex<Double>
+public typealias ComplexFloat   = Complex<Float>
 public typealias Complex64      = Complex<Double>
 public typealias Complex32      = Complex<Float>

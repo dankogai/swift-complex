@@ -9,8 +9,7 @@ MandelPlot().plot(center:-1.0-0.0.i, radius:3.0, mag:256)
 // "multibrot"
 let origin = Float(0)+Float(0).i
 (0...5).map{
-    MandelPlot(dimension:Float($0))
-        .plot(center:origin, radius:3.0, mag:64)
+    MandelPlot(dimension:Float($0)).plot(center:origin, radius:3.0)
 }
 // zoom into the Misiurewicz point
 // cf. https://en.wikipedia.org/wiki/Misiurewicz_point
