@@ -30,6 +30,10 @@ public protocol ArithmeticType: AbsoluteValuable, Equatable, Comparable, Hashabl
     init(_: Double)
     init(_: Float)
     init(_: Self)
+    // CGFloat if !os(Linux)
+    #if !os(Linux)
+    init(_: CGFloat)
+    #endif
     // Operators (predefined)
     prefix func + (_: Self)->Self
     prefix func - (_: Self)->Self
@@ -41,10 +45,6 @@ public protocol ArithmeticType: AbsoluteValuable, Equatable, Comparable, Hashabl
     func -= (inout _: Self, _: Self)
     func *= (inout _: Self, _: Self)
     func /= (inout _: Self, _: Self)
-    // CGFloat if !os(Linux)
-    #if !os(Linux)
-    init(_: CGFloat)
-    #endif
 }
 // protocol extension !!!
 public extension ArithmeticType {
@@ -53,6 +53,8 @@ public extension ArithmeticType {
     /// abs(z)
     public static func abs(x:Self)->Self { return Swift.abs(x) }
     /// failable initializer to conver the type
+    /// - parameter x: `U:ArithmeticType` where U might not be T
+    /// - returns: Self(x)
     public init?<U:ArithmeticType>(_ x:U) {
         switch x {
         case let s as Self:     self.init(s)
@@ -69,7 +71,7 @@ extension Int : ArithmeticType {}
 /// Complex of Integers or Floating-Point Numbers
 ///
 public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Hashable {
-    public typealias Kind = T
+    public typealias Element = T
     public var (re, im): (T, T)
     /// standard init(r, i)
     public init(_ r:T, _ i:T) {
@@ -87,11 +89,11 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     public init<U:ArithmeticType>(_ z:Complex<U>) {
         (re, im) = (T(z.re)!, T(z.im)!)
     }
-    /// self * i
+    /// `self * i`
     public var i:Complex { return Complex(-im, re) }
-    /// real part of self
+    /// real part of self. also a setter.
     public var real:T { get{ return re } set(r){ re = r } }
-    /// imaginary part of self
+    /// imaginary part of self. also a setter.
     public var imag:T { get{ return im } set(i){ im = i } }
     /// norm of self
     public var norm:T { return re*re + im*im }
@@ -111,16 +113,16 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
             ? ((re.hashValue & mask) << bits) | (im.hashValue & mask) // Complex<Int>
             :  (re.hashValue & ~mask) | (im.hashValue >> bits)        // Complex<RealType>
     }
-    /// (real, imag)
+    /// (re:real, im:imag)
     public var tuple:(T, T) {
         get{ return (re, im) }
         set(t){ (re, im) = t }
     }
-    /// converts to Complex<Int>
+    /// - returns: `Complex<Int>(self)`
     public var asComplexInt:Complex<Int>        { return Complex<Int>(self) }
-    /// converts to Complex<Double>
+    /// - returns: `Complex<Double>(self)`
     public var asComplexDouble:Complex<Double>  { return Complex<Double>(self) }
-    /// converts to Complex<Float>
+    /// - returns: `Complex<Float>(self)`
     public var asComplexFloat:Complex<Float>    { return Complex<Float>(self) }
 }
 /// real part of z
@@ -530,13 +532,13 @@ extension CGFloat : RealType {
 }
 extension Complex {
     /// - paramater p: CGPoint
-    /// - returns: Complex<CGFloat>
+    /// - returns: `Complex<CGFloat>`
     public init(_ p:CGPoint) {
         self.init(T(p.x)!, T(p.y)!)
     }
-    /// converts to Complex<Float>
+    /// - returns: `Complex<Float>(self)`
     public var asComplexCGFloat:Complex<CGFloat> { return Complex<CGFloat>(self) }
-    /// converts to CGPoint(x:re, y:im)
+    /// - returns: `CGPoint(x:self.re, y:self.im)`
     public var asCGPoint:CGPoint {
         return CGPoint(x:CGFloat(re)!, y:CGFloat(im)!)
     }

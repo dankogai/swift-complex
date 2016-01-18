@@ -41,3 +41,4 @@ cosh(acosh(z2)) =~ z2
 atanh(tanh(z2)) =~ z2
 tanh(atanh(z2)) =~ z2
 //: [Next](@next)
+z2.tuple
