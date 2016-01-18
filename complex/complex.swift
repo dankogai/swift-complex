@@ -52,7 +52,7 @@ public extension ArithmeticType {
     public var i:Complex<Self>{ return Complex(Self(0), self) }
     /// abs(z)
     public static func abs(x:Self)->Self { return Swift.abs(x) }
-    /// failable initializer as a converter
+    /// failable initializer to conver the type
     public init?<U:ArithmeticType>(_ x:U) {
         switch x {
         case let s as Self:     self.init(s)
@@ -531,6 +531,11 @@ extension CGFloat : RealType {
     public static var SQRT1_2 = CGFloat(Double.SQRT1_2)
 }
 extension Complex {
+    /// - paramater p: CGPoint
+    /// - returns: Complex<CGFloat>
+    public init(_ p:CGPoint) {
+        self.init(T(p.x)!, T(p.y)!)
+    }
     /// converts to CGPoint(x:re, y:im)
     public var asCGPoint:CGPoint {
         return CGPoint(x:CGFloat(re)!, y:CGFloat(im)!)

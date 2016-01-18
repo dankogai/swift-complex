@@ -45,7 +45,9 @@ func done_testing(){ print("1..\(tests)") }
 })()
 #if !os(Linux)
 ({
-    same(ComplexInt(1, 1).asComplexCGFloat, ComplexCGFloat(1, 1), ".asComplexCGFloat")
+    same(ComplexInt(1, 1).asComplexCGFloat, ComplexCGFloat(1, 1),   ".asComplexCGFloat")
+    same(ComplexInt(1, 1).asCGPoint, CGPoint(x:1,y:1),              ".asCGPoint")
+    same(Complex(CGPoint(x:1, y:1)), ComplexCGFloat(1,1),           "init(CGPoint(x:y:))")
 })()
 #endif
 ({
