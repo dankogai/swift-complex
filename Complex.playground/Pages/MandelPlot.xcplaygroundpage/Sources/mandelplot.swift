@@ -35,8 +35,8 @@ public class MandelPlot<T:RealType> {
     /// - parameter mag=128 : number of pixels per radius
     /// - returns: NSImage of Mandelbrot Set
     public func plot(center center: Complex<T>, radius:T, mag:Int=128) -> NSImage {
-        let w = T.toInt(2 * T(mag))
-        let h = T.toInt(2 * T(mag))
+        let w = Int(2 * T(mag))!
+        let h = Int(2 * T(mag))!
         let sx = radius / T(w)
         let sy = radius / T(h)
         let ox = T(mag)

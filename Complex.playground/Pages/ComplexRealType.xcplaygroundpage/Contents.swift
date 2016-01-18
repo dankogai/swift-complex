@@ -1,19 +1,17 @@
-//: Playground - noun: a place where people can play
+//: [Previous](@previous)
 // Foundation or Glibc needed for atan2()
 #if os(Linux)
-import Glibc
+    import Glibc
 #else
-import Foundation
+    import Foundation
 #endif
-1-1.i
-0.i == Complex(0, 0)
-1 == 1+0.i
 let z0 = Complex(abs:10.0, arg:atan2(3.0,4.0))
 z0.re == 8 && z0.im == 6
 z0 - z0 == 0
 let z1 = z0 * z0
 z1 - z0 == z0
 z1 / z0 == z0
+(4294967295+4294967295.i).hashValue
 sqrt(z1) == z0
 let π = Double.PI
 let epi = exp(π.i)
@@ -41,4 +39,3 @@ cosh(acosh(z2)) =~ z2
 atanh(tanh(z2)) =~ z2
 tanh(atanh(z2)) =~ z2
 //: [Next](@next)
-z2.tuple
