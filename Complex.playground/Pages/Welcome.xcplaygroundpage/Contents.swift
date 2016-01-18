@@ -1,8 +1,15 @@
-//: Playground - noun: a place where people can play
-let z0 = 1.0 + 1.0.i // (1.0+0.0.i)
-let z1 = 1.0 - 1.0.i // (1.0-0.0.i)
-z0.conj == z1        // true
-z0 * z1              // (2.0+0.0.i)
-z0 * z1 == z0 + z1   // true
-z0 * z1 == 2         // true
+/*:
+
+# Welcome!
+
+*/
+let z0 = 1.0 + 1.0.i    // (1.0+1.0.i)
+let z1 = 1.0 - 1.0.i    // (1.0-1.0.i)
+z0.conj // (1.0-1.0.i)
+z0.i    // (-1.0+1.0.i)
+z0.norm // 2
+z0 + z1 // (2.0+0.0.i)
+z0 - z1 // (0.0+2.0.i)
+z0 * z1 // (2.0+0.0.i)
+z0 / z1 // (0.0+1.0.i)
 //: [Next](@next)
