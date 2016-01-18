@@ -143,6 +143,7 @@ public protocol RealType : ArithmeticType, FloatingPointType {
 }
 /// POP!
 extension RealType {
+    //typealias PKG = Foundation
     // math functions - needs extension for each struct
     #if os(Linux)
     public static func cos(x:Self)->    Self { return Self( Glibc.cos(Double(x)!) )! }
@@ -183,9 +184,10 @@ extension Double : RealType {
     public static var SQRT2 = M_SQRT2
     public static var SQRT1_2 = M_SQRT1_2
 }
-// But when explicitly typed you can use Float
 extension Float : RealType {
-    // This is what it looks like w/o protocol extension
+    //
+    // Deliberately not via protocol extension
+    //
     #if os(Linux)
     public static func cos(x:Float)->Float  { return Glibc.cosf(x) }
     public static func cosh(x:Float)->Float { return Glibc.coshf(x) }
@@ -335,21 +337,7 @@ public func *= <T>(inout lhs:Complex<T>, rhs:T) {
 // cf. https://github.com/dankogai/swift-complex/issues/3
 //
 public func / <T>(lhs:Complex<T>, rhs:Complex<T>) -> Complex<T> {
-    if abs(rhs.re) >= abs(rhs.im) {
-        let r = rhs.im / rhs.re
-        let d = rhs.re + rhs.im * r
-        return Complex (
-            (lhs.re + lhs.im * r) / d,
-            (lhs.im - lhs.re * r) / d
-        )
-    } else {
-        let r = rhs.re / rhs.im
-        let d = rhs.re * r + rhs.im
-        return Complex (
-            (lhs.re * r + lhs.im) / d,
-            (lhs.im * r - lhs.re) / d
-        )
-    }
+    return (lhs * rhs.conj) / rhs.norm
 }
 public func / <T>(lhs:Complex<T>, rhs:T) -> Complex<T> {
     return Complex(lhs.re / rhs, lhs.im / rhs)
