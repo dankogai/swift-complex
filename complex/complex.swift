@@ -139,44 +139,38 @@ public func conj<T>(z:Complex<T>) -> Complex<T> { return Complex(z.re, -z.im) }
 /// * currently, `Double` and `Float`
 ///   * and `CGFloat` if not `os(Linux)`
 public protocol RealType : ArithmeticType, FloatingPointType {
-    // math functions - needs extension for each struct
-    static func cos(_:Self)->Self
-    static func cosh(_:Self)->Self
-    static func exp(_:Self)->Self
-    static func log(_:Self)->Self
-    static func sin(_:Self)->Self
-    static func sinh(_:Self)->Self
-    static func sqrt(_:Self)->Self
-    static func hypot(_:Self, _:Self)->Self
-    static func atan2(_:Self, _:Self)->Self
-    static func pow(_:Self, _:Self)->Self
     static var EPSILON:Self { get } // for =~
 }
+/// POP!
+extension RealType {
+    // math functions - needs extension for each struct
+    #if os(Linux)
+    public static func cos(x:Self)->    Self { return Self( Glibc.cos(Double(x)!) )! }
+    public static func cosh(x:Self)->   Self { return Self( Glibc.cosh(Double(x)!) )! }
+    public static func exp(x:Self)->    Self { return Self( Glibc.exp(Double(x)!) )! }
+    public static func log(x:Self)->    Self { return Self( Glibc.log(Double(x)!) )! }
+    public static func sin(x:Self)->    Self { return Self( Glibc.sin(Double(x)!) )! }
+    public static func sinh(x:Self)->   Self { return Self( Glibc.sinh(Double(x)!) )! }
+    public static func sqrt(x:Self)->   Self { return Self( Glibc.sqrt(Double(x)!) )! }
+    public static func hypot(x:Self, _ y:Self)->Self { return Self( Glibc.hypot(Double(x)!, Double(y)!) )! }
+    public static func atan2(y:Self, _ x:Self)->Self { return Self( Glibc.atan2(Double(y)!, Double(x)!) )! }
+    public static func pow(x:Self, _ y:Self)->  Self { return Self( Glibc.pow(Double(x)!, Double(y)!) )! }
+    #else
+    public static func cos(x:Self)->    Self { return Self( Foundation.cos(Double(x)!) )! }
+    public static func cosh(x:Self)->   Self { return Self( Foundation.cosh(Double(x)!) )! }
+    public static func exp(x:Self)->    Self { return Self( Foundation.exp(Double(x)!) )! }
+    public static func log(x:Self)->    Self { return Self( Foundation.log(Double(x)!) )! }
+    public static func sin(x:Self)->    Self { return Self( Foundation.sin(Double(x)!) )! }
+    public static func sinh(x:Self)->   Self { return Self( Foundation.sinh(Double(x)!) )! }
+    public static func sqrt(x:Self)->   Self { return Self( Foundation.sqrt(Double(x)!) )! }
+    public static func hypot(x:Self, _ y:Self)->Self { return Self( Foundation.hypot(Double(x)!, Double(y)!) )! }
+    public static func atan2(y:Self, _ x:Self)->Self { return Self( Foundation.atan2(Double(y)!, Double(x)!) )! }
+    public static func pow(x:Self, _ y:Self)->  Self { return Self( Foundation.pow(Double(x)!, Double(y)!) )! }
+    #endif
+ }
+
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
-    #if os(Linux)
-    public static func cos(x:Double)->Double    { return Glibc.cos(x) }
-    public static func cosh(x:Double)->Double   { return Glibc.cosh(x) }
-    public static func exp(x:Double)->Double    { return Glibc.exp(x) }
-    public static func log(x:Double)->Double    { return Glibc.log(x) }
-    public static func sin(x:Double)->Double    { return Glibc.sin(x) }
-    public static func sinh(x:Double)->Double   { return Glibc.sinh(x) }
-    public static func sqrt(x:Double)->Double   { return Glibc.sqrt(x) }
-    public static func hypot(x:Double, _ y:Double)->Double { return Glibc.hypot(x, y) }
-    public static func atan2(y:Double, _ x:Double)->Double { return Glibc.atan2(y, x) }
-    public static func pow(x:Double, _ y:Double)->Double   { return Glibc.pow(x, y) }
-    #else
-    public static func cos(x:Double)->Double    { return Foundation.cos(x) }
-    public static func cosh(x:Double)->Double   { return Foundation.cosh(x) }
-    public static func exp(x:Double)->Double    { return Foundation.exp(x) }
-    public static func log(x:Double)->Double    { return Foundation.log(x) }
-    public static func sin(x:Double)->Double    { return Foundation.sin(x) }
-    public static func sinh(x:Double)->Double   { return Foundation.sinh(x) }
-    public static func sqrt(x:Double)->Double   { return Foundation.sqrt(x) }
-    public static func hypot(x:Double, _ y:Double)->Double { return Foundation.hypot(x, y) }
-    public static func atan2(y:Double, _ x:Double)->Double { return Foundation.atan2(y, x) }
-    public static func pow(x:Double, _ y:Double)->Double { return Foundation.pow(x, y) }
-    #endif
     public static var EPSILON = 0x1p-52
     // The following values are for convenience, not really needed for protocol conformance.
     public static var PI = M_PI
@@ -191,6 +185,7 @@ extension Double : RealType {
 }
 // But when explicitly typed you can use Float
 extension Float : RealType {
+    // This is what it looks like w/o protocol extension
     #if os(Linux)
     public static func cos(x:Float)->Float  { return Glibc.cosf(x) }
     public static func cosh(x:Float)->Float { return Glibc.coshf(x) }
@@ -507,16 +502,6 @@ extension CGFloat : RealType {
             return nil
         }
     }
-    public static func cos(x:CGFloat)->CGFloat  { return Foundation.cos(x) }
-    public static func cosh(x:CGFloat)->CGFloat { return Foundation.cosh(x) }
-    public static func exp(x:CGFloat)->CGFloat  { return Foundation.exp(x) }
-    public static func log(x:CGFloat)->CGFloat  { return Foundation.log(x) }
-    public static func sin(x:CGFloat)->CGFloat  { return Foundation.sin(x) }
-    public static func sinh(x:CGFloat)->CGFloat { return Foundation.sinh(x) }
-    public static func sqrt(x:CGFloat)->CGFloat { return Foundation.sqrt(x) }
-    public static func hypot(x:CGFloat, _ y:CGFloat)->CGFloat { return Foundation.hypot(x, y) }
-    public static func atan2(y:CGFloat, _ x:CGFloat)->CGFloat { return Foundation.atan2(y, x) }
-    public static func pow(x:CGFloat, _ y:CGFloat)->CGFloat   { return Foundation.pow(x, y) }
     //
     public static var EPSILON = CGFloat(Double.EPSILON)
     // The following values are for convenience, not really needed for protocol conformance.
