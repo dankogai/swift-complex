@@ -11,8 +11,10 @@ import Glibc
 import Foundation
 #endif
 ///
-/// Minimum requirement for `T` of `Complex<T>` -- currently `Int`, `Double` and `Float`
+/// ArithmeticType: Minimum requirement for `T` of `Complex<T>`.
 ///
+/// * currently `Int`, `Double` and `Float`
+/// * and `CGFloat` if not os(Linux)
 public protocol ArithmeticType: AbsoluteValuable, Equatable, Comparable, Hashable {
     // Initializers (predefined)
     init(_: Int)
@@ -39,34 +41,47 @@ public protocol ArithmeticType: AbsoluteValuable, Equatable, Comparable, Hashabl
     func -= (inout _: Self, _: Self)
     func *= (inout _: Self, _: Self)
     func /= (inout _: Self, _: Self)
-    // Converters (extension needed)
-    static func toInt(_:Self)->Int
-    static func toDouble(_:Self)->Double
-    static func toFloat(_:Self)->Float
+    // CGFloat if !os(Linux)
+    #if !os(Linux)
+    init(_: CGFloat)
+    #endif
 }
 // protocol extension !!!
 public extension ArithmeticType {
     /// self * 1.0i
     public var i:Complex<Self>{ return Complex(Self(0), self) }
     /// abs(z)
-    public static func abs(z:Self)->Self { return Swift.abs(z) }
+    public static func abs(x:Self)->Self { return Swift.abs(x) }
+    /// failable initializer as a converter
+    public init?<U:ArithmeticType>(_ x:U) {
+        switch x {
+        case let s as Self:     self.init(s)
+        case let i as Int:      self.init(i)
+        case let d as Double:   self.init(d)
+        case let f as Float:    self.init(f)
+        default:
+            return nil
+        }
+    }
 }
-extension Int : ArithmeticType {
-    public static func toInt(x:Int)->Int { return x }
-    public static func toDouble(x:Int)->Double { return Double(x) }
-    public static func toFloat(x:Int)->Float { return Float(x) }
-}
+extension Int : ArithmeticType {}
 ///
 /// Complex of Integers or Floating-Point Numbers
 ///
 public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Hashable {
+    public typealias Kind = T
     public var (re, im): (T, T)
-    public init(_ re:T, _ im:T) {
-        self.re = re
-        self.im = im
+    /// standard init(r, i)
+    public init(_ r:T, _ i:T) {
+        (re, im) = (T(r), T(i))
     }
+    /// default init() == init(0, 0)
     public init() {
-        re = T(0); im = T(0)
+        (re, im) = (T(0), T(0))
+    }
+    /// init(t:(r, i))
+    public init(t:(T, T)) {
+        (re, im) = t
     }
     /// self * i
     public var i:Complex { return Complex(-im, re) }
@@ -99,15 +114,15 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     }
     /// converts to Complex<Int>
     public var asComplexInt:Complex<Int> {
-        return Complex<Int>(T.toInt(re), T.toInt(im))
+        return Complex<Int>(Int(re)!, Int(im)!)
     }
     /// converts to Complex<Double>
     public var asComplexDouble:Complex<Double> {
-        return Complex<Double>(T.toDouble(re), T.toDouble(im))
+        return Complex<Double>(Double(re)!, Double(im)!)
     }
     /// converts to Complex<Float>
     public var asComplexFloat:Complex<Float> {
-        return Complex<Float>(T.toFloat(re), T.toFloat(im))
+        return Complex<Float>(Float(re)!, Float(im)!)
     }
 }
 /// real part of z
@@ -119,8 +134,10 @@ public func norm<T>(z:Complex<T>) -> T { return z.norm }
 /// conjugate of z
 public func conj<T>(z:Complex<T>) -> Complex<T> { return Complex(z.re, -z.im) }
 ///
-///  Real numbers -- currently `Double` and `Float`
+///  RealType:  Types acceptable for "CMath"
 ///
+/// * currently, `Double` and `Float`
+///   * and `CGFloat` if not `os(Linux)`
 public protocol RealType : ArithmeticType, FloatingPointType {
     // math functions - needs extension for each struct
     static func cos(_:Self)->Self
@@ -137,9 +154,6 @@ public protocol RealType : ArithmeticType, FloatingPointType {
 }
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
-    public static func toInt(x:Double)->Int { return Int(x) }
-    public static func toDouble(x:Double)->Double { return x }
-    public static func toFloat(x:Double)->Float { return Float(x) }
     #if os(Linux)
     public static func cos(x:Double)->Double    { return Glibc.cos(x) }
     public static func cosh(x:Double)->Double   { return Glibc.cosh(x) }
@@ -177,9 +191,6 @@ extension Double : RealType {
 }
 // But when explicitly typed you can use Float
 extension Float : RealType {
-    public static func toInt(x:Float)->Int { return Int(x) }
-    public static func toDouble(x:Float)->Double { return Double(x) }
-    public static func toFloat(x:Float)->Float { return x }
     #if os(Linux)
     public static func cos(x:Float)->Float  { return Glibc.cosf(x) }
     public static func cosh(x:Float)->Float { return Glibc.coshf(x) }
@@ -394,7 +405,7 @@ public func pow<T:RealType>(lhs:Complex<T>, _ rhs:T) -> Complex<T> {
     }
     if lhs == T(0) { return Complex(T.pow(lhs.re, rhs), T(0)) } // 0 ** y for any y
     // integer
-    let ix = T.toInt(rhs)
+    let ix = Int(rhs)!
     if T(ix) == rhs { return pow(lhs, ix) }
     // integer/2
     let fx = rhs - T(ix)
@@ -480,18 +491,22 @@ public typealias ComplexDouble  = Complex<Double>
 public typealias ComplexFloat   = Complex<Float>
 public typealias Complex64      = Complex<Double>
 public typealias Complex32      = Complex<Float>
-/// CGFloat
-#if os(Linux)
-/// not yet :(
-#else
+/// CGFloat if !os(Linux)
+#if !os(Linux)
 extension CGFloat : RealType {
-    public init(_ value: CGFloat) {
-        self.native = value.native
+    public init(_ value:CGFloat) {
+        self = value
     }
-    public static func toInt(x:CGFloat)->Int { return Int(x) }
-    public static func toDouble(x:CGFloat)->Double { return Double(x) }
-    public static func toFloat(x:CGFloat)->Float { return Float(x) }
-    //
+    public init?<U:ArithmeticType>(_ x:U) {
+        switch x {
+        case let s as CGFloat:  self.init(s)
+        case let i as Int:      self.init(i)
+        case let d as Double:   self.init(d)
+        case let f as Float:    self.init(f)
+        default:
+            return nil
+        }
+    }
     public static func cos(x:CGFloat)->CGFloat  { return Foundation.cos(x) }
     public static func cosh(x:CGFloat)->CGFloat { return Foundation.cosh(x) }
     public static func exp(x:CGFloat)->CGFloat  { return Foundation.exp(x) }
@@ -516,9 +531,13 @@ extension CGFloat : RealType {
     public static var SQRT1_2 = CGFloat(Double.SQRT1_2)
 }
 extension Complex {
+    /// converts to CGPoint(x:re, y:im)
+    public var asCGPoint:CGPoint {
+        return CGPoint(x:CGFloat(re)!, y:CGFloat(im)!)
+    }
     /// converts to Complex<Float>
     public var asComplexCGFloat:Complex<CGFloat> {
-        return Complex<CGFloat>(CGFloat(T.toDouble(re)), CGFloat(T.toDouble(im)))
+        return Complex<CGFloat>(CGFloat(re)!, CGFloat(im)!)
     }
 }
 public typealias ComplexCGFloat = Complex<CGFloat>

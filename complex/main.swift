@@ -43,8 +43,7 @@ func done_testing(){ print("1..\(tests)") }
     same(ComplexInt(1,-1).asComplexDouble, Complex(1.0,-1.0), ".asComplexDouble")
     same(ComplexDouble(1.0,-1.0).asComplexInt, Complex(1,-1), ".asComplexInt")
 })()
-#if os(Linux)
-#else
+#if !os(Linux)
 ({
     same(ComplexInt(1, 1).asComplexCGFloat, ComplexCGFloat(1, 1), ".asComplexCGFloat")
 })()
