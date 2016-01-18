@@ -56,9 +56,9 @@ public extension ArithmeticType {
     public init?<U:ArithmeticType>(_ x:U) {
         switch x {
         case let s as Self:     self.init(s)
-        case let i as Int:      self.init(i)
         case let d as Double:   self.init(d)
         case let f as Float:    self.init(f)
+        case let i as Int:      self.init(i)
         default:
             return nil
         }
@@ -82,6 +82,10 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     /// init(t:(r, i))
     public init(t:(T, T)) {
         (re, im) = t
+    }
+    /// Complex<U> -> Complex<T>
+    public init<U:ArithmeticType>(_ z:Complex<U>) {
+        (re, im) = (T(z.re)!, T(z.im)!)
     }
     /// self * i
     public var i:Complex { return Complex(-im, re) }
@@ -113,17 +117,11 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
         set(t){ (re, im) = t }
     }
     /// converts to Complex<Int>
-    public var asComplexInt:Complex<Int> {
-        return Complex<Int>(Int(re)!, Int(im)!)
-    }
+    public var asComplexInt:Complex<Int>        { return Complex<Int>(self) }
     /// converts to Complex<Double>
-    public var asComplexDouble:Complex<Double> {
-        return Complex<Double>(Double(re)!, Double(im)!)
-    }
+    public var asComplexDouble:Complex<Double>  { return Complex<Double>(self) }
     /// converts to Complex<Float>
-    public var asComplexFloat:Complex<Float> {
-        return Complex<Float>(Float(re)!, Float(im)!)
-    }
+    public var asComplexFloat:Complex<Float>    { return Complex<Float>(self) }
 }
 /// real part of z
 public func real<T>(z:Complex<T>) -> T { return z.re }
@@ -500,9 +498,9 @@ extension CGFloat : RealType {
     public init?<U:ArithmeticType>(_ x:U) {
         switch x {
         case let s as CGFloat:  self.init(s)
-        case let i as Int:      self.init(i)
         case let d as Double:   self.init(d)
         case let f as Float:    self.init(f)
+        case let i as Int:      self.init(i)
         default:
             return nil
         }
@@ -536,13 +534,11 @@ extension Complex {
     public init(_ p:CGPoint) {
         self.init(T(p.x)!, T(p.y)!)
     }
+    /// converts to Complex<Float>
+    public var asComplexCGFloat:Complex<CGFloat> { return Complex<CGFloat>(self) }
     /// converts to CGPoint(x:re, y:im)
     public var asCGPoint:CGPoint {
         return CGPoint(x:CGFloat(re)!, y:CGFloat(im)!)
-    }
-    /// converts to Complex<Float>
-    public var asComplexCGFloat:Complex<CGFloat> {
-        return Complex<CGFloat>(CGFloat(re)!, CGFloat(im)!)
     }
 }
 public typealias ComplexCGFloat = Complex<CGFloat>
