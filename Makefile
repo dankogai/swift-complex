@@ -1,17 +1,21 @@
 #ifndef SWIFTC
 SWIFTC=xcrun -sdk macosx swiftc
 #endif
-TARGET=main
-SRC=complex/*.swift
+MAIN=main
 MODSRC=complex/complex.swift complex/exops.swift
-all:$(TARGET)
+SRC=$(MODSRC) complex/main.swift
+MODNAME=Complex
+MODULE=Complex.swiftdoc Complex.swiftmodule libComplex.dylib
 
+all: $(MAIN)
 clean:
-	rm $(TARGET)
-$(TARGET): $(SRC)
+	-rm $(MAIN) $(MODULE)
+$(MAIN): $(SRC)
 	$(SWIFTC) $(SRC)
-test: $(TARGET)
+test: $(MAIN)
 	prove ./main
-# Currently broken
 module: $(MODSRC)
-	$(SWIFTC) -emit-module $(MODSRC) -module-name Complex
+$(MODULE): $(MODSRC)
+	$(SWIFTC) -emit-library -emit-module $(MODSRC) -module-name $(MODNAME)
+repl: $(MODULE)
+	swift -I. -L. -lComplex
