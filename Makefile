@@ -9,6 +9,6 @@ all:$(TARGET)
 clean:
 	rm $(TARGET)
 $(TARGET): $(SRC)
-	$(SWIFTC) complex/*.swift
+	$(SWIFTC) $(SRC)
 test: $(TARGET)
 	prove ./main
