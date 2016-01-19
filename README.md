@@ -31,7 +31,9 @@ To use `**` and `=~` operators, add [complex/exops.swift] as well.
 
 Have fun with [Complex.playground] that is a part of this git repo.
 
-![](playground.png)
+![](screenshots/playground0.png)
+
+![](screenshots/playground1.png)
 
 [Complex.playground]: ./Complex.playground
 
