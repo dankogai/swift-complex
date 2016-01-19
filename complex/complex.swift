@@ -523,7 +523,7 @@ public typealias ComplexCGFloat = Complex<CGFloat>
 //
 // Type that supports the % operator
 //
-public protocol ModuloType : ArithmeticType {
+public protocol ModuloType : ArithmeticType, IntegerArithmeticType {
     func % (_: Self, _: Self)->Self
     func %= (inout _: Self, _: Self)
 }
