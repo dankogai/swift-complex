@@ -1,9 +1,9 @@
-ifndef SWIFTPATH
-	SWIFTC=xcrun -sdk macosx swiftc
-	SWIFT=swift
-else
+ifdef SWIFTPATH
 	SWIFTC=$(SWIFTPATH)/swiftc
 	SWIFT=$(SWIFTPATH)/swift
+else
+	SWIFTC=xcrun -sdk macosx swiftc
+	SWIFT=swift
 endif
 
 MAIN=main
