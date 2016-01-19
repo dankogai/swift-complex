@@ -45,30 +45,39 @@ Just drop [complex/complex.swift] to `Sources`.  In git `Complex.playground/Sour
 
 To use `**` and `=~` operators, add [complex/exops.swift] as well.
 
+### REPL via command line:
 
-### via command line:
+![](screenshots/repl-linux.png)
 
 #### OS X with Xcode
 ````shell
 git clone https://github.com/dankogai/swift-complex.git
-cd swift-complex/complex
-xcrun -sdk macosx swiftc *.swift && ./main
+cd swift-complex
+make repl
 ````
+
+#### Linux
 ````shell
-# or just
+git clone https://github.com/dankogai/swift-complex.git
+cd swift-complex
+make SWIFTPATH=${YOUR_SWIFT_PATH} repl # ${YOUR_SWIFT_PATH}=~/swift/usr/bin in my case
+````
+
+
+### test via command line:
+
+#### OS X with Xcode
+````shell
+git clone https://github.com/dankogai/swift-complex.git
+cd swift-complex
 make test
 ````
 
 #### Linux
 ````shell
 git clone https://github.com/dankogai/swift-complex.git
-cd swift-complex/complex
-export SWIFTC=/path/to/your/swiftc # mine: ~/swift/usr/bin/swiftc
-${SWIFTC} *.swift && ./main
-````
-````shell
-# or just
-make SWIFTC=${SWIFTC} test
+cd swift-complex
+make SWIFTPATH=${YOUR_SWIFT_PATH} test # ${YOUR_SWIFT_PATH}=~/swift/usr/bin in my case
 ````
 
 Synopsis
