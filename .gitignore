@@ -22,11 +22,14 @@ xcuserdata
 *.moved-aside
 *.xcuserstate
 *.xcscmblueprint
-*.xctimeline
 
 ## Obj-C/Swift specific
 *.hmap
 *.ipa
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
 
 # Swift Package Manager
 #
