@@ -1,9 +1,17 @@
 //: [Previous](@previous)
+/*:
+## Complex<T:RealType>
+
+In addition to `Complex<T:ArithmeticType>`, `Complex<RealType>` is capable of "cmath" operations.  This is Swift's equivalent of [C++ std::complex].
+
+[C++ std::complex]: http://www.cplusplus.com/reference/complex/
+
+*/
 // Foundation or Glibc needed for atan2()
 #if os(Linux)
-    import Glibc
+import Glibc
 #else
-    import Foundation
+import Foundation
 #endif
 let z0 = Complex(abs:10.0, arg:atan2(3.0,4.0))
 z0.re == 8 && z0.im == 6
@@ -11,7 +19,8 @@ z0 - z0 == 0
 let z1 = z0 * z0
 z1 - z0 == z0
 z1 / z0 == z0
-(4294967295+4294967295.i).hashValue
+(-z0).abs == z0.abs
+z0.proj
 sqrt(z1) == z0
 let π = Double.PI
 let epi = exp(π.i)
