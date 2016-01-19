@@ -10,13 +10,13 @@ MAIN=main
 MODSRC=complex/complex.swift complex/exops.swift
 SRC=$(MODSRC) complex/main.swift
 MODNAME=Complex
-MODULE=Complex.swiftdoc Complex.swiftmodule libComplex.dylib
+MODULE=Complex.swiftmodule Complex.swiftdoc 
+SHLIB=libComplex
 
 all: $(MAIN)
 module: $(MODSRC)
-
 clean:
-	-rm $(MAIN) $(MODULE)
+	-rm $(MAIN) $(MODULE) $(MODULE) $(SHLIB).*
 $(MAIN): $(SRC)
 	$(SWIFTC) $(SRC)
 test: $(MAIN)
