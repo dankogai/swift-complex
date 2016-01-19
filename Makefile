@@ -13,13 +13,14 @@ MODNAME=Complex
 MODULE=Complex.swiftdoc Complex.swiftmodule libComplex.dylib
 
 all: $(MAIN)
+module: $(MODSRC)
+
 clean:
 	-rm $(MAIN) $(MODULE)
 $(MAIN): $(SRC)
 	$(SWIFTC) $(SRC)
 test: $(MAIN)
 	prove ./main
-module: $(MODSRC)
 $(MODULE): $(MODSRC)
 	$(SWIFTC) -emit-library -emit-module $(MODSRC) -module-name $(MODNAME)
 repl: $(MODULE)
