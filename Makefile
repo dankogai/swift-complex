@@ -1,9 +1,9 @@
-ifndef BINDIR
+ifndef SWIFTPATH
 	SWIFTC=xcrun -sdk macosx swiftc
 	SWIFT=swift
 else
-	SWIFTC=$(BINDIR)/swiftc
-	SWIFT=$(BINDIR)/swift
+	SWIFTC=$(SWIFTPATH)/swiftc
+	SWIFT=$(SWIFTPATH)/swift
 endif
 
 MAIN=main
