@@ -26,8 +26,8 @@ The following example adds `.isGaussianInt` method to `Complex<T:ModuloType>`.
 
 extension ModuloType {
     // class Prime is defined at ../Sources/prime.swift
-    var isPrime:Bool { return Prime.isPrime(Int(self)!) }
-    var abs:Int { return Int(self)! < 0 ? Int(-self)! : Int(+self)! }
+    var isPrime:Bool { return Prime.isPrime(Int(self)) }
+    var abs:Int { return Int(self) < 0 ? Int(-self) : Int(+self) }
 }
 extension Complex where T:ModuloType {
     var isGaussianPrime:Bool {

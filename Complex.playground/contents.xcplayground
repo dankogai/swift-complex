@@ -7,6 +7,5 @@
         <page name='ComplexModuloType'/>
         <page name='MandelPlot'/>
         <page name='MandelPrint'/>
-        <page name='ComplexRat'/>
     </pages>
 </playground>
