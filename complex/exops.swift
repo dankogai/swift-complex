@@ -45,7 +45,9 @@ public func =~ <T:RealType>(lhs:T, rhs:T) -> Bool {
     // sign must match
     if lhs.isSignMinus != rhs.isSignMinus { return false }
     // delta / average < epsilon
-    return (lhs - rhs)/(lhs + rhs) < T(2)*T.EPSILON
+    let num = lhs - rhs
+    let den = lhs + rhs
+    return num/den < T(2)*T.EPSILON
 }
 public func =~ <T:RealType>(lhs:Complex<T>, rhs:Complex<T>) -> Bool {
     return lhs.abs =~ rhs.abs
