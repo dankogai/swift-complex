@@ -17,12 +17,12 @@ public class TAP {
     public init(tests:Int) {
         self.plan(tests)
     }
-    ///
+    /// sets the number of tests to run. call it before the first test
     public func plan(tests:Int) {
         self.tests = tests
         print("1..\(tests)")
     }
-    ///
+    /// ok if `predicate` is true
     public func ok(@autoclosure predicate:()->Bool, _ message:String = "")->Bool {
         let ok = predicate()
         runs.append(ok)
@@ -32,25 +32,39 @@ public class TAP {
     }
     /// ok if `actual` == `expected`
     public func eq<T:Equatable>(actual:T, _ expected:T, _ message:String = "")->Bool {
-        if !ok(actual == expected, message) {
-            print("#       got: \(actual)")
-            print("#  expected: \(expected)")
-            return false
-        }
-        return true
+        if ok(actual == expected, message) { return true }
+        print("#       got: \(actual)")
+        print("#  expected: \(expected)")
+        return false
     }
-    public func done() {
+    /// ok if `actual` != `expected`
+    public func ne<T:Equatable>(actual:T, _ expected:T, _ message:String = "")->Bool {
+        if ok(actual != expected, message) { return true }
+        print("#       got: \(actual)")
+        print("#  expected: anthing but \(expected)")
+        return false
+    }
+    /// checks the test results, print stuff if neccesary,
+    /// and `exit()` with code == number of failures
+    public func done(dontExit nx:Bool = false) {
+        if runs.count == 0 && nx != true {
+            print("# no test run!")
+            exit(-1)
+        }
         if tests == 0 {
             print("1..\(runs.count)")
-            tests == runs.count
         }
         else if runs.count != tests {
             print("not ok \(runs.count + 1) - planned to run \(tests) but actually ran \(runs.count)")
             runs.append(false)
+            if nx != true { exit(-1) }
         }
-        exit(Int32(runs.filter{ $0 == false }.count) & 255)
+        if nx != true {
+            let code = min(254, runs.filter{ $0 == false }.count)
+            exit(Int32(code))
+        }
     }
     deinit {
-        done()
+        done(dontExit:true)
     }
 }
