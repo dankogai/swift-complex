@@ -6,22 +6,21 @@ else
 	SWIFT=swift
 endif
 
+MOD=Complex
 MAIN=main
 MODSRC=complex/complex.swift complex/exops.swift
-SRC=$(MODSRC) complex/main.swift
-MODNAME=Complex
-MODULE=Complex.swiftmodule Complex.swiftdoc 
-SHLIB=libComplex
+SRC=$(MODSRC) complex/main.swift complex/tap.swift
+MODULE=$(MOD).swiftmodule $(MOD).swiftdoc
 
 all: $(MAIN)
-module: $(MODSRC)
+module: $(MODULE)
 clean:
-	-rm $(MAIN) $(MODULE) $(MODULE) $(SHLIB).*
+	-rm $(MAIN) $(MODULE) lib$(MOD).*
 $(MAIN): $(SRC)
 	$(SWIFTC) $(SRC)
 test: $(MAIN)
 	prove ./main
 $(MODULE): $(MODSRC)
-	$(SWIFTC) -emit-library -emit-module $(MODSRC) -module-name $(MODNAME)
+	$(SWIFTC) -emit-library -emit-module $(MODSRC) -module-name $(MOD)
 repl: $(MODULE)
-	$(SWIFT) -I. -L. -lComplex
+	$(SWIFT) -I. -L. -l$(MOD)
