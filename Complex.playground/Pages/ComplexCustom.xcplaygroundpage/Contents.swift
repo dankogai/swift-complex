@@ -80,24 +80,24 @@ public func / (lhs:TinyInt, rhs:TinyInt)->TinyInt {
     return TinyInt(Int(lhs) / Int(rhs))
 }
 //: let's first see TynyInt works as expected.
-TinyInt.Z + TinyInt.Z
-TinyInt.Z + TinyInt.P
-TinyInt.Z + TinyInt.N
-TinyInt.P + TinyInt.Z
-TinyInt.P + TinyInt.P
-TinyInt.P + TinyInt.N
-TinyInt.N + TinyInt.Z
-TinyInt.N + TinyInt.P
-TinyInt.N + TinyInt.N
-TinyInt.Z * TinyInt.Z
-TinyInt.Z * TinyInt.P
-TinyInt.Z * TinyInt.N
-TinyInt.P * TinyInt.Z
-TinyInt.P * TinyInt.P
-TinyInt.P * TinyInt.N
-TinyInt.N * TinyInt.Z
-TinyInt.N * TinyInt.P
-TinyInt.N * TinyInt.N
+TinyInt.Z + TinyInt.Z == TinyInt.Z
+TinyInt.Z + TinyInt.P == TinyInt.P
+TinyInt.Z + TinyInt.N == TinyInt.N
+TinyInt.P + TinyInt.Z == TinyInt.P
+TinyInt.P + TinyInt.P == TinyInt.P
+TinyInt.P + TinyInt.N == TinyInt.Z
+TinyInt.N + TinyInt.Z == TinyInt.N
+TinyInt.N + TinyInt.P == TinyInt.Z
+TinyInt.N + TinyInt.N == TinyInt.N
+TinyInt.Z * TinyInt.Z == TinyInt.Z
+TinyInt.Z * TinyInt.P == TinyInt.Z
+TinyInt.Z * TinyInt.N == TinyInt.Z
+TinyInt.P * TinyInt.Z == TinyInt.Z
+TinyInt.P * TinyInt.P == TinyInt.P
+TinyInt.P * TinyInt.N == TinyInt.N
+TinyInt.N * TinyInt.Z == TinyInt.Z
+TinyInt.N * TinyInt.P == TinyInt.N
+TinyInt.N * TinyInt.N == TinyInt.P
 //: now let's tell Swift `TinyInt` conforms to `ArithmeticType`
 extension TinyInt:ArithmeticType {}
 //: and enjoy!
