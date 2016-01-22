@@ -1,3 +1,8 @@
+MOD=Complex
+BIN=main
+MODSRC=complex/complex.swift complex/exops.swift
+BINSRC=$(MODSRC) complex/main.swift complex/tap.swift
+MODULE=$(MOD).swiftmodule $(MOD).swiftdoc
 SWIFTC=swiftc
 SWIFT=swift
 ifdef SWIFTPATH
@@ -8,12 +13,6 @@ OS := $(shell uname)
 ifeq ($(OS),Darwin)
 	SWIFTC=xcrun -sdk macosx swiftc
 endif
-
-MOD=Complex
-BIN=main
-MODSRC=complex/complex.swift complex/exops.swift
-BINSRC=$(MODSRC) complex/main.swift complex/tap.swift
-MODULE=$(MOD).swiftmodule $(MOD).swiftdoc
 
 all: $(BIN)
 module: $(MODULE)
