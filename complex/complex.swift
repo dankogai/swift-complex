@@ -32,6 +32,8 @@ public protocol ArithmeticType: AbsoluteValuable, Equatable, Comparable, Hashabl
     func - (_: Self, _: Self)->Self
     func * (_: Self, _: Self)->Self
     func / (_: Self, _: Self)->Self
+    // used by Complex#description
+    var isSignMinus:Bool{ get }
 }
 // protocol extension !!!
 public extension ArithmeticType {
@@ -53,7 +55,11 @@ public extension ArithmeticType {
         }
     }
 }
-extension Int : ArithmeticType {}
+extension Int : ArithmeticType {
+    /// true if self < 0
+    /// used by Complex#description
+    public var isSignMinus:Bool{ return self != abs(self) }
+}
 ///
 /// Complex of Integers or Floating-Point Numbers
 ///
@@ -88,15 +94,13 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     public var conj:Complex { return Complex(re, -im) }
     /// .description -- conforms to Printable
     public var description:String {
-        let ims = "\(self.im)"
-        let sig = ims[ims.startIndex] == Character("-") ? "" : "+"
-        return "(\(re)\(sig)\(ims).i)"
+        return "(\(re)\(im.isSignMinus ? "-" : "+")\(T.abs(im)).i)"
     }
     /// .hashValue -- conforms to Hashable
     public var hashValue:Int { // take most significant halves and join
         let bits = sizeof(Int) * 4
         let mask = bits == 16 ? 0xffff : 0xffffFFFF
-        return re is Int
+        return re.hashValue == Int(re)
             ? ((re.hashValue & mask) << bits) | (im.hashValue & mask) // Complex<Int>
             :  (re.hashValue & ~mask) | (im.hashValue >> bits)        // Complex<RealType>
     }

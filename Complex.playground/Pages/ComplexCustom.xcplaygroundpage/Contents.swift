@@ -35,6 +35,7 @@ extension Bool : IntegerLiteralConvertible {
     public init(integerLiteral i:Int) {
         self.init(Int(i))
     }
+    public var isSignMinus:Bool { return false }
 }
 extension Bool: ArithmeticType {}
 //: Now let's see if it behaves as a complex number
