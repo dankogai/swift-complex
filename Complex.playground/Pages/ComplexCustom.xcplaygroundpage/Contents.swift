@@ -10,10 +10,10 @@ So long as `CustomNumberType` conforms to `ArithmeticType`, Complex<CustomNumber
 To demonstrate that, let us make `TinyInt`, consisting only of `-1`, `0`, and '1'.
 
 */
-public enum TinyInt:Int8 {
-    case Z =  0
-    case P =  1
-    case N = -1
+public enum TinyInt {
+    case Z
+    case P
+    case N
 }
 //: cross-platform import
 #if os(Linux)
@@ -24,28 +24,37 @@ public enum TinyInt:Int8 {
 //: required initializers
 public extension TinyInt {
     public init(_ t:TinyInt) { self = t }
-    public init(_ i:Int8) {
+    public init(_ i:Int) {
         self = i < 0 ? .N : i > 0 ? .P : .Z
     }
-    public init(_ d:Int)    { self.init(Int8(d)) }
-    public init(_ d:Double) { self.init(Int8(d)) }
-    public init(_ f:Float)  { self.init(Int8(f)) }
+    public init(_ d:Double) { self.init(Int(d)) }
+    public init(_ f:Float)  { self.init(Int(f)) }
     #if !os(Linux)
     public init(_ c:CGFloat)    { self.init(Int(c)) }
     #endif
 }
 //: protocol conformance
-extension TinyInt : Comparable, IntegerLiteralConvertible, CustomStringConvertible {
+extension TinyInt : Comparable, IntegerLiteralConvertible  {
     public typealias IntegerLiteralType = Int
     public init(integerLiteral i:Int) {
         self.init(Int(i))
     }
-    public var description:String {
-        return self.rawValue.description
+    public var isSignMinus:Bool { return self == .N }
+    public static func abs(t:TinyInt)->TinyInt {
+        return t == .N ? .P : t
+    }
+}
+extension Int {
+    init(_ t:TinyInt) {
+        switch t {
+        case .N: self.init(-1)
+        case .P: self.init(1)
+        default: self.init(0)
+        }
     }
 }
 public func < (lhs:TinyInt, rhs:TinyInt)->Bool {
-    return lhs.rawValue < rhs.rawValue
+    return Int(lhs) < Int(rhs)
 }
 //: and arithmetic operators
 public prefix func + (t:TinyInt)->TinyInt {
@@ -59,16 +68,16 @@ public prefix func - (t:TinyInt)->TinyInt {
     }
 }
 public func + (lhs:TinyInt, rhs:TinyInt)->TinyInt {
-    return TinyInt(lhs.rawValue + rhs.rawValue)
+    return TinyInt(Int(lhs) + Int(rhs))
 }
 public func - (lhs:TinyInt, rhs:TinyInt)->TinyInt {
-    return TinyInt(lhs.rawValue - rhs.rawValue)
+    return TinyInt(Int(lhs) - Int(rhs))
 }
 public func * (lhs:TinyInt, rhs:TinyInt)->TinyInt {
-    return TinyInt(lhs.rawValue * rhs.rawValue)
+    return TinyInt(Int(lhs) * Int(rhs))
 }
 public func / (lhs:TinyInt, rhs:TinyInt)->TinyInt {
-    return TinyInt(lhs.rawValue / rhs.rawValue)
+    return TinyInt(Int(lhs) / Int(rhs))
 }
 //: let's first see TynyInt works as expected.
 TinyInt.Z + TinyInt.Z
@@ -97,4 +106,5 @@ z.i
 z.i.i == -z
 z.i.i.i == z.conj
 z.i.i.i.i == z
+z.hashValue
 //: [Next](@next)

@@ -33,14 +33,14 @@ public protocol ArithmeticType: AbsoluteValuable, Equatable, Comparable, Hashabl
     func * (_: Self, _: Self)->Self
     func / (_: Self, _: Self)->Self
     // used by Complex#description
-    var isSignMinus:Bool{ get }
+    var isSignMinus:Bool { get }
 }
 // protocol extension !!!
 public extension ArithmeticType {
     /// self * 1.0i
     public var i:Complex<Self>{ return Complex(Self(0), self) }
     /// abs(z)
-    public static func abs(x:Self)->Self { return Swift.abs(x) }
+    public static func abs(x:Self)->Self { return x.isSignMinus ? -x : x }
     /// failable initializer to conver the type
     /// - parameter x: `U:ArithmeticType` where U might not be T
     /// - returns: Self(x)
@@ -97,12 +97,28 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
         return "(\(re)\(im.isSignMinus ? "-" : "+")\(T.abs(im)).i)"
     }
     /// .hashValue -- conforms to Hashable
-    public var hashValue:Int { // take most significant halves and join
+    public var hashValue:Int {
         let bits = sizeof(Int) * 4
         let mask = bits == 16 ? 0xffff : 0xffffFFFF
-        return re.hashValue == Int(re)
-            ? ((re.hashValue & mask) << bits) | (im.hashValue & mask) // Complex<Int>
-            :  (re.hashValue & ~mask) | (im.hashValue >> bits)        // Complex<RealType>
+        // Apply different strategies by types.
+        // this is ugly but you can't go like 're is RealType'
+        // or implement separately at extension Complex where T:RealType
+        //
+        // take the most significant halves and join for floating-point
+        if re is Double || re is Float || re is Float80 {
+            return (re.hashValue & ~mask) | (im.hashValue >> bits)
+        }
+        #if !os(Linux)
+        if re is CGFloat {
+            return (re.hashValue & ~mask) | (im.hashValue >> bits)
+        }
+        #endif
+        // take the least significant halves and join for integer
+        if re is Int || re is Int64 || re is Int32 || re is Int16 || re is Int8 {
+            return (re.hashValue << bits) | (im.hashValue & mask)
+        }
+        // use description for last resort
+        return self.description.hashValue
     }
     /// (re:real, im:imag)
     public var tuple:(T, T) {

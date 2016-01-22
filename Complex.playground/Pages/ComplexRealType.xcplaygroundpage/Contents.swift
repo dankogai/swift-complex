@@ -47,4 +47,7 @@ acosh(cosh(z2)) =~ z2
 cosh(acosh(z2)) =~ z2
 atanh(tanh(z2)) =~ z2
 tanh(atanh(z2)) =~ z2
+// .hashValue
+(1+1.i).hashValue
+(1.0+1.0.i).hashValue
 //: [Next](@next)
