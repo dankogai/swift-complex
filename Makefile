@@ -7,18 +7,18 @@ else
 endif
 
 MOD=Complex
-MAIN=main
+BIN=main
 MODSRC=complex/complex.swift complex/exops.swift
 SRC=$(MODSRC) complex/main.swift complex/tap.swift
 MODULE=$(MOD).swiftmodule $(MOD).swiftdoc
 
-all: $(MAIN)
+all: $(BIN)
 module: $(MODULE)
 clean:
-	-rm $(MAIN) $(MODULE) lib$(MOD).*
-$(MAIN): $(SRC)
+	-rm $(BIN) $(MODULE) lib$(MOD).*
+$(BIN): $(SRC)
 	$(SWIFTC) $(SRC)
-test: $(MAIN)
+test: $(BIN)
 	prove ./main
 $(MODULE): $(MODSRC)
 	$(SWIFTC) -emit-library -emit-module $(MODSRC) -module-name $(MOD)

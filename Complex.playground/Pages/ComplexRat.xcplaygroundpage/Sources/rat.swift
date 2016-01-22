@@ -33,7 +33,7 @@ public extension RatElement {
 
 extension Int:   RatElement {}
 
-public struct Rat<T:RatElement> : AbsoluteValuable, Equatable, Comparable, CustomStringConvertible, Hashable {
+public struct Rat<T:RatElement> : AbsoluteValuable, IntegerLiteralConvertible, Equatable, Comparable, CustomStringConvertible, Hashable {
     public typealias Element = T
     public typealias IntegerLiteralType = T.IntegerLiteralType
     private let (num, den):(T, T)
