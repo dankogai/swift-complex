@@ -94,7 +94,8 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
     public var conj:Complex { return Complex(re, -im) }
     /// .description -- conforms to Printable
     public var description:String {
-        return "(\(re)\(im.isSignMinus ? "-" : "+")\(T.abs(im)).i)"
+        let sig = im.isSignMinus ? "-" : "+"
+        return "(\(re)\(sig)\(T.abs(im)).i)"
     }
     /// .hashValue -- conforms to Hashable
     public var hashValue:Int {
