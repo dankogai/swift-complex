@@ -22,7 +22,7 @@ clean:
 $(BIN): $(BINSRC)
 	$(SWIFTC) $(BINSRC)
 test: $(BIN)
-	prove ./main
+	prove ./$(BIN)
 $(MODULE): $(MODSRC)
 	$(SWIFTC) -emit-library -emit-module $(MODSRC) -module-name $(MOD)
 repl: $(MODULE)
