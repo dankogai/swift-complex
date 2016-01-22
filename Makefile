@@ -1,23 +1,26 @@
+SWIFTC=swiftc
+SWIFT=swift
 ifdef SWIFTPATH
 	SWIFTC=$(SWIFTPATH)/swiftc
 	SWIFT=$(SWIFTPATH)/swift
-else
+endif
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
 	SWIFTC=xcrun -sdk macosx swiftc
-	SWIFT=swift
 endif
 
 MOD=Complex
 BIN=main
 MODSRC=complex/complex.swift complex/exops.swift
-SRC=$(MODSRC) complex/main.swift complex/tap.swift
+BINSRC=$(MODSRC) complex/main.swift complex/tap.swift
 MODULE=$(MOD).swiftmodule $(MOD).swiftdoc
 
 all: $(BIN)
 module: $(MODULE)
 clean:
 	-rm $(BIN) $(MODULE) lib$(MOD).*
-$(BIN): $(SRC)
-	$(SWIFTC) $(SRC)
+$(BIN): $(BINSRC)
+	$(SWIFTC) $(BINSRC)
 test: $(BIN)
 	prove ./main
 $(MODULE): $(MODSRC)
