@@ -106,9 +106,14 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
         // or implement separately at extension Complex where T:RealType
         //
         // take the most significant halves and join for floating-point
-        if re is Double || re is Float || re is Float80 {
+        if re is Double || re is Float {
             return (re.hashValue & ~mask) | (im.hashValue >> bits)
         }
+        #if !os(iOS)
+        if re is Float80 { // linux had it, too.
+            return (re.hashValue & ~mask) | (im.hashValue >> bits)
+        }
+        #endif
         #if !os(Linux)
         if re is CGFloat {
             return (re.hashValue & ~mask) | (im.hashValue >> bits)
