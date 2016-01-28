@@ -6,9 +6,10 @@
 //  Copyright (c) 2014 Dan Kogai. All rights reserved.
 //
 #if os(Linux)
-import Glibc
+    import Glibc
 #else
-import Foundation
+    import Darwin
+    import CoreGraphics
 #endif
 ///
 /// ArithmeticType: Minimum requirement for `T` of `Complex<T>`.
@@ -158,7 +159,7 @@ public protocol RealType : ArithmeticType, FloatingPointType {
 extension RealType {
     /// Default type to store RealType
     public typealias Real = Double
-    //typealias PKG = Foundation
+    //typealias PKG = Darwin
     // math functions - needs extension for each struct
     #if os(Linux)
     public static func cos(x:Self)->    Self { return Self(Glibc.cos(Real(x))) }
@@ -172,18 +173,18 @@ extension RealType {
     public static func atan2(y:Self, _ x:Self)->Self { return Self(Glibc.atan2(Real(y), Real(x))) }
     public static func pow(x:Self, _ y:Self)->  Self { return Self(Glibc.pow(Real(x), Real(y))) }
     #else
-    public static func cos(x:Self)->    Self { return Self(Foundation.cos(Real(x))) }
-    public static func cosh(x:Self)->   Self { return Self(Foundation.cosh(Real(x))) }
-    public static func exp(x:Self)->    Self { return Self(Foundation.exp(Real(x))) }
-    public static func log(x:Self)->    Self { return Self(Foundation.log(Real(x))) }
-    public static func sin(x:Self)->    Self { return Self(Foundation.sin(Real(x))) }
-    public static func sinh(x:Self)->   Self { return Self(Foundation.sinh(Real(x))) }
-    public static func sqrt(x:Self)->   Self { return Self(Foundation.sqrt(Real(x))) }
-    public static func hypot(x:Self, _ y:Self)->Self { return Self(Foundation.hypot(Real(x), Real(y))) }
-    public static func atan2(y:Self, _ x:Self)->Self { return Self(Foundation.atan2(Real(y), Real(x))) }
-    public static func pow(x:Self, _ y:Self)->  Self { return Self(Foundation.pow(Real(x), Real(y))) }
+    public static func cos(x:Self)->    Self { return Self(Darwin.cos(Real(x))) }
+    public static func cosh(x:Self)->   Self { return Self(Darwin.cosh(Real(x))) }
+    public static func exp(x:Self)->    Self { return Self(Darwin.exp(Real(x))) }
+    public static func log(x:Self)->    Self { return Self(Darwin.log(Real(x))) }
+    public static func sin(x:Self)->    Self { return Self(Darwin.sin(Real(x))) }
+    public static func sinh(x:Self)->   Self { return Self(Darwin.sinh(Real(x))) }
+    public static func sqrt(x:Self)->   Self { return Self(Darwin.sqrt(Real(x))) }
+    public static func hypot(x:Self, _ y:Self)->Self { return Self(Darwin.hypot(Real(x), Real(y))) }
+    public static func atan2(y:Self, _ x:Self)->Self { return Self(Darwin.atan2(Real(y), Real(x))) }
+    public static func pow(x:Self, _ y:Self)->  Self { return Self(Darwin.pow(Real(x), Real(y))) }
     #endif
- }
+}
 
 // Double is default since floating-point literals are Double by default
 extension Double : RealType {
@@ -215,16 +216,16 @@ extension Float : RealType {
     public static func atan2(y:Float, _ x:Float)->Float { return Glibc.atan2f(y, x) }
     public static func pow(x:Float, _ y:Float)->Float   { return Glibc.powf(x, y) }
     #else
-    public static func cos(x:Float)->Float  { return Foundation.cosf(x) }
-    public static func cosh(x:Float)->Float { return Foundation.coshf(x) }
-    public static func exp(x:Float)->Float  { return Foundation.expf(x) }
-    public static func log(x:Float)->Float  { return Foundation.logf(x) }
-    public static func sin(x:Float)->Float  { return Foundation.sinf(x) }
-    public static func sinh(x:Float)->Float { return Foundation.sinhf(x) }
-    public static func sqrt(x:Float)->Float { return Foundation.sqrtf(x) }
-    public static func hypot(x:Float, _ y:Float)->Float { return Foundation.hypotf(x, y) }
-    public static func atan2(y:Float, _ x:Float)->Float { return Foundation.atan2f(y, x) }
-    public static func pow(x:Float, _ y:Float)->Float   { return Foundation.powf(x, y) }
+    public static func cos(x:Float)->Float  { return Darwin.cosf(x) }
+    public static func cosh(x:Float)->Float { return Darwin.coshf(x) }
+    public static func exp(x:Float)->Float  { return Darwin.expf(x) }
+    public static func log(x:Float)->Float  { return Darwin.logf(x) }
+    public static func sin(x:Float)->Float  { return Darwin.sinf(x) }
+    public static func sinh(x:Float)->Float { return Darwin.sinhf(x) }
+    public static func sqrt(x:Float)->Float { return Darwin.sqrtf(x) }
+    public static func hypot(x:Float, _ y:Float)->Float { return Darwin.hypotf(x, y) }
+    public static func atan2(y:Float, _ x:Float)->Float { return Darwin.atan2f(y, x) }
+    public static func pow(x:Float, _ y:Float)->Float   { return Darwin.powf(x, y) }
     #endif
     public static var EPSILON:Float = 0x1p-23
     // The following values are for convenience, not really needed for protocol conformance.

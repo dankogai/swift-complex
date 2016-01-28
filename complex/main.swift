@@ -8,7 +8,8 @@
 #if os(Linux)
     import Glibc
 #else
-    import Foundation
+    import Darwin
+    import CoreGraphics
 #endif
 let test = TAP()
 ({

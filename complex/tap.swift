@@ -8,7 +8,7 @@
 #if os(Linux)
     import Glibc
 #else
-    import Foundation
+    import Darwin
 #endif
 
 public class TAP {
