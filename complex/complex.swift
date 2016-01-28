@@ -109,7 +109,7 @@ public struct Complex<T:ArithmeticType> : Equatable, CustomStringConvertible, Ha
         if re is Double || re is Float {
             return (re.hashValue & ~mask) | (im.hashValue >> bits)
         }
-        #if !os(iOS)
+        #if os(OSX) || os(Linux)
         if re is Float80 { // linux had it, too.
             return (re.hashValue & ~mask) | (im.hashValue >> bits)
         }
