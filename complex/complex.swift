@@ -9,6 +9,7 @@
 import Glibc
 #else
 import Foundation
+import UIKit
 #endif
 ///
 /// ArithmeticType: Minimum requirement for `T` of `Complex<T>`.
