@@ -7,11 +7,11 @@ In addition to `Complex<T:ArithmeticType>`, `Complex<RealType>` is capable of "c
 [C++ std::complex]: http://www.cplusplus.com/reference/complex/
 
 */
-// Foundation or Glibc needed for atan2()
+// Darwin or Glibc needed for atan2()
 #if os(Linux)
-import Glibc
+    import Glibc
 #else
-import Foundation
+    import Darwin
 #endif
 let z0 = Complex(abs:10.0, arg:atan2(3.0,4.0))
 z0.re == 8 && z0.im == 6

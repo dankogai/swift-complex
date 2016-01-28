@@ -1,4 +1,4 @@
-import Cocoa    // this is an OSX Playground
+import UIKit    // this is an iOS Playground
 /*:
 
 # Welcome!
