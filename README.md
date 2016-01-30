@@ -60,6 +60,10 @@ To use `**` and `=~` operators, add [complex/exops.swift] as well.
 [complex/complex.swift]: ./complex/complex.swift
 [complex/exops.swift]: ./complex/exops.swift
 
+### with workspace
+
+Browse all the playgrounds and the project via `Complex.xcworkspace`.
+
 ### with playgrounds
 
 Have fun with playgrounds that is a part of this git repo.  While [OSX.playground] is pretty detaild with many pages, [iOS.playground] and [tvOS.playground] are maily for testing purpose.
