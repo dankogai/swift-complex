@@ -1,6 +1,10 @@
 # OBSOLETED BY
 
-[swift-pons], Protocol-Oriented Number System in Pure Swift.  In addition to Complex, it includes
+[PONS], Protocol-Oriented Number System in Pure Swift. 
+
+https://github.com/dankogai/swift-pons
+
+In addition to Complex, it includes
 
 * BigInt
 * Rational
@@ -14,7 +18,7 @@ func fact<T:POInteger>(n:T)->T { // teach all integer types how to factorial
 
 The last one is important because in PONS, even Complex is implemented via protocol extensions that can be extended in that manner.  Also note in swift-complex, `Complex<Rational<Int>>` was just in theory.  But with PONS that is in reality.
 
-[swift-pons]: https://github.com/dankogai/swift-pons
+[PONS]: https://github.com/dankogai/swift-pons
 
 # swift-complex
 
