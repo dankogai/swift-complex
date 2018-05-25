@@ -1,10 +1,10 @@
-# swift-complex
-
 [![Swift 4.1](https://img.shields.io/badge/swift-4.1-brightgreen.svg)](https://swift.org)
 [![MIT LiCENSE](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 [![build status](https://secure.travis-ci.org/dankogai/swift-complex.png)](http://travis-ci.org/dankogai/swift-complex)
 
-Complex numbers in [Swift].
+# swift-complex
+
+Complex numbers in Swift.
 
 # UNDER RECONSTRUCTION
 
@@ -89,7 +89,9 @@ Add the following to the `dependencies` section:
 and the following to the `.target` argument:
 
 ```
-dependencies: ["Complex"])
+.target(
+  name: "YourSwiftyPackage",
+  dependencies: ["Complex"])
 ```
 
 Now all you have to do is:
