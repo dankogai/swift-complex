@@ -3,7 +3,7 @@
 set -ev
 
 if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    apt-get install clang
+    sudo apt-get install clang
     DIR="$(pwd)"
     cd ..
     export SWIFT_VERSION=swift-4.1.1-RELEASE
