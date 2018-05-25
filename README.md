@@ -1,36 +1,12 @@
-# UNDER RECONSTRUCTION
-
-for Swift 4 and Swift Package Manager
-
-# OBSOLETED BY
-
-[PONS], Protocol-Oriented Number System in Pure Swift. 
-
-https://github.com/dankogai/swift-pons
-
-In addition to Complex, it includes
-
-* BigInt
-* Rational
-* Protocols that allows you to extend all types that all at once.
-
-````Swift
-func fact<T:POInteger>(n:T)->T { // teach all integer types how to factorial
-    return n < 2 ? 1 : (2...n).reduce(1, combine:*)
-}
-````
-
-The last one is important because in PONS, even Complex is implemented via protocol extensions that can be extended in that manner.  Also note in swift-complex, `Complex<Rational<Int>>` was just in theory.  But with PONS that is in reality.
-
-[PONS]: https://github.com/dankogai/swift-pons
-
 # swift-complex
 
 [![build status](https://secure.travis-ci.org/dankogai/swift-complex.png)](http://travis-ci.org/dankogai/swift-complex)
 
 Complex numbers in [Swift].
 
-[Swift]: https://developer.apple.com/swift/
+# UNDER RECONSTRUCTION
+
+for Swift 4 and Swift Package Manager
 
 ## Synopsis
 
@@ -77,75 +53,50 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 
 ## Usage
 
-### in your project:
+## Usage
 
-Just add [complex/complex.swift] to it.
+### build
 
-To use `**` and `=~` operators, add [complex/exops.swift] as well.
+```shell
+$ git clone https://github.com/dankogai/swift-complex.git
+$ cd swift-complex # the following assumes your $PWD is here
+$ swift build
+```
 
-[complex/complex.swift]: ./complex/complex.swift
-[complex/exops.swift]: ./complex/exops.swift
+### REPL
 
-### with workspace
+```
+$ swift build
+$ swift run # runs Sources/ComplexRun/main.swift
 
-Browse all the playgrounds and the project via `Complex.xcworkspace`.
+```
 
-### with playgrounds
-
-Have fun with playgrounds that is a part of this git repo.  While [OSX.playground] is pretty detaild with many pages, [iOS.playground] and [tvOS.playground] are maily for testing purpose.
-
-![](screenshots/playground0.png)
-
-![](screenshots/playground1.png)
-
-[OSX.playground]: ./OSX.playground
-[iOS.playground]: ./iOS.playground
-[tvOS.playground]: ./tvOS.playground
-
-When you use it, make sure you turn on the left pane (it's off right after you pulled since UI settings are `.gitignore`d).  As you see above, this playground consists of multiple pages and sources.
-
-#### with your playground
-
-Just drop [complex/complex.swift] to `Sources`.  In git `*.playground/Sources/complex.swift` is a symlink thereto.
-
-To use `**` and `=~` operators, add [complex/exops.swift] as well.
-
-### REPL via command line:
-
-![](screenshots/repl-linux.png)
-
-#### OS X with Xcode
-````shell
-git clone https://github.com/dankogai/swift-complex.git
-cd swift-complex
-make repl
+````
+Welcome to Apple Swift version 4.1 (swiftlang-902.0.48 clang-902.0.39.1). Type :help for assistance.
+  1> import Complex
+  2> Complex.sqrt(1.i)
+$R0: Complex.Complex<Double> = {
+  real = 0.70710678118654757
+  imag = 0.70710678118654757
+}
 ````
 
-#### Linux
-````shell
-git clone https://github.com/dankogai/swift-complex.git
-cd swift-complex
-make SWIFTPATH=${YOUR_SWIFT_PATH} repl # ${YOUR_SWIFT_PATH}=~/swift/usr/bin in my case
-````
-### test via command line:
+### From Your SwiftPM-Managed Projects
 
-#### OS X with Xcode
-````shell
-git clone https://github.com/dankogai/swift-complex.git
-cd swift-complex
-make test
-````
+Add the following to the `dependencies` section:
 
-#### Linux
-````shell
-git clone https://github.com/dankogai/swift-complex.git
-cd swift-complex
-make SWIFTPATH=${YOUR_SWIFT_PATH} test # ${YOUR_SWIFT_PATH}=~/swift/usr/bin in my case
-````
+```
+.package(
+  url: "https://github.com/dankogai/swift-complex.git", from: "4.0.0"
+)
+```
+
+and the following to the `.target` argument:
+
+```
+dependencies: ["Complex"])
+```
 
 # Prerequisite
 
-Swift 2.0 or better, OS X or Linux to build. iOS and tvOS are supported (so far as I see via playground)
-
-For Swift 1.x and below see the swift-1.x branch 
-(which is no longer maintained).
+Swift 4.1 or better, OS X or Linux to build.
