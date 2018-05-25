@@ -4,11 +4,7 @@
 
 # swift-complex
 
-Complex numbers in Swift.
-
-# UNDER RECONSTRUCTION
-
-for Swift 4 and Swift Package Manager
+Complex numbers in Swift and Swift Package Manager.
 
 ## Synopsis
 
