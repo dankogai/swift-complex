@@ -98,8 +98,17 @@ public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible & Floati
 }
 
 extension ComplexFloat {
+    ///
     public init(abs:Element, arg:Element) {
         self.init(abs * Element.cos(arg), abs * Element.sin(arg))
+    }
+    ///
+    public init(_ r:Double) {
+        self.init(Element(r), 0)
+    }
+    ///
+    public var asDouble:Double {
+        return self.real.asDouble
     }
     /// absolute value
     public var abs:Element {
