@@ -1,5 +1,7 @@
 # swift-complex
 
+[![Swift 4.1](https://img.shields.io/badge/swift-4.1-brightgreen.svg)](https://swift.org)
+[![MIT LiCENSE](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 [![build status](https://secure.travis-ci.org/dankogai/swift-complex.png)](http://travis-ci.org/dankogai/swift-complex)
 
 Complex numbers in [Swift].
@@ -11,7 +13,7 @@ for Swift 4 and Swift Package Manager
 ## Synopsis
 
 ````swift
-import Complex // needed only if you build module and load it, like "make repl"
+import Complex
 let z0 = 1.0 + 1.0.i    // (1.0+1.0.i)
 let z1 = 1.0 - 1.0.i    // (1.0-1.0.i)
 z0.conj // (1.0-1.0.i)
@@ -31,16 +33,13 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 
 ### like C++11
 
-* Generic! (Since version 0.3.0. `Int` support introduced in 0.5.0)
-  * Complex numbers are `Complex<T>` where `T` is a type of `.re` and `.im` that conforms to the `ArithmeticType` protocol.
+* Protocol-Oriented  * Complex numbers are `Complex<R>` where `R` is a type of `.real` and `.imag` that conforms to the `ComplexElement` protocol or `GaussianIntElement` protocol.
   * In addition to basic arithmetic operations like `+`, `-`, `*`, `/` and `abs()`, `Complex<T:RealType>` gets `libm` functions like `exp()`, `log()`, `sin()`, `cos()`.
 
 ### unlike C++11
 
 * Instead of defining the constant `i`, `Double` and `Complex` have a property `.i` which returns `self * Complex(0,1)` so it does not pollute the identifier `i`, too popularly used for iteration to make it a constant.
-* Following functions are also provided as properties:
-  * `z.real` for `real(z)`
-  * `z.imag` for `imag(z)`
+* Following functions are provided as compouted properties:
   * `z.abs` for `abs(z)`
   * `z.arg` for `arg(z)`
   * `z.norm` for `norm(z)`
@@ -48,10 +47,6 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
   * `z.proj` for `proj(z)`
 * Construct a complex number via polar notation as:
   * `Complex(abs:magnitude, arg:argument)`
-  * In addition to `pow()`, it comes with the `**` and `=~` operators. See [complex/exops.swift] for details.
-
-
-## Usage
 
 ## Usage
 
@@ -66,8 +61,8 @@ $ swift build
 ### REPL
 
 ```
-$ swift build
-$ swift run # runs Sources/ComplexRun/main.swift
+$ swift build 
+$ swift -I.build/debug -L.build/debug -lComplex
 
 ```
 
@@ -96,6 +91,14 @@ and the following to the `.target` argument:
 ```
 dependencies: ["Complex"])
 ```
+
+Now all you have to do is:
+
+```
+import PONS
+```
+
+in your code.  Enjoy!
 
 # Prerequisite
 
