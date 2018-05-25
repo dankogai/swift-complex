@@ -1,4 +1,16 @@
-language: objective-c
-osx_image: xcode9.3
+matrix:
+  include:
+    - os: linux
+      language: generic
+      dist: xenial
+      sudo: required
+    - os: osx
+      language: objective-c
+      osx_image: xcode9.3
 script:
-- swift test
+  - swift test
+before_install:
+  - chmod ugo+x ./scripts/run-tests.sh
+  - . ./scripts/run-tests.sh
+notifications:
+  email: false
