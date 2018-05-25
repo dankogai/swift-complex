@@ -1,3 +1,7 @@
+# UNDER RECONSTRUCTION
+
+for Swift 4 and Swift Package Manager
+
 # OBSOLETED BY
 
 [PONS], Protocol-Oriented Number System in Pure Swift. 
