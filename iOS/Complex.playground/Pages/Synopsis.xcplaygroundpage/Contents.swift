@@ -1,6 +1,6 @@
 //: ## Synopsis
 
-import Complex
+// import Complex / is not needed
 
 let z0 = 1.0 + 1.0.i    // (1.0+1.0.i)
 let z1 = 1.0 - 1.0.i    // (1.0-1.0.i)
@@ -14,4 +14,3 @@ z0 / z1 // (0.0+1.0.i)
 Complex.sqrt(-1)
 
 //: [Next](@next)
-

@@ -56,11 +56,21 @@ $ swift build
 
 ### REPL
 
+Simply
+
+```
+$ scripts/xcode-prep.sh
+```
+
+or
+
 ```
 $ swift build 
 $ swift -I.build/debug -L.build/debug -lComplex
 
 ```
+
+and in your repl,
 
 ````
 Welcome to Apple Swift version 4.1 (swiftlang-902.0.48 clang-902.0.39.1). Type :help for assistance.
@@ -71,6 +81,38 @@ $R0: Complex.Complex<Double> = {
   imag = 0.70710678118654757
 }
 ````
+
+### Xcode
+
+Xcode project is deliberately excluded from the repository because it should be generated via `swift package generate-xcodeproj` . For convenience, you can
+
+```
+$ scripts/prep-xcode
+```
+
+And the Workspace opens up for you with Playground on top.
+
+### iOS and Swift Playground
+
+Unfortunately Swift Package Manager does not support iOS.  To make matters worse Swift Playgrounds does not support modules.
+
+To address this, `scripts/makemono.pl` is provided to amalgamate all necessary sources to a single `monoComplex.swift` which can be dropped into your projects, in which case `import Complex` is unneeded.
+
+Just run:
+
+```shell
+$ scripts/makemono.pl
+```
+
+And even more conveniently,
+
+```shell
+$ scripts/ios-prep.sh
+```
+
+Does that and adds `monoComplex.swift` into `iOS/Complex.playground`.  The resulting playground is compabile w/ the Playgrounds App for iOS.
+
+![](img/playground.png)
 
 ### From Your SwiftPM-Managed Projects
 
