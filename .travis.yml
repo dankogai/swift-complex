@@ -11,6 +11,6 @@ script:
   - swift test
 before_install:
   - chmod a+x ./scripts/travis-prep.sh
-  - . ./scripts/run-tests.sh
+  - . ./scripts/travis-prep.sh
 notifications:
   email: false
