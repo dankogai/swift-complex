@@ -90,7 +90,7 @@ Xcode project is deliberately excluded from the repository because it should be 
 $ scripts/prep-xcode
 ```
 
-And the Workspace opens up for you with Playground on top.
+And the Workspace opens up for you with Playground on top.  The playground is written as a manual.
 
 ### iOS and Swift Playground
 

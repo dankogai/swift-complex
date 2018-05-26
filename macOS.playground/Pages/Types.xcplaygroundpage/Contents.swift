@@ -58,7 +58,7 @@ let gi64 = Int64(0x7fff_ffff_ffff_ffff) + Int64(-0x8000_0000_0000_0000).i
  
  */
 
-let cf32 = Float32.pi + Float32.pi.i  // cd is Complex<Double>
+let cf32 = Float32.pi + Float32.pi.i
 let cf64 = Float64.pi + Float64.pi.i
 
 /*:
