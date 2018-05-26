@@ -10,7 +10,7 @@ matrix:
 script:
   - swift test
 before_install:
-  - chmod ugo+x ./scripts/run-tests.sh
+  - chmod a+x ./scripts/travis-prep.sh
   - . ./scripts/run-tests.sh
 notifications:
   email: false
