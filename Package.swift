@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
       .package(
-        url: "https://github.com/dankogai/swift-floatingpointmath.git", from: "0.0.7"
+        url: "https://github.com/dankogai/swift-floatingpointmath.git", from: "0.0.8"
       )
     ],
     targets: [
