@@ -97,9 +97,12 @@ import Darwin
 
 import FloatingPointMath
 
-public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible & FloatingPointMath
-    where Element: FloatingPoint & FloatingPointMath {
+public typealias ComplexFloatElement = FloatingPoint & FloatingPointMath
+
+public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible
+    where Element: ComplexFloatElement {
 }
+
 
 extension ComplexFloat {
     ///
@@ -338,9 +341,7 @@ extension ComplexFloat {
     public static func lgamma(_ x:Element)->Self { return Self(Element.lgamma(x)) }
 }
 
-public typealias ComplexElement = FloatingPoint & FloatingPointMath
-
-public struct Complex<R:ComplexElement> : ComplexFloat  {
+public struct Complex<R:ComplexFloatElement> : ComplexFloat  {
     public typealias NumericType = R
     public var (real, imag):(R, R)
     public init(real r:R, imag i:R) {
@@ -365,7 +366,7 @@ extension Complex : Codable where Element: Codable {
     }
 }
 
-extension FloatingPoint where Self:ComplexElement {
+extension FloatingPoint where Self:ComplexFloatElement {
     public var i:Complex<Self> {
         return Complex(0, self)
     }
