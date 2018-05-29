@@ -31,7 +31,7 @@ let gi32 = Int32(0x7fff_ffff)           +            Int32(-0x80000000).i
 let gi64 = Int64(0x7fff_ffff_ffff_ffff) + Int64(-0x8000_0000_0000_0000).i
 
 /*:
- `GaussianIntElement` is simply `SignedInteger & Codable` so if your custom integer conforms to that, you can use it with no extension.  For instance, [attaswift/BigInt] does conform so:
+ `GaussianIntElement` is simply `SignedInteger` so if your custom integer conforms to that, you can use it with no extension.  For instance, [attaswift/BigInt] does conform so:
 
  [attaswift/BigInt]: https://github.com/attaswift/BigInt
 
@@ -63,7 +63,7 @@ let cf64 = Float64.pi + Float64.pi.i
 
 /*:
  
- `ComplexElement` is `FloatingPoint & FloatingPointMath & Codable`.  Meaning it is a bit trikier to comply.  Unlike built-in `FloatingPoint` and `Codable`, [FloatingPointMath] is externaly defined to ensure necessary math functions exist. But if your type is already `FloatingPoint & Codable`, Complying to `FloatingPointMath` should be relatively easy.  All you need is:
+ `ComplexElement` is `FloatingPoint & FloatingPointMath.  Meaning it is a bit trikier to comply.  Unlike built-in `FloatingPoint`, [FloatingPointMath] is externaly defined to ensure necessary math functions exist. But if your type is already `FloatingPoint`, Complying to `FloatingPointMath` should be relatively easy.  All you need is:
  
  [FloatingPointMath]: https://github.com/dankogai/swift-floatingpointmath
  

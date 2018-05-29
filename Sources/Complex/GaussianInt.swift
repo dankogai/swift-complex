@@ -33,13 +33,30 @@ extension ComplexInt {
     }
 }
 
-public typealias GaussianIntElement = SignedInteger & Codable
+public typealias GaussianIntElement = SignedInteger
 
 public struct GaussianInt<I:GaussianIntElement> : ComplexInt {
     public typealias NumericType = I
     public var (real, imag):(I, I)
     public init(real r:I, imag i:I) {
         (real, imag) = (r, i)
+    }
+}
+
+extension GaussianInt : Codable where Element: Codable {
+    public enum CodingKeys : String, CodingKey {
+        public typealias RawValue = String
+        case real, imag
+    }
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.real = try values.decode(Element.self, forKey: .real)
+        self.imag = try values.decode(Element.self, forKey: .imag)
+    }
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.real, forKey: .real)
+        try container.encode(self.imag, forKey: .imag)
     }
 }
 
