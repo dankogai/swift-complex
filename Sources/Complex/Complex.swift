@@ -301,44 +301,6 @@ extension ComplexFloat {
     public static func atan2(_ lhs:Self, _ rhs:Element)->Self { return atan2(lhs, Self(rhs, 0)) }
     public static func atan2(_ lhs:Element, _ rhs:Self)->Self { return atan2(Self(lhs, 0), rhs) }
     public static func atan2(_ lhs:Element, _ rhs:Element)->Self { return Self(Element.atan2(lhs, rhs)) }
-    /// - returns: erf(z). currently fatalError for z.imag != zero
-    public static func erf(_ z:Self) -> Self {
-        if z.imag.isZero { return erf(z.real) }
-        fatalError("UNIMPLEMENTED")
-    }
-    public static func erf(_ x:Element)->Self { return Self(Element.erf(x)) }
-    /// - returns: erfc(z). currently fatalError for z.imag != zero
-    public static func erfc(_ z:Self) -> Self {
-        if z.imag.isZero { return erfc(z.real) }
-        fatalError("UNIMPLEMENTED")
-    }
-    public static func erfc(_ x:Element)->Self { return Self(Element.erfc(x)) }
-    //
-    // tgamma and lgamma are calculated via Stirling's Approximation,
-    // which is relatively simple but innacurate.
-    //
-    // cf. https://en.wikipedia.org/wiki/Stirling%27s_approximation
-    //
-    /// - returns: Γ(z). NOT VERY ACCURATE
-    public static func tgamma(_ z:Self) -> Self {
-        if z.imag.isZero { return tgamma(z.real) }
-        let (pi, e) = (Self(Element.pi), exp(1))
-        if z.real.asDouble < 0.5  { return pi / (sin(pi*z) * tgamma(1-z)) }
-        var t = 10*z
-        t = 12*z - 1/t
-        return sqrt(2*pi/z) * pow((z + 1/t)/e, z)
-    }
-    public static func tgamma(_ x:Element)->Self { return Self(Element.tgamma(x)) }
-    /// - returns: lnΓ(z). NOT VERY ACCURATE
-    public static func lgamma(_ z:Self) -> Self {
-        if z.imag.isZero { return lgamma(z.real) }
-        let pi = Self(Element.pi)
-        var t = 10*z
-        t = 12*z - 1/t
-        let u = z * (log(z + 1/t) - 1)
-        return (log(2*pi) - log(z))/2 + u
-    }
-    public static func lgamma(_ x:Element)->Self { return Self(Element.lgamma(x)) }
 }
 
 public struct Complex<R:ComplexFloatElement> : ComplexFloat  {
