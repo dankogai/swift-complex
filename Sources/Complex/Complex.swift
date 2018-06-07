@@ -103,7 +103,6 @@ public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible
     where Element: ComplexFloatElement {
 }
 
-
 extension ComplexFloat {
     ///
     public init(abs:Element, arg:Element) {
@@ -127,6 +126,10 @@ extension ComplexFloat {
             (real, imag) = (real * r, imag * r)
         }
     }
+    /// magnitude = abs
+    public var magnitude:Element {
+        return self.abs
+    }
     /// argument
     public var arg:Element  {
         get { return Element.atan2(imag, real) }
@@ -143,7 +146,7 @@ extension ComplexFloat {
             return Self(.infinity, imag.sign == .minus ? -Element(0): +Element(0))
         }
     }
-    /// description -- conforms to Printable
+    /// description -- conforms to CustomStringConvertible
     public var description:String {
         let sig = imag.sign == .minus ? "-" : "+"
         return "(\(real)\(sig)\(imag.magnitude).i)"
@@ -167,7 +170,7 @@ extension ComplexFloat {
 }
 
 extension ComplexFloat {
-    /// - returns: square root of z in Complex
+    /// square root of z in Complex
     public static func sqrt(_ z:Self) -> Self {
         let a = z.abs
         let r = Element.sqrt((a + z.real)/2)
@@ -175,47 +178,47 @@ extension ComplexFloat {
         return Self(r, z.imag.sign == .minus ? -i : i)
     }
     public static func sqrt(_ x:Element)->Self { return sqrt(Self(x)) }
-    /// - returns: e ** z in Complex
+    /// e ** z in Complex
     public static func exp(_ z:Self)->Self {
         let r = Element.exp(z.real)
         let a = z.imag
         return Self(r * Element.cos(a), r * Element.sin(a))
     }
     public static func exp(_ x:Element)->Self { return Self(Element.exp(x)) }
-    /// - returns: e ** z - 1.0 in Complex
-    /// cf. https://lists.gnu.org/archive/html/octave-maintainers/2008-03/msg00174.html
+    /// e ** z - 1.0 in Complex
     public static func expm1(_ z:Self)->Self {
+        // cf. https://lists.gnu.org/archive/html/octave-maintainers/2008-03/msg00174.html
         return -exp(z/2) * 2 * sin(z.i/2).i
     }
     public static func expm1(_ x:Element)->Self { return Self(Element.expm1(x)) }
-    /// - returns: natural log of z in Complex
+    /// natural log of z in Complex
     public static func log(_ z:Self)->Self {
         return Self(Element.log(z.abs), z.arg)
     }
     public static func log(_ x:Element)->Self { return log(Self(x)) }
-    /// - returns: natural log of (z + 1) in Complex
+    /// natural log of (z + 1) in Complex
     public static func log1p(_ z:Self)->Self {
         return 2*atanh(z/(z+2))
     }
     public static func log1p(_ x:Element)->Self { return Self(Element.log1p(x)) }
-    /// - returns: base 2 log of z in Complex
+    /// base 2 log of z in Complex
     public static func log2(_ z:Self)->Self {
         return log(z) / Element.log(2)
     }
     public static func log2(_ x:Element)->Self { return log2(Self(x)) }
-    /// - returns: base 10 log of z in Complex
+    /// base 10 log of z in Complex
     public static func log10(_ z:Self)->Self {
         return log(z) / Element.log(10)
     }
     public static func log10(_ x:Element)->Self { return log10(Self(x)) }
-    /// - returns: lhs ** rhs in Complex
+    /// lhs ** rhs in Complex
     public static func pow(_ lhs:Self, _ rhs:Self)->Self {
         return exp(log(lhs) * rhs)
     }
     public static func pow(_ lhs:Self, _ rhs:Element)->Self { return pow(lhs, Self(rhs)) }
     public static func pow(_ lhs:Element, _ rhs:Self)->Self { return pow(Self(lhs), rhs) }
     public static func pow(_ lhs:Element, _ rhs:Element)->Self { return Self(Element.pow(lhs, rhs)) }
-    /// - returns: cosine of z in Complex
+    /// cosine of z in Complex
     public static func cos(_ z:Self) -> Self {
         return Self(
             +Element.cos(z.real) * Element.cosh(z.imag),
@@ -223,7 +226,7 @@ extension ComplexFloat {
         )
     }
     public static func cos(_ x:Element)->Self { return cos(Self(x)) }
-    /// - returns: sine of z in Complex
+    /// sine of z in Complex
     public static func sin(_ z:Self) -> Self {
         return Self(
             +Element.sin(z.real) * Element.cosh(z.imag),
@@ -231,70 +234,70 @@ extension ComplexFloat {
         )
     }
     public static func sin(_ x:Element)->Self { return sin(Self(x)) }
-    /// - returns: tangent of z in Complex
+    /// tangent of z in Complex
     public static func tan(_ z:Self) -> Self {
         return sin(z) / cos(z)
     }
     public static func tan(_ x:Element) -> Self { return tan(Self(x)) }
-    /// - returns: arc cosine of z in Complex
+    /// arc cosine of z in Complex
     public static func acos(_ z:Self) -> Self {
         return log(z - sqrt(1 - z*z).i).i
     }
     public static func acos(_ x:Element) -> Self { return acos(Self(x)) }
-    /// - returns: arc sine of z in Complex
+    /// arc sine of z in Complex
     public static func asin(_ z:Self) -> Self {
         return -log(z.i + sqrt(1 - z*z)).i
     }
     public static func asin(_ x:Element) -> Self { return asin(Self(x)) }
-    /// - returns: arc tangent of z in Complex
+    /// arc tangent of z in Complex
     public static func atan(_ z:Self) -> Self {
         let lp = log(1 - z.i)
         let lm = log(1 + z.i)
         return (lp - lm).i / 2
     }
     public static func atan(_ x:Element) -> Self { return atan(Self(x)) }
-    /// - returns: hyperbolic cosine of z in Complex
+    /// hyperbolic cosine of z in Complex
     public static func cosh(_ z:Self) -> Self {
         // return (exp(z) + exp(-z)) / T(2)
         return cos(z.i)
     }
     public static func cosh(_ x:Element) -> Self { return cosh(Self(x)) }
-    /// - returns: hyperbolic sine of z in Complex
+    /// hyperbolic sine of z in Complex
     public static func sinh(_ z:Self) -> Self {
         // return (exp(z) - exp(-z)) / T(2)
         return -sin(z.i).i;
     }
     public static func sinh(_ x:Element) -> Self { return sinh(Self(x)) }
-    /// - returns: hyperbolic tangent of z in Complex
+    /// hyperbolic tangent of z in Complex
     public static func tanh(_ z:Self) -> Self {
         // let ez = exp(z), e_z = exp(-z)
         // return (ez - e_z) / (ez + e_z)
         return sinh(z) / cosh(z)
     }
     public static func tanh(_ x:Element) -> Self { return tanh(Self(x)) }
-    /// - returns: inverse hyperbolic cosine of z in Complex
+    /// inverse hyperbolic cosine of z in Complex
     public static func acosh(_ z:Self) -> Self {
         return log(z + sqrt(z+1)*sqrt(z-1))
     }
     public static func acosh(_ x:Element) -> Self { return acosh(Self(x)) }
-    /// - returns: inverse hyperbolic cosine of z in Complex
+    /// inverse hyperbolic cosine of z in Complex
     public static func asinh(_ z:Self) -> Self {
         return log(z + sqrt(z*z+1))
     }
     public static func asinh(_ x:Element) -> Self { return asinh(Self(x)) }
-    /// - returns: inverse hyperbolic tangent of z in Complex
+    /// inverse hyperbolic tangent of z in Complex
     public static func atanh(_ z:Self) -> Self {
         return (log(1 + z) - log(1 - z)) / 2
     }
     public static func atanh(_ x:Element) -> Self { return atanh(Self(x)) }
-    /// - returns: hypot
+    /// hypotenuse. defined as √(lhs**2 + rhs**2) though its need for Complex is moot.
     public static func hypot(_ lhs:Self, _ rhs:Self) -> Self {
-        fatalError("Not applicable for Complex")
+        return sqrt(lhs*lhs + rhs*rhs)
     }
     public static func hypot(_ lhs:Self, _ rhs:Element)->Self { return hypot(lhs, Self(rhs)) }
     public static func hypot(_ lhs:Element, _ rhs:Self)->Self { return hypot(Self(lhs), rhs) }
     public static func hypot(_ lhs:Element, _ rhs:Element)->Self { return Self(Element.hypot(lhs, rhs)) }
-    /// - returns: atan2
+    /// atan2 = atan(lhs/rhs)
     public static func atan2(_ lhs:Self, _ rhs:Self) -> Self {
         return atan(lhs/rhs)
     }
