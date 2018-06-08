@@ -104,7 +104,7 @@ public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible
 }
 
 extension ComplexFloat {
-    ///
+    /// construct by polar coodinates
     public init(abs:Element, arg:Element) {
         self.init(abs * Element.cos(arg), abs * Element.sin(arg))
     }
@@ -156,7 +156,7 @@ extension ComplexFloat {
         return Self(lhs.real / rhs, lhs.imag / rhs)
     }
     public static func /(_ lhs:Self, _ rhs:Self)->Self {
-        return lhs * rhs.conj / rhs.norm
+        return rhs.imag.isZero ? lhs / rhs.real : lhs * rhs.conj / rhs.norm
     }
     public static func /(_ lhs:Element, _ rhs:Self)->Self {
         return Self(lhs, 0) / rhs
@@ -167,8 +167,20 @@ extension ComplexFloat {
     public static func /=(_ lhs:inout Self, _ rhs:Element) {
         lhs = lhs / rhs
     }
+    /// nan
+    public static var nan:Self { return Self(real:Element.nan, imag:Element.nan)}
+    /// check if either real or imag is nan
+    public var isNaN:Bool { return real.isNaN || imag.isNaN }
+    /// infinity + infinity.i
+    public static var infinity:Self { return Self(real:Element.infinity, imag:Element.infinity)}
+    /// check if either real or imag is infinite
+    public var isInfinite:Bool { return real.isInfinite || imag.isInfinite }
+    /// 0.0 + 0.0.i, aka "origin"
+    public static var zero:Self { return Self(0, 0) }
+    /// check if both real and imag are zeros
+    public var isZero:Bool { return real.isZero && imag.isZero }
 }
-
+// CMath
 extension ComplexFloat {
     /// square root of z in Complex
     public static func sqrt(_ z:Self) -> Self {
