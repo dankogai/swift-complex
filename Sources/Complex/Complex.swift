@@ -119,11 +119,10 @@ extension ComplexFloat {
     /// absolute value
     public var abs:Element {
         get {
-            return Element.hypot(real, imag)
+            return imag.isZero ? Swift.abs(real) : Element.hypot(real, imag)
         }
         set {
-            let r = newValue / abs
-            (real, imag) = (real * r, imag * r)
+            self = Self(abs:newValue, arg:self.arg)
         }
     }
     /// magnitude = abs
@@ -134,8 +133,7 @@ extension ComplexFloat {
     public var arg:Element  {
         get { return Element.atan2(imag, real) }
         set {
-            let m = abs
-            (real, imag) = (m * Element.cos(newValue), m * Element.sin(newValue))
+            self = Self(abs:self.abs, arg:newValue)
         }
     }
     /// projection
