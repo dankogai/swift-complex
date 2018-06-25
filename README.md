@@ -48,7 +48,7 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 
 ### build
 
-```shell
+```sh
 $ git clone https://github.com/dankogai/swift-complex.git
 $ cd swift-complex # the following assumes your $PWD is here
 $ swift build
@@ -58,21 +58,20 @@ $ swift build
 
 Simply
 
-```
-$ scripts/xcode-prep.sh
+```sh
+$ scripts/run-repl.sh
 ```
 
 or
 
-```
-$ swift build 
-$ swift -I.build/debug -L.build/debug -lComplex
+```sh
+$ swift build && swift -I.build/debug -L.build/debug -lComplex
 
 ```
 
 and in your repl,
 
-````
+```sh
 Welcome to Apple Swift version 4.1 (swiftlang-902.0.48 clang-902.0.39.1). Type :help for assistance.
   1> import Complex
   2> Complex.sqrt(1.i)
