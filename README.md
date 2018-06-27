@@ -139,6 +139,6 @@ import Complex
 
 in your code.  Enjoy!
 
-# Prerequisite
+### Prerequisite
 
 Swift 4.1 or better, OS X or Linux to build.
