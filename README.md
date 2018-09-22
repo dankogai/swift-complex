@@ -117,7 +117,7 @@ Does that and adds `monoComplex.swift` into `iOS/Complex.playground`.  The resul
 
 Add the following to the `dependencies` section:
 
-```
+```swift
 .package(
   url: "https://github.com/dankogai/swift-complex.git", from: "4.0.0"
 )
@@ -125,7 +125,7 @@ Add the following to the `dependencies` section:
 
 and the following to the `.target` argument:
 
-```
+```swift
 .target(
   name: "YourSwiftyPackage",
   dependencies: ["Complex"])
@@ -133,12 +133,12 @@ and the following to the `.target` argument:
 
 Now all you have to do is:
 
-```
+```swift
 import Complex
 ```
 
 in your code.  Enjoy!
 
-# Prerequisite
+### Prerequisite
 
 Swift 4.1 or better, OS X or Linux to build.
