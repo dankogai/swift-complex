@@ -59,6 +59,12 @@ $ swift build
 Simply
 
 ```sh
+$ swift run --repl
+```
+
+or
+
+```sh
 $ scripts/run-repl.sh
 ```
 
