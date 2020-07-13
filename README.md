@@ -1,4 +1,4 @@
-[![Swift 4.2](https://img.shields.io/badge/swift-4.2-brightgreen.svg)](https://swift.org)
+[![Swift 5](https://img.shields.io/badge/swift-5-brightgreen.svg)](https://swift.org)
 [![MIT LiCENSE](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 [![build status](https://secure.travis-ci.org/dankogai/swift-complex.png)](http://travis-ci.org/dankogai/swift-complex)
 
@@ -123,21 +123,13 @@ And the Workspace opens up for you with Playground on top.  The playground is wr
 
 Unfortunately Swift Package Manager does not support iOS.  To make matters worse Swift Playgrounds does not support modules.
 
-To address this, `scripts/makemono.pl` is provided to amalgamate all necessary sources to a single `monoComplex.swift` which can be dropped into your projects, in which case `import Complex` is unneeded.
-
-Just run:
-
-```shell
-$ scripts/makemono.pl
-```
-
-And even more conveniently,
+Fortunately Playgrounds allow you to include swift source codes under `Sources` directory.  Just run:
 
 ```shell
 $ scripts/ios-prep.sh
 ```
 
-Does that and adds `monoComplex.swift` into `iOS/Complex.playground`.  The resulting playground is compabile w/ the Playgrounds App for iOS.
+and you are all set.  `iOS/Complex.playground` now runs on Xcode and Playgrounds on macOS, and Playgrounds on iOS (Well, it is supposed to iPadOS but it is still labeled iOS).
 
 ![](img/playground.png)
 
@@ -147,7 +139,7 @@ Add the following to the `dependencies` section:
 
 ```swift
 .package(
-  url: "https://github.com/dankogai/swift-complex.git", from: "4.0.0"
+  url: "https://github.com/dankogai/swift-complex.git", from: "5.0.0"
 )
 ```
 
@@ -169,4 +161,4 @@ in your code.  Enjoy!
 
 ### Prerequisite
 
-Swift 4.2 or better, OS X or Linux to build.
+Swift 5 or better, OS X or Linux to build.
