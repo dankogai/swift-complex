@@ -1,6 +1,5 @@
 #!/bin/sh
-dir=iOS/Complex.playground/Sources
-file=monoComplex.swift
-scripts/makemono.pl
-mkdir -p $dir
-mv $file $dir
+srcdir=Sources/Complex
+dstdir=iOS/Complex.playground/Sources
+test -d $dstdir && /bin/rm -r $dstdir
+/bin/cp -a $srcdir $dstdir
