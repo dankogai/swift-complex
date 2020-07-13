@@ -95,7 +95,7 @@ import Glibc
 import Darwin
 #endif
 
-import FloatingPointMath
+// import FloatingPointMath
 
 public typealias ComplexFloatElement = FloatingPoint & FloatingPointMath
 

@@ -11,15 +11,11 @@ let package = Package(
         targets: ["Complex"]),
       
     ],
-    dependencies: [
-      .package(
-        url: "https://github.com/dankogai/swift-floatingpointmath.git", from: "0.0.8"
-      )
-    ],
+    dependencies: [],
     targets: [
       .target(
         name: "Complex",
-        dependencies: ["FloatingPointMath"]),
+        dependencies: []),
       .target(
         name: "ComplexRun",
         dependencies: ["Complex"]),
