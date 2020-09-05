@@ -1,5 +1,5 @@
-[![Swift 5](https://img.shields.io/badge/swift-5-brightgreen.svg)](https://swift.org)
-[![MIT LiCENSE](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
+[![Swift 5](https://img.shields.io/badge/swift-5-blue.svg)](https://swift.org)
+[![MIT LiCENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![build status](https://secure.travis-ci.org/dankogai/swift-complex.png)](http://travis-ci.org/dankogai/swift-complex)
 
 # CAVEAT: Swift Numerics vs. this module
