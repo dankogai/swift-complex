@@ -7,16 +7,6 @@
 With [apple/swift-numerics] complex number support on swift is [official at last].  You should consider using `ComplexModule` of `Numerics` instead of this.  I am switching to `swift-numerics` myself whereever I can. But there are still a few things that make you want to use this module in spite of that.
 
 * `swift-numerics` relies 100% on swift package manager.  You cannot use it on Swift Playgrounds.
-* As of version 0.0.6 `ComplexModule` of `swift-numerics` still does not conform to `ElementaryFunctions`.  You are on your own if you need functions like   So you are at your own if you need functions like:
-`exp`, `expMinusOne`,
-`log`, `log(onePlus:)`,
-`cos`, `sin`, `tan`,
-`acos`, `asin`, `atan`,
-`cosh`, `sinh`, `tanh`,
-`acosh`, `asinh`, `atanh`,
-`pow`, `sqrt`, and `root`
-
-  * https://github.com/apple/swift-numerics/issues/2
 * `ComplexModule` may be too swifty on some respects.
   * `ComplexModule` adopts [point at infinity].  While this is mathmatically more correct, technically it may cause unexpected results because real operation on complex numbers is no longer isomorphic to real operations on real numbers.  For instance, `Complex(-1.0, 0.0) / Complex(0.0, 0.0)` is `Complex(+infinity, 0.0)`, not `Complex(-infinity, nan)` like many other platforms. 
 
