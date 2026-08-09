@@ -1,18 +1,5 @@
-[![Swift 5](https://img.shields.io/badge/swift-5-blue.svg)](https://swift.org)
+[![Swift 6](https://img.shields.io/badge/swift-6-blue.svg)](https://swift.org)
 [![MIT LiCENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![build status](https://secure.travis-ci.org/dankogai/swift-complex.png)](http://travis-ci.org/dankogai/swift-complex)
-
-# CAVEAT: Swift Numerics vs. this module
-
-With [apple/swift-numerics] complex number support on swift is [official at last].  You should consider using `ComplexModule` of `Numerics` instead of this.  I am switching to `swift-numerics` myself whereever I can. But there are still a few things that make you want to use this module in spite of that.
-
-* `swift-numerics` relies 100% on swift package manager.  You cannot use it on Swift Playgrounds.
-* `ComplexModule` may be too swifty on some respects.
-  * `ComplexModule` adopts [point at infinity].  While this is mathmatically more correct, technically it may cause unexpected results because real operation on complex numbers is no longer isomorphic to real operations on real numbers.  For instance, `Complex(-1.0, 0.0) / Complex(0.0, 0.0)` is `Complex(+infinity, 0.0)`, not `Complex(-infinity, nan)` like many other platforms. 
-
-[apple/swift-numerics]: https://github.com/apple/swift-numerics
-[official at last]: https://swift.org/blog/numerics/
-[point at infinity]: https://en.wikipedia.org/wiki/Point_at_infinity
 
 # swift-complex
 
@@ -41,13 +28,15 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 
 ### like C++11
 
-* Protocol-Oriented  * Complex numbers are `Complex<R>` where `R` is a type of `.real` and `.imag` that conforms to the `ComplexElement` protocol or `GaussianIntElement` protocol.
-  * In addition to basic arithmetic operations like `+`, `-`, `*`, `/` and `abs()`, `Complex<T:RealType>` gets `libm` functions like `exp()`, `log()`, `sin()`, `cos()`.
+* Protocol-Oriented
+  * Complex numbers are `Complex<R>` where `R` is the type of `.real` and `.imag` that conforms to the `ComplexFloatElement` protocol, that is, `FloatingPoint & ElementaryFunctions`.
+  * Gaussian integers are `GaussianInt<I>` where `I` conforms to the `GaussianIntElement` protocol, that is, `SignedInteger`.
+  * In addition to basic arithmetic operations like `+`, `-`, `*`, `/` and `abs()`, `Complex<R>` gets `libm` functions like `exp()`, `log()`, `sin()`, `cos()`.
 
 ### unlike C++11
 
 * Instead of defining the constant `i`, `Double` and `Complex` have a property `.i` which returns `self * Complex(0,1)` so it does not pollute the identifier `i`, too popularly used for iteration to make it a constant.
-* Following functions are provided as compouted properties:
+* Following functions are provided as computed properties:
   * `z.abs` for `abs(z)`
   * `z.arg` for `arg(z)`
   * `z.norm` for `norm(z)`
@@ -55,6 +44,44 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
   * `z.proj` for `proj(z)`
 * Construct a complex number via polar notation as:
   * `Complex(abs:magnitude, arg:argument)`
+
+## ElementaryFunctions
+
+The element of `Complex<R>` is `FloatingPoint & ElementaryFunctions`.  `ElementaryFunctions` was formerly named `FloatingPointMath`; it is renamed for the sake of [apple/swift-numerics] (a deprecated typealias keeps the old name compiling).  Unlike built-in `FloatingPoint`, `ElementaryFunctions` is defined in this module to ensure necessary math functions exist.  If your type is already `FloatingPoint`, complying to `ElementaryFunctions` is relatively easy.  All you need is:
+
+```swift
+extension YourFloat : ElementaryFunctions {
+  init(_:Double) {
+    // convert from Double
+  }
+  func toDouble()->Double {
+    // convert to Double
+  }
+}
+```
+
+The rest — `exp`, `log`, `sin`, `cos` and their friends — are default-implemented by way of `Double`, meaning the precision of the math functions is that of `Double`.  If your type has its own math functions, define them and they become the witnesses of the protocol requirements — see below.
+
+### precision and debug
+
+Every math function also comes in a version with `precision` and `debug` flag, as in [dankogai/swift-bignum]:
+
+```swift
+BigRat.exp(1, precision: 256)           // e to 256-bit precision
+Complex<BigRat>.exp(z)                  // computed natively at BigRat.precision
+```
+
+They are *not* protocol requirements.  `precision` and `debug` are used only when the element has the corresponding function — like `BigRat` and `BigFloat` of [dankogai/swift-bignum].  For elements like `Double` they are simply ignored.
+
+`ComplexFloat` also has a settable `precision` which defaults to `128`.  It is handed down to the element as the default precision of the math functions, and likewise ignored for cases like `Element == Double`.
+
+[dankogai/swift-bignum]: https://github.com/dankogai/swift-bignum
+
+### arbitrary precision
+
+This module is tested against [dankogai/swift-bignum] — `Complex<BigRat>`, `Complex<BigFloat>`, and `GaussianInt<BigInt>`.  Since `BigRat` and `BigFloat` natively offer arbitrary-precision math functions, `Complex` math on them is computed natively — not by way of `Double`.  See [Tests/ComplexTests/BigNumSupport.swift] for how to bridge them to `ElementaryFunctions`.  Note swift-bignum is a test-only dependency; the library itself depends on nothing but the standard library.
+
+[Tests/ComplexTests/BigNumSupport.swift]: Tests/ComplexTests/BigNumSupport.swift
 
 ## Usage
 
@@ -65,6 +92,16 @@ $ git clone https://github.com/dankogai/swift-complex.git
 $ cd swift-complex # the following assumes your $PWD is here
 $ swift build
 ```
+
+### test
+
+The test suite is written in [Swift Testing], the modern successor of `XCTest`.  Simply:
+
+```sh
+$ swift test
+```
+
+[Swift Testing]: https://developer.apple.com/documentation/testing/
 
 ### REPL
 
@@ -80,48 +117,25 @@ or
 $ scripts/run-repl.sh
 ```
 
-or
-
-```sh
-$ swift build && swift -I.build/debug -L.build/debug -lComplex
-
-```
-
 and in your repl,
 
 ```sh
-Welcome to Apple Swift version 4.2 (swiftlang-1000.11.37.1 clang-1000.11.45.1). Type :help for assistance.
+Welcome to Swift!  Type :help for assistance.
   1> import Complex
   2> Complex.sqrt(1.i)
 $R0: Complex.Complex<Double> = {
   real = 0.70710678118654757
   imag = 0.70710678118654757
 }
-````
+```
 
 ### Xcode
 
-Xcode project is deliberately excluded from the repository because it should be generated via `swift package generate-xcodeproj` . For convenience, you can
+Just open the package directory — Xcode natively supports Swift Package Manager:
 
+```sh
+$ open ./Package.swift
 ```
-$ scripts/prep-xcode
-```
-
-And the Workspace opens up for you with Playground on top.  The playground is written as a manual.
-
-### iOS and Swift Playground
-
-Unfortunately Swift Package Manager does not support iOS.  To make matters worse Swift Playgrounds does not support modules.
-
-Fortunately Playgrounds allow you to include swift source codes under `Sources` directory.  Just run:
-
-```shell
-$ scripts/ios-prep.sh
-```
-
-and you are all set.  `iOS/Complex.playground` now runs on Xcode and Playgrounds on macOS, and Playgrounds on iOS (Well, it is supposed to iPadOS but it is still labeled iOS).
-
-![](img/playground.png)
 
 ### From Your SwiftPM-Managed Projects
 
@@ -129,7 +143,7 @@ Add the following to the `dependencies` section:
 
 ```swift
 .package(
-  url: "https://github.com/dankogai/swift-complex.git", from: "5.0.0"
+  url: "https://github.com/dankogai/swift-complex.git", from: "6.3.0"
 )
 ```
 
@@ -151,4 +165,16 @@ in your code.  Enjoy!
 
 ### Prerequisite
 
-Swift 5 or better, OS X or Linux to build.
+Swift 6 or better, macOS or Linux to build.
+
+## CAVEAT: Swift Numerics vs. this module
+
+With [apple/swift-numerics] complex number support on swift is [official at last].  You should consider using `ComplexModule` of `Numerics` instead of this.  I am switching to `swift-numerics` myself wherever I can. But there are still a few things that make you want to use this module in spite of that.
+
+* `swift-numerics` relies 100% on swift package manager.  You cannot use it on Swift Playgrounds.
+* `ComplexModule` may be too swifty on some respects.
+  * `ComplexModule` adopts [point at infinity].  While this is mathematically more correct, technically it may cause unexpected results because real operation on complex numbers is no longer isomorphic to real operations on real numbers.  For instance, `Complex(-1.0, 0.0) / Complex(0.0, 0.0)` is `Complex(+infinity, 0.0)`, not `Complex(-infinity, nan)` like many other platforms. 
+
+[apple/swift-numerics]: https://github.com/apple/swift-numerics
+[official at last]: https://swift.org/blog/numerics/
+[point at infinity]: https://en.wikipedia.org/wiki/Point_at_infinity
