@@ -100,30 +100,6 @@ extension ElementaryFunctions {
 // Overrides default
 extension Double : ElementaryFunctions {
     public func toDouble()->Double { return self }
-    public static func acos (_ x:Double)->Double { return Foundation.acos(x) }
-    public static func asin (_ x:Double)->Double { return Foundation.asin(x) }
-    public static func atan (_ x:Double)->Double { return Foundation.atan(x) }
-    public static func acosh(_ x:Double)->Double { return Foundation.acosh(x) }
-    public static func asinh(_ x:Double)->Double { return Foundation.asinh(x) }
-    public static func atanh(_ x:Double)->Double { return Foundation.atanh(x) }
-    public static func cbrt (_ x:Double)->Double { return Foundation.cbrt(x) }
-    public static func cos  (_ x:Double)->Double { return Foundation.cos(x) }
-    public static func cosh (_ x:Double)->Double { return Foundation.cosh(x) }
-    public static func exp  (_ x:Double)->Double { return Foundation.exp(x) }
-    public static func exp2 (_ x:Double)->Double { return Foundation.exp2(x) }
-    public static func expm1(_ x:Double)->Double { return Foundation.expm1(x) }
-    public static func log  (_ x:Double)->Double { return Foundation.log(x) }
-    public static func log2 (_ x:Double)->Double { return Foundation.log2(x) }
-    public static func log10(_ x:Double)->Double { return Foundation.log10(x) }
-    public static func log1p(_ x:Double)->Double { return Foundation.log1p(x) }
-    public static func sin  (_ x:Double)->Double { return Foundation.sin(x) }
-    public static func sinh (_ x:Double)->Double { return Foundation.sinh(x) }
-    public static func sqrt (_ x:Double)->Double { return Foundation.sqrt(x) }
-    public static func tan  (_ x:Double)->Double { return Foundation.tan(x) }
-    public static func tanh (_ x:Double)->Double { return Foundation.tanh(x) }
-    public static func atan2(_ y:Double, _ x:Double)->Double { return Foundation.atan2(y, x) }
-    public static func hypot(_ x:Double, _ y:Double)->Double { return Foundation.hypot(x, y) }
-    public static func pow  (_ x:Double, _ y:Double)->Double { return Foundation.pow(x, y) }
 }
 
 extension Float : ElementaryFunctions {
