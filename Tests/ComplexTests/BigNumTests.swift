@@ -75,11 +75,10 @@ import BigNum
 }
 
 @Suite struct PrecisionDispatchTests {
-    // generic code must dispatch through the ElementaryFunctions requirements
-    // to BigNum's native arbitrary-precision implementations
+    // the plain forms are protocol requirements, so generic code dispatches
+    // to BigNum's native implementations at the element's own precision
     func e<T:ComplexFloatElement>(_ one:T)->T { return T.exp(one) }
-    func e<T:ComplexFloatElement>(_ one:T, px:Int)->T { return T.exp(one, precision:px, debug:false) }
-    @Test func nativePrecision() {
+    @Test func nativeDispatch() {
         // a Double roundtrip would return exactly BigRat(Foundation.exp(1.0));
         // the native 128-bit result must be more precise than that
         #expect(e(BigRat(1)) != BigRat(Foundation.exp(1.0)))
@@ -88,21 +87,18 @@ import BigNum
         #expect(e(1.0) == Foundation.exp(1.0))
     }
     @Test func precisionFlag() {
-        // asking for more precision must change the result
-        #expect(e(BigRat(1), px:24) != e(BigRat(1), px:128))
-        #expect(e(BigFloat(1), px:24) != e(BigFloat(1), px:128))
+        // precision and debug are used when the element has the corresponding
+        // function, as BigRat and BigFloat do
+        #expect(BigRat.exp(BigRat(1), precision:24, debug:false) != BigRat.exp(BigRat(1), precision:128, debug:false))
+        #expect(BigFloat.exp(BigFloat(1), precision:24, debug:false) != BigFloat.exp(BigFloat(1), precision:128, debug:false))
     }
-    @Test func complexPrecisionPropagates() {
-        // precision must reach the Element calls inside CMath
+    @Test func complexReachesNative() {
+        // the native implementations are reached through Complex as well
         typealias C = Complex<BigRat>
-        let z = C(1, 1)
-        #expect(C.exp(z, precision:24) != C.exp(z, precision:128))
-        #expect(C.log(z, precision:24) != C.log(z, precision:128))
-        #expect(C.sqrt(z, precision:24) != C.sqrt(z, precision:128))
-        #expect(C.tan(z, precision:24) != C.tan(z, precision:128))
-        // and the default is ComplexFloat's own precision, 128
         #expect(C.precision == 128)
-        #expect(C.exp(z) == C.exp(z, precision:C.precision))
+        let e1 = C.exp(C(1, 0)).real
+        #expect(e1 != BigRat(Foundation.exp(1.0)))
+        #expect(e1 == BigRat.exp(BigRat(1), precision:BigRat.precision, debug:false))
     }
 }
 

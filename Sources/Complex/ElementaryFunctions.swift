@@ -1,35 +1,34 @@
 public protocol ElementaryFunctions {
     init (_:Double)             // BinaryFloatingPoint already has one
     func toDouble()->Double  // you have to add it yourself
-    /// bit width to which results are computed when `precision` is unspecified
+    /// bit width to which results are computed
     static var precision:Int { get }
-    // full versions with precision and debug flag, as in swift-bignum.
-    // types like BigRat and BigFloat already have these, so their
-    // arbitrary-precision versions become the witnesses automatically.
-    static func acos (_ x:Self, precision:Int, debug:Bool)->Self
-    static func acosh(_ x:Self, precision:Int, debug:Bool)->Self
-    static func asin (_ x:Self, precision:Int, debug:Bool)->Self
-    static func asinh(_ x:Self, precision:Int, debug:Bool)->Self
-    static func atan (_ x:Self, precision:Int, debug:Bool)->Self
-    static func atanh(_ x:Self, precision:Int, debug:Bool)->Self
-    static func cbrt (_ x:Self, precision:Int, debug:Bool)->Self
-    static func cos  (_ x:Self, precision:Int, debug:Bool)->Self
-    static func cosh (_ x:Self, precision:Int, debug:Bool)->Self
-    static func exp  (_ x:Self, precision:Int, debug:Bool)->Self
-    static func exp2 (_ x:Self, precision:Int, debug:Bool)->Self
-    static func expm1(_ x:Self, precision:Int, debug:Bool)->Self
-    static func log  (_ x:Self, precision:Int, debug:Bool)->Self
-    static func log2 (_ x:Self, precision:Int, debug:Bool)->Self
-    static func log10(_ x:Self, precision:Int, debug:Bool)->Self
-    static func log1p(_ x:Self, precision:Int, debug:Bool)->Self
-    static func sin  (_ x:Self, precision:Int, debug:Bool)->Self
-    static func sinh (_ x:Self, precision:Int, debug:Bool)->Self
-    static func sqrt (_ x:Self, precision:Int, debug:Bool)->Self
-    static func tan  (_ x:Self, precision:Int, debug:Bool)->Self
-    static func tanh (_ x:Self, precision:Int, debug:Bool)->Self
-    static func atan2(y:Self, x:Self, precision:Int, debug:Bool)->Self
-    static func hypot(_ x:Self, _ y:Self, precision:Int, debug:Bool)->Self
-    static func pow  (_ x:Self, _ y:Self, precision:Int, debug:Bool)->Self
+    // plain versions only.  types like BigRat and BigFloat already have
+    // them natively, so they become the witnesses automatically.
+    static func acos (_ x:Self)->Self
+    static func acosh(_ x:Self)->Self
+    static func asin (_ x:Self)->Self
+    static func asinh(_ x:Self)->Self
+    static func atan (_ x:Self)->Self
+    static func atanh(_ x:Self)->Self
+    static func cbrt (_ x:Self)->Self
+    static func cos  (_ x:Self)->Self
+    static func cosh (_ x:Self)->Self
+    static func exp  (_ x:Self)->Self
+    static func exp2 (_ x:Self)->Self
+    static func expm1(_ x:Self)->Self
+    static func log  (_ x:Self)->Self
+    static func log2 (_ x:Self)->Self
+    static func log10(_ x:Self)->Self
+    static func log1p(_ x:Self)->Self
+    static func sin  (_ x:Self)->Self
+    static func sinh (_ x:Self)->Self
+    static func sqrt (_ x:Self)->Self
+    static func tan  (_ x:Self)->Self
+    static func tanh (_ x:Self)->Self
+    static func atan2(y:Self, x:Self)->Self
+    static func hypot(_ x:Self, _ y:Self)->Self
+    static func pow  (_ x:Self, _ y:Self)->Self
 }
 
 @available(*, deprecated, renamed: "ElementaryFunctions")
@@ -37,64 +36,66 @@ public typealias FloatingPointMath = ElementaryFunctions
 
 import Foundation
 
-// Default implementations go through Double, so precision and debug are ignored.
+// Default implementations go through Double.
 extension ElementaryFunctions {
     public static var precision:Int { return Double.significandBitCount }
-    public static func acos (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.acos (x.toDouble())) }
-    public static func acosh(_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.acosh(x.toDouble())) }
-    public static func asin (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.asin (x.toDouble())) }
-    public static func asinh(_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.asinh(x.toDouble())) }
-    public static func atan (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.atan (x.toDouble())) }
-    public static func atanh(_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.atanh(x.toDouble())) }
-    public static func cbrt (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.cbrt (x.toDouble())) }
-    public static func cos  (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.cos  (x.toDouble())) }
-    public static func cosh (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.cosh (x.toDouble())) }
-    public static func exp  (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.exp  (x.toDouble())) }
-    public static func exp2 (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.exp2 (x.toDouble())) }
-    public static func expm1(_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.expm1(x.toDouble())) }
-    public static func log  (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.log  (x.toDouble())) }
-    public static func log2 (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.log2 (x.toDouble())) }
-    public static func log10(_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.log10(x.toDouble())) }
-    public static func log1p(_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.log1p(x.toDouble())) }
-    public static func sin  (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.sin  (x.toDouble())) }
-    public static func sinh (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.sinh (x.toDouble())) }
-    public static func sqrt (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.sqrt (x.toDouble())) }
-    public static func tan  (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.tan  (x.toDouble())) }
-    public static func tanh (_ x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.tanh (x.toDouble())) }
-    public static func atan2(y:Self, x:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.atan2(y.toDouble(), x.toDouble())) }
-    public static func hypot(_ x:Self, _ y:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.hypot(x.toDouble(), y.toDouble())) }
-    public static func pow  (_ x:Self, _ y:Self, precision:Int, debug:Bool)->Self { return Self(Foundation.pow  (x.toDouble(), y.toDouble())) }
+    public static func acos (_ x:Self)->Self { return Self(Foundation.acos (x.toDouble())) }
+    public static func acosh(_ x:Self)->Self { return Self(Foundation.acosh(x.toDouble())) }
+    public static func asin (_ x:Self)->Self { return Self(Foundation.asin (x.toDouble())) }
+    public static func asinh(_ x:Self)->Self { return Self(Foundation.asinh(x.toDouble())) }
+    public static func atan (_ x:Self)->Self { return Self(Foundation.atan (x.toDouble())) }
+    public static func atanh(_ x:Self)->Self { return Self(Foundation.atanh(x.toDouble())) }
+    public static func cbrt (_ x:Self)->Self { return Self(Foundation.cbrt (x.toDouble())) }
+    public static func cos  (_ x:Self)->Self { return Self(Foundation.cos  (x.toDouble())) }
+    public static func cosh (_ x:Self)->Self { return Self(Foundation.cosh (x.toDouble())) }
+    public static func exp  (_ x:Self)->Self { return Self(Foundation.exp  (x.toDouble())) }
+    public static func exp2 (_ x:Self)->Self { return Self(Foundation.exp2 (x.toDouble())) }
+    public static func expm1(_ x:Self)->Self { return Self(Foundation.expm1(x.toDouble())) }
+    public static func log  (_ x:Self)->Self { return Self(Foundation.log  (x.toDouble())) }
+    public static func log2 (_ x:Self)->Self { return Self(Foundation.log2 (x.toDouble())) }
+    public static func log10(_ x:Self)->Self { return Self(Foundation.log10(x.toDouble())) }
+    public static func log1p(_ x:Self)->Self { return Self(Foundation.log1p(x.toDouble())) }
+    public static func sin  (_ x:Self)->Self { return Self(Foundation.sin  (x.toDouble())) }
+    public static func sinh (_ x:Self)->Self { return Self(Foundation.sinh (x.toDouble())) }
+    public static func sqrt (_ x:Self)->Self { return Self(Foundation.sqrt (x.toDouble())) }
+    public static func tan  (_ x:Self)->Self { return Self(Foundation.tan  (x.toDouble())) }
+    public static func tanh (_ x:Self)->Self { return Self(Foundation.tanh (x.toDouble())) }
+    public static func atan2(y:Self, x:Self)->Self { return Self(Foundation.atan2(y.toDouble(), x.toDouble())) }
+    public static func hypot(_ x:Self, _ y:Self)->Self { return Self(Foundation.hypot(x.toDouble(), y.toDouble())) }
+    public static func pow  (_ x:Self, _ y:Self)->Self { return Self(Foundation.pow  (x.toDouble(), y.toDouble())) }
 }
 
-// Short versions.  They go through the protocol requirements above
-// so conforming types pick their own implementations dynamically.
+// Versions with precision and debug flag, as in swift-bignum.
+// They are NOT protocol requirements: precision and debug are used only
+// when the element has the corresponding function (e.g. BigRat, BigFloat).
+// Otherwise they simply forward to the plain versions above.
 extension ElementaryFunctions {
-    public static func acos (_ x:Self)->Self { return acos(x, precision:precision, debug:false) }
-    public static func acosh(_ x:Self)->Self { return acosh(x, precision:precision, debug:false) }
-    public static func asin (_ x:Self)->Self { return asin(x, precision:precision, debug:false) }
-    public static func asinh(_ x:Self)->Self { return asinh(x, precision:precision, debug:false) }
-    public static func atan (_ x:Self)->Self { return atan(x, precision:precision, debug:false) }
-    public static func atanh(_ x:Self)->Self { return atanh(x, precision:precision, debug:false) }
-    public static func cbrt (_ x:Self)->Self { return cbrt(x, precision:precision, debug:false) }
-    public static func cos  (_ x:Self)->Self { return cos(x, precision:precision, debug:false) }
-    public static func cosh (_ x:Self)->Self { return cosh(x, precision:precision, debug:false) }
-    public static func exp  (_ x:Self)->Self { return exp(x, precision:precision, debug:false) }
-    public static func exp2 (_ x:Self)->Self { return exp2(x, precision:precision, debug:false) }
-    public static func expm1(_ x:Self)->Self { return expm1(x, precision:precision, debug:false) }
-    public static func log  (_ x:Self)->Self { return log(x, precision:precision, debug:false) }
-    public static func log2 (_ x:Self)->Self { return log2(x, precision:precision, debug:false) }
-    public static func log10(_ x:Self)->Self { return log10(x, precision:precision, debug:false) }
-    public static func log1p(_ x:Self)->Self { return log1p(x, precision:precision, debug:false) }
-    public static func sin  (_ x:Self)->Self { return sin(x, precision:precision, debug:false) }
-    public static func sinh (_ x:Self)->Self { return sinh(x, precision:precision, debug:false) }
-    public static func sqrt (_ x:Self)->Self { return sqrt(x, precision:precision, debug:false) }
-    public static func tan  (_ x:Self)->Self { return tan(x, precision:precision, debug:false) }
-    public static func tanh (_ x:Self)->Self { return tanh(x, precision:precision, debug:false) }
-    public static func atan2(_ y:Self, _ x:Self)->Self { return atan2(y:y, x:x, precision:precision, debug:false) }
-    public static func hypot(_ x:Self, _ y:Self)->Self { return hypot(x, y, precision:precision, debug:false) }
-    public static func pow  (_ x:Self, _ y:Self)->Self { return pow  (x, y, precision:precision, debug:false) }
+    public static func acos (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return acos(x) }
+    public static func acosh(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return acosh(x) }
+    public static func asin (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return asin(x) }
+    public static func asinh(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return asinh(x) }
+    public static func atan (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return atan(x) }
+    public static func atanh(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return atanh(x) }
+    public static func cbrt (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return cbrt(x) }
+    public static func cos  (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return cos(x) }
+    public static func cosh (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return cosh(x) }
+    public static func exp  (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return exp(x) }
+    public static func exp2 (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return exp2(x) }
+    public static func expm1(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return expm1(x) }
+    public static func log  (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return log(x) }
+    public static func log2 (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return log2(x) }
+    public static func log10(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return log10(x) }
+    public static func log1p(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return log1p(x) }
+    public static func sin  (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return sin(x) }
+    public static func sinh (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return sinh(x) }
+    public static func sqrt (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return sqrt(x) }
+    public static func tan  (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return tan(x) }
+    public static func tanh (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return tanh(x) }
+    public static func atan2(y:Self, x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return atan2(y:y, x:x) }
+    public static func atan2(_ y:Self, _ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return atan2(y:y, x:x) }
+    public static func hypot(_ x:Self, _ y:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return hypot(x, y) }
+    public static func pow  (_ x:Self, _ y:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return pow  (x, y) }
 }
-
 
 // Overrides default
 extension Double : ElementaryFunctions {
