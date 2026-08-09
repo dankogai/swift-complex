@@ -63,16 +63,15 @@ let cf64 = Float64.pi + Float64.pi.i
 
 /*:
  
- `ComplexElement` is `FloatingPoint & FloatingPointMath.  Meaning it is a bit trikier to comply.  Unlike built-in `FloatingPoint`, [FloatingPointMath] is externaly defined to ensure necessary math functions exist. But if your type is already `FloatingPoint`, Complying to `FloatingPointMath` should be relatively easy.  All you need is:
+ `ComplexElement` is `FloatingPoint & ElementaryFunctions`.  Meaning it is a bit trikier to comply.  Unlike built-in `FloatingPoint`, `ElementaryFunctions` is externaly defined to ensure necessary math functions exist. But if your type is already `FloatingPoint`, Complying to `ElementaryFunctions` should be relatively easy.  All you need is:
  
- [FloatingPointMath]: https://github.com/dankogai/swift-floatingpointmath
  
  ```
- extension YourFloat: FloatingPointMath {
+ extension YourFloat: ElementaryFunctions {
    init(_:Double) {
      // convert from Double
    }
-   var asDouble:Double {
+   func toDouble()->Double {
      // convert to Double
    }
  }
