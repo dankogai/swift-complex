@@ -36,6 +36,7 @@ playground.xcworkspace
 # Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
 # Packages/
 .build/
+.swiftpm/
 *.xcodeproj
 Package.resolved
 
@@ -63,3 +64,12 @@ Carthage/Build
 
 fastlane/report.xml
 fastlane/screenshots
+
+# VSCode
+.vscode/
+
+# Claude Code
+.claude/
+
+# Anything out of the sight of git
+.attic/

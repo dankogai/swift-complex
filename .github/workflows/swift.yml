@@ -1,0 +1,23 @@
+name: CI via GitHub Actions
+
+on:
+  workflow_dispatch:
+  push:
+    tags: [ '*.*.*' ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        swift: ["6.3"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: SwiftyLab/setup-swift@v1
+        with:
+          swift-version: ${{ matrix.swift }}
+      - uses: actions/checkout@v6
+      - name: Run tests
+        run: swift test -c release -Xswiftc -enable-testing -v
