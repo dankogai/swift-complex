@@ -1,64 +1,64 @@
-import XCTest
+import Testing
 @testable import Complex
 
-final class GaussianIntTests: XCTestCase {
-    func testInit() {
-        XCTAssertEqual(GaussianInt(real:3, imag:4),GaussianInt(1+2, 2*2))
-        XCTAssertEqual(1.i, GaussianInt(0, 1))
+@Suite struct GaussianIntTests {
+    typealias G = GaussianInt<Int>
+    @Test func initialization() {
+        #expect(G(real:3, imag:4) == G(1+2, 2*2))
+        #expect(1.i == G(0, 1))
     }
-    func testHash() {
-        XCTAssertNotEqual(GaussianInt(3, 4).hashValue, GaussianInt(4, 3).hashValue)
+    @Test func hash() {
+        #expect(G(3, 4).hashValue != G(4, 3).hashValue)
     }
-    func testAdd() {
-        XCTAssertEqual(3+4.i, GaussianInt(3, 4))
-        XCTAssertEqual(+GaussianInt(3, 4), 3+4.i)
-        XCTAssertEqual((1+1.i) + (2+3.i), 3+4.i)
-        XCTAssertEqual((1+1.i) + 2,       3+1.i)
-        XCTAssertEqual(1       + (2+3.i), 3+3.i)
-        var z = 1+1.i
+    @Test func add() {
+        #expect(3+4.i == G(3, 4))
+        #expect(+G(3, 4) == 3+4.i)
+        let z11: G = 1+1.i
+        let z23: G = 2+3.i
+        #expect(z11 + z23 == 3+4.i)
+        #expect(z11 + 2   == 3+1.i)
+        #expect(1 + z23   == 3+3.i)
+        var z: G = 1+1.i
         z += z
-        XCTAssertEqual(z, 2+2.i)
+        #expect(z == 2+2.i)
         z += 1
-        XCTAssertEqual(z, 3+2.i)
+        #expect(z == 3+2.i)
     }
-    func testSub() {
-        XCTAssertEqual(3-4.i, GaussianInt(3, -4))
-        XCTAssertEqual(-GaussianInt(3, -4), -3+4.i)
-        XCTAssertEqual((1+1.i) - (2+3.i), -1-2.i)
-        XCTAssertEqual((1+1.i) - 2,         -1+1.i)
-        XCTAssertEqual(1         - (2+3.i), -1-3.i)
-        var z = 1+1.i
+    @Test func sub() {
+        #expect(3-4.i == G(3, -4))
+        #expect(-G(3, -4) == -3+4.i)
+        let z11: G = 1+1.i
+        let z23: G = 2+3.i
+        #expect(z11 - z23 == -1-2.i)
+        #expect(z11 - 2   == -1+1.i)
+        #expect(1 - z23   == -1-3.i)
+        var z: G = 1+1.i
         z -= z
-        XCTAssertEqual(z, 0+0.i)
+        #expect(z == 0+0.i)
         z -= 1
-        XCTAssertEqual(z, -1+0.i)
+        #expect(z == -1+0.i)
     }
-    func testMul() {
-        XCTAssertEqual((3+4.i)*(3+4.i), -7+24.i)
-        XCTAssertEqual((3+4.i)*2,       6+8.i)
-        XCTAssertEqual(2*(3+4.i),       6+8.i)
-        var z = 3+4.i
+    @Test func mul() {
+        let z34: G = 3+4.i
+        #expect(z34*z34 == -7+24.i)
+        #expect(z34*2   == 6+8.i)
+        #expect(2*z34   == 6+8.i)
+        var z: G = 3+4.i
         z *= z
-        XCTAssertEqual(z, -7+24.i)
+        #expect(z == -7+24.i)
         z *= 2
-        XCTAssertEqual(z, -14+48.i)
+        #expect(z == -14+48.i)
     }
-    func testDiv() {
-        XCTAssertEqual((-7+24.i)/(3+4.i), 3+4.i)
-        XCTAssertEqual((3+4.i)/0.5,       6+8.i)
-        XCTAssertEqual(2/(1+1.i),       1-1.i)
-        var z = -7+24.i
-        z /= 3+4.i
-        XCTAssertEqual(z, 3+4.i)
+    @Test func div() {
+        let z34: G = 3+4.i
+        let z_724: G = -7+24.i
+        #expect(z_724/z34 == z34)
+        let z11: G = 1+1.i
+        #expect(2/z11 == 1-1.i)
+        var z: G = -7+24.i
+        z /= z34
+        #expect(z == 3+4.i)
         // z /= 0.5
-        // XCTAssertEqual(z, 6+8.i)
+        // #expect(z == 6+8.i)
     }
-    static var allTests = [
-        ("testInit", testInit),
-        ("testHash", testHash),
-        ("testAdd", testAdd),
-        ("testSub",  testSub),
-        ("testMul",  testMul),
-        ("testDiv",  testDiv),
-    ]
 }

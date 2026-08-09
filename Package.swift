@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:6.0
 
 import PackageDescription
 
@@ -9,18 +9,24 @@ let package = Package(
         name: "Complex",
         type: .dynamic,
         targets: ["Complex"]),
-      
+
     ],
-    dependencies: [],
+    dependencies: [
+      .package(url: "https://github.com/dankogai/swift-bignum.git", from: "6.3.0"),
+    ],
     targets: [
       .target(
         name: "Complex",
         dependencies: []),
-      .target(
+      .executableTarget(
         name: "ComplexRun",
         dependencies: ["Complex"]),
       .testTarget(
         name: "ComplexTests",
-        dependencies: ["Complex"]),
-    ]
+        dependencies: [
+          "Complex",
+          .product(name: "BigNum", package: "swift-bignum"),
+        ]),
+    ],
+    swiftLanguageModes: [.v5]
 )
