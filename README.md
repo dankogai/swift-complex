@@ -1,5 +1,6 @@
 [![Swift 6](https://img.shields.io/badge/swift-6-blue.svg)](https://swift.org)
 [![MIT LiCENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CI via GitHub Actions](https://github.com/dankogai/swift-complex/actions/workflows/swift.yml/badge.svg)](https://github.com/dankogai/swift-complex/actions/workflows/swift.yml)
 
 # swift-complex
 
