@@ -48,7 +48,7 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 
 ## RMath and CMath
 
-`Complex<R>` itself only requires `R` to be `FloatingPoint`.  When `R` also conforms to `RMath : FloatingPoint` (typealias `RealElementaryFunctions`), `Complex<R>` conforms to `CMath` (typealias `ComplexElementaryFunctions`) and gets the math functions.  `RMath` was formerly named `FloatingPointMath` (kept as a deprecated typealias); it is deliberately not named `ElementaryFunctions`, which would collide with [apple/swift-numerics] and [dankogai/swift-bignum].  `RMath` is defined in this module to ensure necessary math functions exist.  If your type is already `FloatingPoint`, complying to `RMath` is relatively easy.  All you need is:
+`Complex<R>` itself only requires `R` to be `FloatingPoint`.  When `R` also conforms to `RMath : FloatingPoint` (typealias `RealElementaryFunctions`), `Complex<R>` conforms to `CMath` (typealias `ComplexElementaryFunctions`) and gets the math functions.  `RMath` is deliberately not named `ElementaryFunctions`, which would collide with [apple/swift-numerics] and [dankogai/swift-bignum].  `RMath` is defined in this module to ensure necessary math functions exist.  If your type is already `FloatingPoint`, complying to `RMath` is relatively easy.  All you need is:
 
 ```swift
 extension YourFloat : RMath {

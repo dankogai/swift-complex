@@ -33,9 +33,6 @@ public protocol RMath : FloatingPoint {
 
 public typealias RealElementaryFunctions = RMath
 
-@available(*, deprecated, renamed: "RMath")
-public typealias FloatingPointMath = RMath
-
 import Foundation
 
 // Default implementations go through Double.
