@@ -48,20 +48,17 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 
 ## RMath and CMath
 
-`Complex<R>` itself only requires `R` to be `FloatingPoint`.  When `R` also conforms to `RMath : FloatingPoint` (typealias `RealElementaryFunctions`), `Complex<R>` conforms to `CMath` (typealias `ComplexElementaryFunctions`) and gets the math functions.  `RMath` is deliberately not named `ElementaryFunctions`, which would collide with [apple/swift-numerics] and [dankogai/swift-bignum].  `RMath` is defined in this module to ensure necessary math functions exist.  If your type is already `FloatingPoint`, complying to `RMath` is relatively easy.  All you need is:
+`Complex<R>` itself only requires `R` to be `FloatingPoint`.  When `R` also conforms to `RMath : FloatingPoint` (typealias `RealElementaryFunctions`), `Complex<R>` conforms to `CMath` (typealias `ComplexElementaryFunctions`) and gets the math functions.  `RMath` is deliberately not named `ElementaryFunctions`, which would collide with [apple/swift-numerics] and [dankogai/swift-bignum].  `RMath` is defined in this module to ensure necessary math functions exist.  If your type already has the math functions — like `BigRat` and `BigFloat` of [dankogai/swift-bignum] — they become the witnesses of the protocol requirements, and an empty conformance is all you need:
 
 ```swift
-extension YourFloat : RMath {
-  init(_:Double) {
-    // convert from Double
-  }
-  func toDouble()->Double {
-    // convert to Double
-  }
-}
+import Complex
+import BigNum
+
+extension BigRat:   @retroactive RMath {}
+extension BigFloat: @retroactive RMath {}
 ```
 
-The rest — `exp`, `log`, `sin`, `cos` and their friends — are default-implemented by way of `Double`, meaning the precision of the math functions is that of `Double`.  If your type has its own math functions, define them and they become the witnesses of the protocol requirements — see below.
+Otherwise you provide the math functions yourself, along with `init(_:Double)`, `toDouble()`, and `precision`.  `RMath` deliberately ships no `Double`-round-trip defaults for them: a competing default would make witness resolution ambiguous for types like the above, and would silently lose precision.
 
 ### precision and debug
 
