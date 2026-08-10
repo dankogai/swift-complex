@@ -99,7 +99,7 @@ import Darwin
 
 public typealias ComplexFloatElement = FloatingPoint & ElementaryFunctions
 
-public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible
+public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible & ElementaryFunctions
     where Element: ComplexFloatElement {
 }
 
