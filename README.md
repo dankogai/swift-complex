@@ -75,6 +75,17 @@ They are *not* protocol requirements.  `precision` and `debug` are used only whe
 
 [dankogai/swift-bignum]: https://github.com/dankogai/swift-bignum
 
+### ComplexOperators
+
+`**` — `pow(base, exponent)` as an operator — lives in a separate module so that plain `import Complex` does not add operators to your namespace:
+
+```swift
+import ComplexOperators // @_exported imports Complex, too
+2.0 ** 3.0              // 8.0
+(1.0+1.0.i) ** 2.0      // (0.0+2.0.i)
+2.0 ** 3.0 ** 2.0       // 512.0 -- binds tighter than *, associates right
+```
+
 ### arbitrary precision
 
 This module is tested against [dankogai/swift-bignum] — `Complex<BigRat>`, `Complex<BigFloat>`, and `GaussianInt<BigInt>`.  Since `BigRat` and `BigFloat` natively offer arbitrary-precision math functions, `Complex` math on them is computed natively — not by way of `Double`.  See [Tests/ComplexTests/BigNumSupport.swift] for how to bridge them to `RMath`.  Note swift-bignum is a test-only dependency; the library itself depends on nothing but the standard library.

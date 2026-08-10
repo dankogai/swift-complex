@@ -8,7 +8,7 @@ let package = Package(
       .library(
         name: "Complex",
         type: .dynamic,
-        targets: ["Complex"]),
+        targets: ["Complex", "ComplexOperators"]),
 
     ],
     dependencies: [
@@ -18,6 +18,9 @@ let package = Package(
       .target(
         name: "Complex",
         dependencies: []),
+      .target(
+        name: "ComplexOperators",
+        dependencies: ["Complex"]),
       .executableTarget(
         name: "ComplexRun",
         dependencies: ["Complex"]),
@@ -25,6 +28,7 @@ let package = Package(
         name: "ComplexTests",
         dependencies: [
           "Complex",
+          "ComplexOperators",
           .product(name: "BigNum", package: "swift-bignum"),
         ]),
     ],
