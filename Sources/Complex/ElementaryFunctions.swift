@@ -116,7 +116,7 @@ extension Float : RMath {
 // default precision for the CMath functions below.  it is passed down to
 // Element, which may ignore it (e.g. Double).
 private var complexFloatPrecision:Int = 128
-extension ComplexElementaryFunctions {
+extension CMath {
     public static var precision:Int {
         get { return complexFloatPrecision }
         set { complexFloatPrecision = newValue }
@@ -124,7 +124,7 @@ extension ComplexElementaryFunctions {
 }
 
 // CMath.  precision and debug propagate down to every Element call.
-extension ComplexElementaryFunctions {
+extension CMath {
     /// arc cosine of z in Complex
     public static func acos(_ z:Self, precision px:Int=Self.precision, debug db:Bool=false) -> Self {
         return log(z - sqrt(1 - z*z, precision:px, debug:db).i, precision:px, debug:db).i
@@ -272,10 +272,9 @@ extension ComplexElementaryFunctions {
     public static func pow(_ lhs:Element, _ rhs:Element, precision px:Int=Self.precision, debug db:Bool=false) -> Self { return Self(Element.pow(lhs, rhs, precision:px, debug:db)) }
 }
 
-// The plain versions below witness the ComplexElementaryFunctions
-// requirements by forwarding to the versions above --
+// The plain versions below witness the CMath requirements by forwarding to the versions above --
 // without them the Double-based defaults would be picked, dropping .imag.
-extension ComplexElementaryFunctions {
+extension CMath {
     public static func acos (_ z:Self)->Self { return acos(z, precision:Self.precision, debug:false) }
     public static func acosh(_ z:Self)->Self { return acosh(z, precision:Self.precision, debug:false) }
     public static func asin (_ z:Self)->Self { return asin(z, precision:Self.precision, debug:false) }

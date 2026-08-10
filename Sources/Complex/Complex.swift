@@ -103,7 +103,7 @@ public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible
 }
 
 /// Complex version of RMath
-public protocol ComplexElementaryFunctions : ComplexFloat where Element: RMath {
+public protocol CMath : ComplexFloat where Element: RMath {
     init (_:Double)
     func toDouble()->Double
     static var precision:Int { get }
@@ -133,8 +133,8 @@ public protocol ComplexElementaryFunctions : ComplexFloat where Element: RMath {
     static func pow  (_ x:Self, _ y:Self)->Self
 }
 
-/// CMath for short
-public typealias CMath = ComplexElementaryFunctions
+/// CMath spelled out
+public typealias ComplexElementaryFunctions = CMath
 
 extension ComplexFloat {
     /// /
@@ -180,7 +180,7 @@ extension ComplexFloat {
     public var isZero:Bool { return real.isZero && imag.isZero }
 }
 
-extension ComplexElementaryFunctions {
+extension CMath {
     /// construct by polar coodinates
     public init(abs:Element, arg:Element) {
         self.init(abs * Element.cos(arg), abs * Element.sin(arg))
@@ -240,7 +240,7 @@ extension Complex : Codable where Element: Codable {
     }
 }
 
-extension Complex : ComplexElementaryFunctions where R: RMath {}
+extension Complex : CMath where R: RMath {}
 
 extension FloatingPoint {
     public var i:Complex<Self> {
