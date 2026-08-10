@@ -82,6 +82,9 @@ import BigNum
         // the plain forms are protocol requirements, so generic code dispatches
         // to BigNum's native implementations at the element's own precision
         func e<T:RealElementaryFunctions>(_ one:T)->T { return T.exp(one) }
+        // direct precision calls go through BigFloatingPoint to sidestep the
+        // overload ambiguity with RMath's precision:debug: conveniences
+        func nexp<T:BigFloatingPoint>(_ x:T, _ px:Int)->T { return T.exp(x, precision:px, debug:false) }
         @Test func nativeDispatch() {
             // a Double roundtrip would return exactly BigRat(Foundation.exp(1.0));
             // the native 128-bit result must be more precise than that
@@ -93,8 +96,8 @@ import BigNum
         @Test func precisionFlag() {
             // precision and debug are used when the element has the corresponding
             // function, as BigRat and BigFloat do
-            #expect(BigRat.exp(BigRat(1), precision:24, debug:false) != BigRat.exp(BigRat(1), precision:128, debug:false))
-            #expect(BigFloat.exp(BigFloat(1), precision:24, debug:false) != BigFloat.exp(BigFloat(1), precision:128, debug:false))
+            #expect(nexp(BigRat(1), 24) != nexp(BigRat(1), 128))
+            #expect(nexp(BigFloat(1), 24) != nexp(BigFloat(1), 128))
         }
         @Test func complexReachesNative() {
             // the native implementations are reached through Complex as well
@@ -102,7 +105,7 @@ import BigNum
             #expect(C.precision == 128)
             let e1 = C.exp(C(1, 0)).real
             #expect(e1 != BigRat(Foundation.exp(1.0)))
-            #expect(e1 == BigRat.exp(BigRat(1), precision:BigRat.precision, debug:false))
+            #expect(e1 == nexp(BigRat(1), BigRat.precision))
         }
     }
 
