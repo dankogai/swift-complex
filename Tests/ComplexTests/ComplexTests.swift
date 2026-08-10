@@ -87,14 +87,14 @@ import Foundation
         #expect(z.abs == 5.0)
     }
     @Test func elementaryFunctions() {
-        // Complex itself conforms to ElementaryFunctions,
-        // so it works in generic code constrained to it
-        func f<T:ElementaryFunctions>(_ x:T)->T { return T.exp(x) }
-        #expect(f(C(0.0, Double.pi)).real == -1.0)
+        // RMath == RealElementaryFunctions constrains real types
+        func f<T:RMath>(_ x:T)->T { return T.exp(x) }
         #expect(f(1.0) == Foundation.exp(1.0))
-        // CMath == ComplexElementaryFunctions constrains to complex types
-        func g<T:CMath>(_ z:T)->T { return T.sqrt(z) }
-        #expect(g(C(-4.0, 0.0)) == C(0.0, 2.0))
+        // CMath == ComplexElementaryFunctions constrains complex types
+        func g<T:CMath>(_ z:T)->T { return T.exp(z) }
+        #expect(g(C(0.0, Double.pi)).real == -1.0)
+        func h0<T:CMath>(_ z:T)->T { return T.sqrt(z) }
+        #expect(h0(C(-4.0, 0.0)) == C(0.0, 2.0))
         // Complex<R> itself only needs R:FloatingPoint;
         // arithmetic works without ElementaryFunctions
         func h<T:FloatingPoint>(_ x:T)->Complex<T> { return Complex(x, x) / Complex(x, -x) }

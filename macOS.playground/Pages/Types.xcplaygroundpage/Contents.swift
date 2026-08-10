@@ -63,11 +63,11 @@ let cf64 = Float64.pi + Float64.pi.i
 
 /*:
  
- `ComplexElement` is `FloatingPoint & ElementaryFunctions`.  Meaning it is a bit trikier to comply.  Unlike built-in `FloatingPoint`, `ElementaryFunctions` is externaly defined to ensure necessary math functions exist. But if your type is already `FloatingPoint`, Complying to `ElementaryFunctions` should be relatively easy.  All you need is:
+ `Complex<R>` only requires `R` to be `FloatingPoint`; for math functions `R` should be `RMath`.  Meaning it is a bit trikier to comply.  Unlike built-in `FloatingPoint`, `RMath` is externaly defined to ensure necessary math functions exist. But if your type is already `FloatingPoint`, Complying to `RMath` should be relatively easy.  All you need is:
  
  
  ```
- extension YourFloat: ElementaryFunctions {
+ extension YourFloat: RMath {
    init(_:Double) {
      // convert from Double
    }

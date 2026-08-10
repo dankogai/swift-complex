@@ -1,10 +1,4 @@
-// BigNum declares its own ElementaryFunctions protocol, and `Complex.ElementaryFunctions`
-// cannot be spelled out because the module name is shadowed by the Complex type.
-// Scoped imports keep BigNum's protocol out of sight so the bare name resolves
-// to the Complex module's protocol.
-import struct BigNum.BigRational
-import struct BigNum.BigFloat
-import protocol BigNum.BigFloatingPoint
+import BigNum
 @testable import Complex
 
 // Trampolines constrained to BigFloatingPoint alone, so calls inside resolve
@@ -40,7 +34,7 @@ private enum BN {
 // and BigNum's own functions match the requirements, which is ambiguous.
 // The precision/debug versions forward to BigNum's natives so that the flags
 // are honored on BigRational.
-extension BigRational : ElementaryFunctions {
+extension BigRational : RMath {
     public static func acos(_ x:Self)->Self { return BN.acos(x, precision, false) }
     public static func acos(_ x:Self, precision px:Int, debug db:Bool)->Self { return BN.acos(x, px, db) }
     public static func acosh(_ x:Self)->Self { return BN.acosh(x, precision, false) }
@@ -95,7 +89,7 @@ extension BigRational : ElementaryFunctions {
 // and BigNum's own functions match the requirements, which is ambiguous.
 // The precision/debug versions forward to BigNum's natives so that the flags
 // are honored on BigFloat.
-extension BigFloat : ElementaryFunctions {
+extension BigFloat : RMath {
     public static func acos(_ x:Self)->Self { return BN.acos(x, precision, false) }
     public static func acos(_ x:Self, precision px:Int, debug db:Bool)->Self { return BN.acos(x, px, db) }
     public static func acosh(_ x:Self)->Self { return BN.acosh(x, precision, false) }

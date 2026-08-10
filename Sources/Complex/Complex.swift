@@ -95,10 +95,6 @@ import Glibc
 import Darwin
 #endif
 
-// import ElementaryFunctions
-
-public typealias RealElementaryFunctions = FloatingPoint & ElementaryFunctions
-
 @available(*, deprecated, renamed: "RealElementaryFunctions")
 public typealias ComplexFloatElement = RealElementaryFunctions
 
@@ -106,9 +102,35 @@ public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible
     where Element: FloatingPoint {
 }
 
-/// Complex version of ElementaryFunctions
-public protocol ComplexElementaryFunctions : ComplexFloat & ElementaryFunctions
-    where Element: RealElementaryFunctions {
+/// Complex version of RMath
+public protocol ComplexElementaryFunctions : ComplexFloat where Element: RMath {
+    init (_:Double)
+    func toDouble()->Double
+    static var precision:Int { get }
+    static func acos (_ x:Self)->Self
+    static func acosh(_ x:Self)->Self
+    static func asin (_ x:Self)->Self
+    static func asinh(_ x:Self)->Self
+    static func atan (_ x:Self)->Self
+    static func atanh(_ x:Self)->Self
+    static func cbrt (_ x:Self)->Self
+    static func cos  (_ x:Self)->Self
+    static func cosh (_ x:Self)->Self
+    static func exp  (_ x:Self)->Self
+    static func exp2 (_ x:Self)->Self
+    static func expm1(_ x:Self)->Self
+    static func log  (_ x:Self)->Self
+    static func log2 (_ x:Self)->Self
+    static func log10(_ x:Self)->Self
+    static func log1p(_ x:Self)->Self
+    static func sin  (_ x:Self)->Self
+    static func sinh (_ x:Self)->Self
+    static func sqrt (_ x:Self)->Self
+    static func tan  (_ x:Self)->Self
+    static func tanh (_ x:Self)->Self
+    static func atan2(y:Self, x:Self)->Self
+    static func hypot(_ x:Self, _ y:Self)->Self
+    static func pow  (_ x:Self, _ y:Self)->Self
 }
 
 /// CMath for short
@@ -218,8 +240,7 @@ extension Complex : Codable where Element: Codable {
     }
 }
 
-extension Complex : ElementaryFunctions where R: RealElementaryFunctions {}
-extension Complex : ComplexElementaryFunctions where R: RealElementaryFunctions {}
+extension Complex : ComplexElementaryFunctions where R: RMath {}
 
 extension FloatingPoint {
     public var i:Complex<Self> {

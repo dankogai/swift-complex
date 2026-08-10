@@ -30,7 +30,7 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 ### like C++11
 
 * Protocol-Oriented
-  * Complex numbers are `Complex<R>` where `R` is the type of `.real` and `.imag` that conforms to `FloatingPoint`.  Math functions become available when `R` also conforms to `RealElementaryFunctions`, that is, `FloatingPoint & ElementaryFunctions`.
+  * Complex numbers are `Complex<R>` where `R` is the type of `.real` and `.imag` that conforms to `FloatingPoint`.  Math functions become available when `R` also conforms to `RMath`, aka `RealElementaryFunctions`.
   * Gaussian integers are `GaussianInt<I>` where `I` conforms to the `GaussianIntElement` protocol, that is, `SignedInteger`.
   * In addition to basic arithmetic operations like `+`, `-`, `*`, `/` and `abs()`, `Complex<R>` gets `libm` functions like `exp()`, `log()`, `sin()`, `cos()`.
 
@@ -46,12 +46,12 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 * Construct a complex number via polar notation as:
   * `Complex(abs:magnitude, arg:argument)`
 
-## ElementaryFunctions
+## RMath and CMath
 
-`Complex<R>` itself only requires `R` to be `FloatingPoint`.  When `R` also conforms to `RealElementaryFunctions` = `FloatingPoint & ElementaryFunctions`, `Complex<R>` conforms to `ComplexElementaryFunctions` (`CMath` for short) and gets the math functions.  `ElementaryFunctions` was formerly named `FloatingPointMath`; it is renamed for the sake of [apple/swift-numerics] (a deprecated typealias keeps the old name compiling).  Unlike built-in `FloatingPoint`, `ElementaryFunctions` is defined in this module to ensure necessary math functions exist.  If your type is already `FloatingPoint`, complying to `ElementaryFunctions` is relatively easy.  All you need is:
+`Complex<R>` itself only requires `R` to be `FloatingPoint`.  When `R` also conforms to `RMath : FloatingPoint` (typealias `RealElementaryFunctions`), `Complex<R>` conforms to `ComplexElementaryFunctions` (`CMath` for short) and gets the math functions.  `RMath` was formerly named `FloatingPointMath` (kept as a deprecated typealias); it is deliberately not named `ElementaryFunctions`, which would collide with [apple/swift-numerics] and [dankogai/swift-bignum].  `RMath` is defined in this module to ensure necessary math functions exist.  If your type is already `FloatingPoint`, complying to `RMath` is relatively easy.  All you need is:
 
 ```swift
-extension YourFloat : ElementaryFunctions {
+extension YourFloat : RMath {
   init(_:Double) {
     // convert from Double
   }
@@ -80,7 +80,7 @@ They are *not* protocol requirements.  `precision` and `debug` are used only whe
 
 ### arbitrary precision
 
-This module is tested against [dankogai/swift-bignum] — `Complex<BigRat>`, `Complex<BigFloat>`, and `GaussianInt<BigInt>`.  Since `BigRat` and `BigFloat` natively offer arbitrary-precision math functions, `Complex` math on them is computed natively — not by way of `Double`.  See [Tests/ComplexTests/BigNumSupport.swift] for how to bridge them to `ElementaryFunctions`.  Note swift-bignum is a test-only dependency; the library itself depends on nothing but the standard library.
+This module is tested against [dankogai/swift-bignum] — `Complex<BigRat>`, `Complex<BigFloat>`, and `GaussianInt<BigInt>`.  Since `BigRat` and `BigFloat` natively offer arbitrary-precision math functions, `Complex` math on them is computed natively — not by way of `Double`.  See [Tests/ComplexTests/BigNumSupport.swift] for how to bridge them to `RMath`.  Note swift-bignum is a test-only dependency; the library itself depends on nothing but the standard library.
 
 [Tests/ComplexTests/BigNumSupport.swift]: Tests/ComplexTests/BigNumSupport.swift
 

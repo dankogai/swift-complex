@@ -1,4 +1,4 @@
-public protocol ElementaryFunctions {
+public protocol RMath : FloatingPoint {
     init (_:Double)             // BinaryFloatingPoint already has one
     func toDouble()->Double  // you have to add it yourself
     /// bit width to which results are computed
@@ -31,13 +31,15 @@ public protocol ElementaryFunctions {
     static func pow  (_ x:Self, _ y:Self)->Self
 }
 
-@available(*, deprecated, renamed: "ElementaryFunctions")
-public typealias FloatingPointMath = ElementaryFunctions
+public typealias RealElementaryFunctions = RMath
+
+@available(*, deprecated, renamed: "RMath")
+public typealias FloatingPointMath = RMath
 
 import Foundation
 
 // Default implementations go through Double.
-extension ElementaryFunctions {
+extension RMath {
     public static var precision:Int { return Double.significandBitCount }
     public static func acos (_ x:Self)->Self { return Self(Foundation.acos (x.toDouble())) }
     public static func acosh(_ x:Self)->Self { return Self(Foundation.acosh(x.toDouble())) }
@@ -69,7 +71,7 @@ extension ElementaryFunctions {
 // They are NOT protocol requirements: precision and debug are used only
 // when the element has the corresponding function (e.g. BigRat, BigFloat).
 // Otherwise they simply forward to the plain versions above.
-extension ElementaryFunctions {
+extension RMath {
     public static func acos (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return acos(x) }
     public static func acosh(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return acosh(x) }
     public static func asin (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return asin(x) }
@@ -98,24 +100,16 @@ extension ElementaryFunctions {
 }
 
 // Overrides default
-extension Double : ElementaryFunctions {
+extension Double : RMath {
     public func toDouble()->Double { return self }
 }
 
-extension Float : ElementaryFunctions {
+extension Float : RMath {
     public func toDouble()->Double { return Double(self) }
 }
 
 //Todo:
-//public protocol ElementaryFunctionsGeneric: FloatingPoint & ElementaryFunctions {}
-//
-//extension ElementaryFunctionsGeneric {
-//    public static func sqrt (_ x:Self)->Self {
-//        return x.squareRoot()
-//    }
-//}
-//
-//extension Float80 : ElementaryFunctionsGeneric {
+//extension Float80 : RMath {
 //    public func toDouble()->Double { return Double(self) }
 //}
 
@@ -278,8 +272,8 @@ extension ComplexElementaryFunctions {
     public static func pow(_ lhs:Element, _ rhs:Element, precision px:Int=Self.precision, debug db:Bool=false) -> Self { return Self(Element.pow(lhs, rhs, precision:px, debug:db)) }
 }
 
-// ComplexElementaryFunctions conforms to ElementaryFunctions.  The plain versions below
-// witness the protocol requirements by forwarding to the versions above --
+// The plain versions below witness the ComplexElementaryFunctions
+// requirements by forwarding to the versions above --
 // without them the Double-based defaults would be picked, dropping .imag.
 extension ComplexElementaryFunctions {
     public static func acos (_ z:Self)->Self { return acos(z, precision:Self.precision, debug:false) }
