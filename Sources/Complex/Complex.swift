@@ -97,20 +97,24 @@ import Darwin
 
 // import ElementaryFunctions
 
-public typealias ComplexFloatElement = FloatingPoint & ElementaryFunctions
+public typealias RealElementaryFunctions = FloatingPoint & ElementaryFunctions
+
+@available(*, deprecated, renamed: "RealElementaryFunctions")
+public typealias ComplexFloatElement = RealElementaryFunctions
+
+public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible
+    where Element: FloatingPoint {
+}
 
 /// Complex version of ElementaryFunctions
-public protocol ComplexElementaryFunctions : ComplexNumeric & ElementaryFunctions
-    where Element: ComplexFloatElement {
+public protocol ComplexElementaryFunctions : ComplexFloat & ElementaryFunctions
+    where Element: RealElementaryFunctions {
 }
 
 /// CMath for short
 public typealias CMath = ComplexElementaryFunctions
 
-public protocol ComplexFloat : ComplexElementaryFunctions & CustomStringConvertible {
-}
-
-extension ComplexElementaryFunctions {
+extension ComplexFloat {
     /// /
     public static func /(_ lhs:Self, _ rhs:Element)->Self {
         return Self(lhs.real / rhs, lhs.imag / rhs)
@@ -127,9 +131,34 @@ extension ComplexElementaryFunctions {
     public static func /=(_ lhs:inout Self, _ rhs:Element) {
         lhs = lhs / rhs
     }
+    /// projection
+    public var proj:Self {
+        if real.isFinite && imag.isFinite {
+            return self
+        } else {
+            return Self(.infinity, imag.sign == .minus ? -Element(0): +Element(0))
+        }
+    }
+    /// description -- conforms to CustomStringConvertible
+    public var description:String {
+        let sig = imag.sign == .minus ? "-" : "+"
+        return "(\(real)\(sig)\(imag.magnitude).i)"
+    }
+    /// nan
+    public static var nan:Self { return Self(real:Element.nan, imag:Element.nan)}
+    /// check if either real or imag is nan
+    public var isNaN:Bool { return real.isNaN || imag.isNaN }
+    /// infinity + infinity.i
+    public static var infinity:Self { return Self(real:Element.infinity, imag:Element.infinity)}
+    /// check if either real or imag is infinite
+    public var isInfinite:Bool { return real.isInfinite || imag.isInfinite }
+    /// 0.0 + 0.0.i, aka "origin"
+    public static var zero:Self { return Self(0, 0) }
+    /// check if both real and imag are zeros
+    public var isZero:Bool { return real.isZero && imag.isZero }
 }
 
-extension ComplexFloat {
+extension ComplexElementaryFunctions {
     /// construct by polar coodinates
     public init(abs:Element, arg:Element) {
         self.init(abs * Element.cos(arg), abs * Element.sin(arg))
@@ -162,34 +191,9 @@ extension ComplexFloat {
             self = Self(abs:self.abs, arg:newValue)
         }
     }
-    /// projection
-    public var proj:Self {
-        if real.isFinite && imag.isFinite {
-            return self
-        } else {
-            return Self(.infinity, imag.sign == .minus ? -Element(0): +Element(0))
-        }
-    }
-    /// description -- conforms to CustomStringConvertible
-    public var description:String {
-        let sig = imag.sign == .minus ? "-" : "+"
-        return "(\(real)\(sig)\(imag.magnitude).i)"
-    }
-    /// nan
-    public static var nan:Self { return Self(real:Element.nan, imag:Element.nan)}
-    /// check if either real or imag is nan
-    public var isNaN:Bool { return real.isNaN || imag.isNaN }
-    /// infinity + infinity.i
-    public static var infinity:Self { return Self(real:Element.infinity, imag:Element.infinity)}
-    /// check if either real or imag is infinite
-    public var isInfinite:Bool { return real.isInfinite || imag.isInfinite }
-    /// 0.0 + 0.0.i, aka "origin"
-    public static var zero:Self { return Self(0, 0) }
-    /// check if both real and imag are zeros
-    public var isZero:Bool { return real.isZero && imag.isZero }
 }
 
-public struct Complex<R:ComplexFloatElement> : ComplexFloat  {
+public struct Complex<R:FloatingPoint> : ComplexFloat  {
     public typealias NumericType = R
     public var (real, imag):(R, R)
     public init(real r:R, imag i:R) {
@@ -214,7 +218,10 @@ extension Complex : Codable where Element: Codable {
     }
 }
 
-extension FloatingPoint where Self:ComplexFloatElement {
+extension Complex : ElementaryFunctions where R: RealElementaryFunctions {}
+extension Complex : ComplexElementaryFunctions where R: RealElementaryFunctions {}
+
+extension FloatingPoint {
     public var i:Complex<Self> {
         return Complex(0, self)
     }

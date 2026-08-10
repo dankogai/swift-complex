@@ -95,6 +95,10 @@ import Foundation
         // CMath == ComplexElementaryFunctions constrains to complex types
         func g<T:CMath>(_ z:T)->T { return T.sqrt(z) }
         #expect(g(C(-4.0, 0.0)) == C(0.0, 2.0))
+        // Complex<R> itself only needs R:FloatingPoint;
+        // arithmetic works without ElementaryFunctions
+        func h<T:FloatingPoint>(_ x:T)->Complex<T> { return Complex(x, x) / Complex(x, -x) }
+        #expect(h(2.0) == Complex(0.0, 1.0))
         // cbrt and exp2, added for the conformance
         #expect(Swift.abs(C.exp2(C(3.0, 0.0)).real - 8.0) < 1e-14)
         #expect(Swift.abs(C.cbrt(C(8.0, 0.0)).real - 2.0) < 1e-14)

@@ -30,7 +30,7 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 ### like C++11
 
 * Protocol-Oriented
-  * Complex numbers are `Complex<R>` where `R` is the type of `.real` and `.imag` that conforms to the `ComplexFloatElement` protocol, that is, `FloatingPoint & ElementaryFunctions`.
+  * Complex numbers are `Complex<R>` where `R` is the type of `.real` and `.imag` that conforms to `FloatingPoint`.  Math functions become available when `R` also conforms to `RealElementaryFunctions`, that is, `FloatingPoint & ElementaryFunctions`.
   * Gaussian integers are `GaussianInt<I>` where `I` conforms to the `GaussianIntElement` protocol, that is, `SignedInteger`.
   * In addition to basic arithmetic operations like `+`, `-`, `*`, `/` and `abs()`, `Complex<R>` gets `libm` functions like `exp()`, `log()`, `sin()`, `cos()`.
 
@@ -48,7 +48,7 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 
 ## ElementaryFunctions
 
-The element of `Complex<R>` is `FloatingPoint & ElementaryFunctions`.  `ElementaryFunctions` was formerly named `FloatingPointMath`; it is renamed for the sake of [apple/swift-numerics] (a deprecated typealias keeps the old name compiling).  Unlike built-in `FloatingPoint`, `ElementaryFunctions` is defined in this module to ensure necessary math functions exist.  If your type is already `FloatingPoint`, complying to `ElementaryFunctions` is relatively easy.  All you need is:
+`Complex<R>` itself only requires `R` to be `FloatingPoint`.  When `R` also conforms to `RealElementaryFunctions` = `FloatingPoint & ElementaryFunctions`, `Complex<R>` conforms to `ComplexElementaryFunctions` (`CMath` for short) and gets the math functions.  `ElementaryFunctions` was formerly named `FloatingPointMath`; it is renamed for the sake of [apple/swift-numerics] (a deprecated typealias keeps the old name compiling).  Unlike built-in `FloatingPoint`, `ElementaryFunctions` is defined in this module to ensure necessary math functions exist.  If your type is already `FloatingPoint`, complying to `ElementaryFunctions` is relatively easy.  All you need is:
 
 ```swift
 extension YourFloat : ElementaryFunctions {

@@ -81,7 +81,7 @@ import BigNum
     @Suite struct PrecisionDispatchTests {
         // the plain forms are protocol requirements, so generic code dispatches
         // to BigNum's native implementations at the element's own precision
-        func e<T:ComplexFloatElement>(_ one:T)->T { return T.exp(one) }
+        func e<T:RealElementaryFunctions>(_ one:T)->T { return T.exp(one) }
         @Test func nativeDispatch() {
             // a Double roundtrip would return exactly BigRat(Foundation.exp(1.0));
             // the native 128-bit result must be more precise than that
