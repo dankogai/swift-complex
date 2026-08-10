@@ -86,6 +86,17 @@ import Foundation
         let z: C = 3.0+4.0.i
         #expect(z.abs == 5.0)
     }
+    @Test func elementaryFunctions() {
+        // Complex itself conforms to ElementaryFunctions,
+        // so it works in generic code constrained to it
+        func f<T:ElementaryFunctions>(_ x:T)->T { return T.exp(x) }
+        #expect(f(C(0.0, Double.pi)).real == -1.0)
+        #expect(f(1.0) == Foundation.exp(1.0))
+        // cbrt and exp2, added for the conformance
+        #expect(Swift.abs(C.exp2(C(3.0, 0.0)).real - 8.0) < 1e-14)
+        #expect(Swift.abs(C.cbrt(C(8.0, 0.0)).real - 2.0) < 1e-14)
+        #expect(C.cbrt(C(8.0, 0.0)).imag.isZero)
+    }
 }
 
 @Suite struct CodableTests {

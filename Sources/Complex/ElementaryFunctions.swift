@@ -163,6 +163,11 @@ extension ComplexFloat {
         return (log(1 + z, precision:px, debug:db) - log(1 - z, precision:px, debug:db)) / 2
     }
     public static func atanh(_ x:Element, precision px:Int=Self.precision, debug db:Bool=false) -> Self { return atanh(Self(x), precision:px, debug:db) }
+    /// principal cube root of z in Complex
+    public static func cbrt(_ z:Self, precision px:Int=Self.precision, debug db:Bool=false) -> Self {
+        return exp(log(z, precision:px, debug:db) / 3, precision:px, debug:db)
+    }
+    public static func cbrt(_ x:Element, precision px:Int=Self.precision, debug db:Bool=false) -> Self { return cbrt(Self(x), precision:px, debug:db) }
     /// cosine of z in Complex
     public static func cos(_ z:Self, precision px:Int=Self.precision, debug db:Bool=false) -> Self {
         return Self(
@@ -184,6 +189,11 @@ extension ComplexFloat {
         return Self(r * Element.cos(a, precision:px, debug:db), r * Element.sin(a, precision:px, debug:db))
     }
     public static func exp(_ x:Element, precision px:Int=Self.precision, debug db:Bool=false) -> Self { return Self(Element.exp(x, precision:px, debug:db)) }
+    /// 2 ** z in Complex
+    public static func exp2(_ z:Self, precision px:Int=Self.precision, debug db:Bool=false) -> Self {
+        return pow(2, z, precision:px, debug:db)
+    }
+    public static func exp2(_ x:Element, precision px:Int=Self.precision, debug db:Bool=false) -> Self { return Self(Element.exp2(x, precision:px, debug:db)) }
     /// e ** z - 1.0 in Complex
     public static func expm1(_ z:Self, precision px:Int=Self.precision, debug db:Bool=false) -> Self {
         // cf. https://lists.gnu.org/archive/html/octave-maintainers/2008-03/msg00174.html
@@ -266,4 +276,34 @@ extension ComplexFloat {
     public static func pow(_ lhs:Self, _ rhs:Element, precision px:Int=Self.precision, debug db:Bool=false) -> Self { return pow(lhs, Self(rhs), precision:px, debug:db) }
     public static func pow(_ lhs:Element, _ rhs:Self, precision px:Int=Self.precision, debug db:Bool=false) -> Self { return pow(Self(lhs), rhs, precision:px, debug:db) }
     public static func pow(_ lhs:Element, _ rhs:Element, precision px:Int=Self.precision, debug db:Bool=false) -> Self { return Self(Element.pow(lhs, rhs, precision:px, debug:db)) }
+}
+
+// ComplexFloat conforms to ElementaryFunctions.  The plain versions below
+// witness the protocol requirements by forwarding to the versions above --
+// without them the Double-based defaults would be picked, dropping .imag.
+extension ComplexFloat {
+    public static func acos (_ z:Self)->Self { return acos(z, precision:Self.precision, debug:false) }
+    public static func acosh(_ z:Self)->Self { return acosh(z, precision:Self.precision, debug:false) }
+    public static func asin (_ z:Self)->Self { return asin(z, precision:Self.precision, debug:false) }
+    public static func asinh(_ z:Self)->Self { return asinh(z, precision:Self.precision, debug:false) }
+    public static func atan (_ z:Self)->Self { return atan(z, precision:Self.precision, debug:false) }
+    public static func atanh(_ z:Self)->Self { return atanh(z, precision:Self.precision, debug:false) }
+    public static func cbrt (_ z:Self)->Self { return cbrt(z, precision:Self.precision, debug:false) }
+    public static func cos  (_ z:Self)->Self { return cos(z, precision:Self.precision, debug:false) }
+    public static func cosh (_ z:Self)->Self { return cosh(z, precision:Self.precision, debug:false) }
+    public static func exp  (_ z:Self)->Self { return exp(z, precision:Self.precision, debug:false) }
+    public static func exp2 (_ z:Self)->Self { return exp2(z, precision:Self.precision, debug:false) }
+    public static func expm1(_ z:Self)->Self { return expm1(z, precision:Self.precision, debug:false) }
+    public static func log  (_ z:Self)->Self { return log(z, precision:Self.precision, debug:false) }
+    public static func log2 (_ z:Self)->Self { return log2(z, precision:Self.precision, debug:false) }
+    public static func log10(_ z:Self)->Self { return log10(z, precision:Self.precision, debug:false) }
+    public static func log1p(_ z:Self)->Self { return log1p(z, precision:Self.precision, debug:false) }
+    public static func sin  (_ z:Self)->Self { return sin(z, precision:Self.precision, debug:false) }
+    public static func sinh (_ z:Self)->Self { return sinh(z, precision:Self.precision, debug:false) }
+    public static func sqrt (_ z:Self)->Self { return sqrt(z, precision:Self.precision, debug:false) }
+    public static func tan  (_ z:Self)->Self { return tan(z, precision:Self.precision, debug:false) }
+    public static func tanh (_ z:Self)->Self { return tanh(z, precision:Self.precision, debug:false) }
+    public static func atan2(y:Self, x:Self)->Self { return atan2(y, x, precision:Self.precision, debug:false) }
+    public static func hypot(_ x:Self, _ y:Self)->Self { return hypot(x, y, precision:Self.precision, debug:false) }
+    public static func pow  (_ x:Self, _ y:Self)->Self { return pow  (x, y, precision:Self.precision, debug:false) }
 }
