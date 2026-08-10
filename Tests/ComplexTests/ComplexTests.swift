@@ -92,6 +92,9 @@ import Foundation
         func f<T:ElementaryFunctions>(_ x:T)->T { return T.exp(x) }
         #expect(f(C(0.0, Double.pi)).real == -1.0)
         #expect(f(1.0) == Foundation.exp(1.0))
+        // CMath == ComplexElementaryFunctions constrains to complex types
+        func g<T:CMath>(_ z:T)->T { return T.sqrt(z) }
+        #expect(g(C(-4.0, 0.0)) == C(0.0, 2.0))
         // cbrt and exp2, added for the conformance
         #expect(Swift.abs(C.exp2(C(3.0, 0.0)).real - 8.0) < 1e-14)
         #expect(Swift.abs(C.cbrt(C(8.0, 0.0)).real - 2.0) < 1e-14)

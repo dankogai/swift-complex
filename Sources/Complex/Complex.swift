@@ -99,8 +99,34 @@ import Darwin
 
 public typealias ComplexFloatElement = FloatingPoint & ElementaryFunctions
 
-public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible & ElementaryFunctions
+/// Complex version of ElementaryFunctions
+public protocol ComplexElementaryFunctions : ComplexNumeric & ElementaryFunctions
     where Element: ComplexFloatElement {
+}
+
+/// CMath for short
+public typealias CMath = ComplexElementaryFunctions
+
+public protocol ComplexFloat : ComplexElementaryFunctions & CustomStringConvertible {
+}
+
+extension ComplexElementaryFunctions {
+    /// /
+    public static func /(_ lhs:Self, _ rhs:Element)->Self {
+        return Self(lhs.real / rhs, lhs.imag / rhs)
+    }
+    public static func /(_ lhs:Self, _ rhs:Self)->Self {
+        return rhs.imag.isZero ? lhs / rhs.real : lhs * rhs.conj / rhs.norm
+    }
+    public static func /(_ lhs:Element, _ rhs:Self)->Self {
+        return Self(lhs, 0) / rhs
+    }
+    public static func /=(_ lhs:inout Self, _ rhs:Self) {
+        lhs = lhs / rhs
+    }
+    public static func /=(_ lhs:inout Self, _ rhs:Element) {
+        lhs = lhs / rhs
+    }
 }
 
 extension ComplexFloat {
@@ -148,22 +174,6 @@ extension ComplexFloat {
     public var description:String {
         let sig = imag.sign == .minus ? "-" : "+"
         return "(\(real)\(sig)\(imag.magnitude).i)"
-    }
-    /// /
-    public static func /(_ lhs:Self, _ rhs:Element)->Self {
-        return Self(lhs.real / rhs, lhs.imag / rhs)
-    }
-    public static func /(_ lhs:Self, _ rhs:Self)->Self {
-        return rhs.imag.isZero ? lhs / rhs.real : lhs * rhs.conj / rhs.norm
-    }
-    public static func /(_ lhs:Element, _ rhs:Self)->Self {
-        return Self(lhs, 0) / rhs
-    }
-    public static func /=(_ lhs:inout Self, _ rhs:Self) {
-        lhs = lhs / rhs
-    }
-    public static func /=(_ lhs:inout Self, _ rhs:Element) {
-        lhs = lhs / rhs
     }
     /// nan
     public static var nan:Self { return Self(real:Element.nan, imag:Element.nan)}
