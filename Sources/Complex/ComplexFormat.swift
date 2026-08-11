@@ -72,6 +72,8 @@ extension Complex where R: RMath {
 // FloatingPoint element; its output equals toString(.math).
 
 extension Complex : CustomDebugStringConvertible where R: RMath {
-    /// `toString(.cartesian, radix:16)`
-    public var debugDescription:String { return toString(.cartesian, radix:16) }
+    /// the elements' own debugDescriptions, in cartesian form
+    public var debugDescription:String {
+        return "(real:\(real.debugDescription), imag:\(imag.debugDescription))"
+    }
 }

@@ -106,8 +106,7 @@ import Foundation
         #expect(w.toString(.tuple, radix:16) == "(0x1.8p+0, -0x1p+1)")
         #expect(w.toString(.tuple, radix:8)  == "(0o1.4p+0, -0o1p+1)")
         #expect(w.toString(.tuple, radix:2)  == "(0b1.1p+0, -0b1p+1)")
-        #expect(w.debugDescription == w.toString(.cartesian, radix:16))
-        #expect(w.debugDescription == "(real:0x1.8p+0, imag:-0x1p+1)")
+        #expect(w.debugDescription == "(real:1.5, imag:-2.0)")
     }
     @Test func magnitude() {
         var z: C = 3.0+4.0.i

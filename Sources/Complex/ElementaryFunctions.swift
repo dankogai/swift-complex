@@ -1,4 +1,4 @@
-public protocol RMath : FloatingPoint {
+public protocol RMath : FloatingPoint & CustomDebugStringConvertible {
     init (_:Double)             // BinaryFloatingPoint already has one
     func toDouble()->Double  // you have to add it yourself
     /// bit width to which results are computed
