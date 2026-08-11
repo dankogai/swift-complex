@@ -68,10 +68,8 @@ extension Complex where R: RMath {
     }
 }
 
-extension Complex : CustomStringConvertible where R: RMath {
-    /// `toString(.math)`
-    public var description:String { return toString(.math) }
-}
+// description lives on ComplexFloat so that it works for every
+// FloatingPoint element; its output equals toString(.math).
 
 extension Complex : CustomDebugStringConvertible where R: RMath {
     /// `toString(.cartesian, radix:16)`

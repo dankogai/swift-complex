@@ -98,7 +98,7 @@ import Darwin
 @available(*, deprecated, renamed: "RealElementaryFunctions")
 public typealias ComplexFloatElement = RealElementaryFunctions
 
-public protocol ComplexFloat : ComplexNumeric
+public protocol ComplexFloat : ComplexNumeric & CustomStringConvertible
     where Element: FloatingPoint {
 }
 
@@ -160,6 +160,13 @@ extension ComplexFloat {
         } else {
             return Self(.infinity, imag.sign == .minus ? -Element(0): +Element(0))
         }
+    }
+    /// description -- conforms to CustomStringConvertible.
+    /// same output as toString(.math), but implemented without it so that
+    /// it works even when Element is not RMath
+    public var description:String {
+        let sig = imag.sign == .minus ? "-" : "+"
+        return "(\(real)\(sig)\(imag.magnitude).i)"
     }
     /// nan
     public static var nan:Self { return Self(real:Element.nan, imag:Element.nan)}
