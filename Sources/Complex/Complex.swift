@@ -204,7 +204,8 @@ extension CMath {
     }
     /// magnitude = abs
     public var magnitude:Element {
-        return self.abs
+        get { return self.abs }
+        set { self.abs = newValue }
     }
     /// argument
     public var arg:Element  {

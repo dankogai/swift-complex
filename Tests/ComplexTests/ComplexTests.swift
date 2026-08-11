@@ -92,6 +92,13 @@ import Foundation
         z.argument = 0.0
         #expect(z == 5.0+0.0.i)
     }
+    @Test func magnitude() {
+        var z: C = 3.0+4.0.i
+        #expect(z.magnitude == z.abs)
+        z.magnitude = 10.0
+        // the polar roundtrip through atan2/cos/sin is not bit-exact
+        #expect((z - (6.0+8.0.i)).abs < 1e-14)
+    }
     @Test func elementaryFunctions() {
         // RMath == RealElementaryFunctions constrains real types
         func f<T:RMath>(_ x:T)->T { return T.exp(x) }
