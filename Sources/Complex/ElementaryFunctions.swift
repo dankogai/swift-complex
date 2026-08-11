@@ -29,6 +29,38 @@ public protocol RMath : FloatingPoint {
     static func atan2(y:Self, x:Self)->Self
     static func hypot(_ x:Self, _ y:Self)->Self
     static func pow  (_ x:Self, _ y:Self)->Self
+    // full-signature versions.  These are requirements -- not conveniences --
+    // because generic code (the CMath layer above all) can only dispatch
+    // through requirements: as mere overloads the precision argument would
+    // silently bind to a forwarder and be discarded.  swift-bignum's
+    // precision:debug: functions witness these as-is; the default argument
+    // values they carry do not participate in witness matching.
+    // (No default arguments here -- requirements cannot have them --
+    // so generic callers spell out precision: and debug: in full.)
+    static func acos (_ x:Self, precision:Int, debug:Bool)->Self
+    static func acosh(_ x:Self, precision:Int, debug:Bool)->Self
+    static func asin (_ x:Self, precision:Int, debug:Bool)->Self
+    static func asinh(_ x:Self, precision:Int, debug:Bool)->Self
+    static func atan (_ x:Self, precision:Int, debug:Bool)->Self
+    static func atanh(_ x:Self, precision:Int, debug:Bool)->Self
+    static func cbrt (_ x:Self, precision:Int, debug:Bool)->Self
+    static func cos  (_ x:Self, precision:Int, debug:Bool)->Self
+    static func cosh (_ x:Self, precision:Int, debug:Bool)->Self
+    static func exp  (_ x:Self, precision:Int, debug:Bool)->Self
+    static func exp2 (_ x:Self, precision:Int, debug:Bool)->Self
+    static func expm1(_ x:Self, precision:Int, debug:Bool)->Self
+    static func log  (_ x:Self, precision:Int, debug:Bool)->Self
+    static func log2 (_ x:Self, precision:Int, debug:Bool)->Self
+    static func log10(_ x:Self, precision:Int, debug:Bool)->Self
+    static func log1p(_ x:Self, precision:Int, debug:Bool)->Self
+    static func sin  (_ x:Self, precision:Int, debug:Bool)->Self
+    static func sinh (_ x:Self, precision:Int, debug:Bool)->Self
+    static func sqrt (_ x:Self, precision:Int, debug:Bool)->Self
+    static func tan  (_ x:Self, precision:Int, debug:Bool)->Self
+    static func tanh (_ x:Self, precision:Int, debug:Bool)->Self
+    static func atan2(y:Self, x:Self, precision:Int, debug:Bool)->Self
+    static func hypot(_ x:Self, _ y:Self, precision:Int, debug:Bool)->Self
+    static func pow  (_ x:Self, _ y:Self, precision:Int, debug:Bool)->Self
 }
 
 public typealias RealElementaryFunctions = RMath
@@ -48,36 +80,21 @@ extension RMath {
     public static func log1p(_ x:Self)->Self { return log(1 + x) }
 }
 
-// Versions with precision and debug flag, as in swift-bignum.
-// They are NOT protocol requirements: precision and debug are used only
-// when the element has the corresponding function (e.g. BigRat, BigFloat).
-// Otherwise they simply forward to the plain versions above.
+// The precision:debug: forms are requirements now, so there are NO
+// unconstrained forwarders here: a forwarder that discards precision would
+// shadow the requirement at generic call sites (the very bug this block
+// once caused), and any same-signature extension member would tie with
+// swift-bignum's in witness resolution.  Only expm1, which swift-bignum
+// spells expMinusOne, gets a default, built from other requirements so
+// precision still propagates; and the unlabeled atan2 convenience stays,
+// forwarding to the labeled requirement.
 extension RMath {
-    public static func acos (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return acos(x) }
-    public static func acosh(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return acosh(x) }
-    public static func asin (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return asin(x) }
-    public static func asinh(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return asinh(x) }
-    public static func atan (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return atan(x) }
-    public static func atanh(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return atanh(x) }
-    public static func cbrt (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return cbrt(x) }
-    public static func cos  (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return cos(x) }
-    public static func cosh (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return cosh(x) }
-    public static func exp  (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return exp(x) }
-    public static func exp2 (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return exp2(x) }
-    public static func expm1(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return expm1(x) }
-    public static func log  (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return log(x) }
-    public static func log2 (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return log2(x) }
-    public static func log10(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return log10(x) }
-    public static func log1p(_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return log1p(x) }
-    public static func sin  (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return sin(x) }
-    public static func sinh (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return sinh(x) }
-    public static func sqrt (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return sqrt(x) }
-    public static func tan  (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return tan(x) }
-    public static func tanh (_ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return tanh(x) }
-    public static func atan2(y:Self, x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return atan2(y:y, x:x) }
-    public static func atan2(_ y:Self, _ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return atan2(y:y, x:x) }
-    public static func hypot(_ x:Self, _ y:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return hypot(x, y) }
-    public static func pow  (_ x:Self, _ y:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self { return pow  (x, y) }
+    public static func expm1(_ x:Self, precision px:Int, debug db:Bool)->Self {
+        return exp(x, precision:px, debug:db) - 1
+    }
+    public static func atan2(_ y:Self, _ x:Self, precision px:Int=Self.precision, debug db:Bool=false)->Self {
+        return atan2(y:y, x:x, precision:px, debug:db)
+    }
 }
 
 // Concrete members always win witness resolution, so Double and Float
@@ -109,6 +126,31 @@ extension Double : RMath {
     public static func atan2(y:Double, x:Double)->Double { return Foundation.atan2(y, x) }
     public static func hypot(_ x:Double, _ y:Double)->Double { return Foundation.hypot(x, y) }
     public static func pow  (_ x:Double, _ y:Double)->Double { return Foundation.pow  (x, y) }
+    // Double's precision is fixed; the arguments are accepted and ignored
+    public static func acos (_ x:Double, precision:Int, debug:Bool)->Double { return acos (x) }
+    public static func acosh(_ x:Double, precision:Int, debug:Bool)->Double { return acosh(x) }
+    public static func asin (_ x:Double, precision:Int, debug:Bool)->Double { return asin (x) }
+    public static func asinh(_ x:Double, precision:Int, debug:Bool)->Double { return asinh(x) }
+    public static func atan (_ x:Double, precision:Int, debug:Bool)->Double { return atan (x) }
+    public static func atanh(_ x:Double, precision:Int, debug:Bool)->Double { return atanh(x) }
+    public static func cbrt (_ x:Double, precision:Int, debug:Bool)->Double { return cbrt (x) }
+    public static func cos  (_ x:Double, precision:Int, debug:Bool)->Double { return cos  (x) }
+    public static func cosh (_ x:Double, precision:Int, debug:Bool)->Double { return cosh (x) }
+    public static func exp  (_ x:Double, precision:Int, debug:Bool)->Double { return exp  (x) }
+    public static func exp2 (_ x:Double, precision:Int, debug:Bool)->Double { return exp2 (x) }
+    public static func expm1(_ x:Double, precision:Int, debug:Bool)->Double { return expm1(x) }
+    public static func log  (_ x:Double, precision:Int, debug:Bool)->Double { return log  (x) }
+    public static func log2 (_ x:Double, precision:Int, debug:Bool)->Double { return log2 (x) }
+    public static func log10(_ x:Double, precision:Int, debug:Bool)->Double { return log10(x) }
+    public static func log1p(_ x:Double, precision:Int, debug:Bool)->Double { return log1p(x) }
+    public static func sin  (_ x:Double, precision:Int, debug:Bool)->Double { return sin  (x) }
+    public static func sinh (_ x:Double, precision:Int, debug:Bool)->Double { return sinh (x) }
+    public static func sqrt (_ x:Double, precision:Int, debug:Bool)->Double { return sqrt (x) }
+    public static func tan  (_ x:Double, precision:Int, debug:Bool)->Double { return tan  (x) }
+    public static func tanh (_ x:Double, precision:Int, debug:Bool)->Double { return tanh (x) }
+    public static func atan2(y:Double, x:Double, precision:Int, debug:Bool)->Double { return atan2(y:y, x:x) }
+    public static func hypot(_ x:Double, _ y:Double, precision:Int, debug:Bool)->Double { return hypot(x, y) }
+    public static func pow  (_ x:Double, _ y:Double, precision:Int, debug:Bool)->Double { return pow  (x, y) }
 }
 
 extension Float : RMath {
@@ -138,6 +180,31 @@ extension Float : RMath {
     public static func atan2(y:Float, x:Float)->Float { return Float(Foundation.atan2(Double(y), Double(x))) }
     public static func hypot(_ x:Float, _ y:Float)->Float { return Float(Foundation.hypot(Double(x), Double(y))) }
     public static func pow  (_ x:Float, _ y:Float)->Float { return Float(Foundation.pow  (Double(x), Double(y))) }
+    // Float's precision is fixed; the arguments are accepted and ignored
+    public static func acos (_ x:Float, precision:Int, debug:Bool)->Float { return acos (x) }
+    public static func acosh(_ x:Float, precision:Int, debug:Bool)->Float { return acosh(x) }
+    public static func asin (_ x:Float, precision:Int, debug:Bool)->Float { return asin (x) }
+    public static func asinh(_ x:Float, precision:Int, debug:Bool)->Float { return asinh(x) }
+    public static func atan (_ x:Float, precision:Int, debug:Bool)->Float { return atan (x) }
+    public static func atanh(_ x:Float, precision:Int, debug:Bool)->Float { return atanh(x) }
+    public static func cbrt (_ x:Float, precision:Int, debug:Bool)->Float { return cbrt (x) }
+    public static func cos  (_ x:Float, precision:Int, debug:Bool)->Float { return cos  (x) }
+    public static func cosh (_ x:Float, precision:Int, debug:Bool)->Float { return cosh (x) }
+    public static func exp  (_ x:Float, precision:Int, debug:Bool)->Float { return exp  (x) }
+    public static func exp2 (_ x:Float, precision:Int, debug:Bool)->Float { return exp2 (x) }
+    public static func expm1(_ x:Float, precision:Int, debug:Bool)->Float { return expm1(x) }
+    public static func log  (_ x:Float, precision:Int, debug:Bool)->Float { return log  (x) }
+    public static func log2 (_ x:Float, precision:Int, debug:Bool)->Float { return log2 (x) }
+    public static func log10(_ x:Float, precision:Int, debug:Bool)->Float { return log10(x) }
+    public static func log1p(_ x:Float, precision:Int, debug:Bool)->Float { return log1p(x) }
+    public static func sin  (_ x:Float, precision:Int, debug:Bool)->Float { return sin  (x) }
+    public static func sinh (_ x:Float, precision:Int, debug:Bool)->Float { return sinh (x) }
+    public static func sqrt (_ x:Float, precision:Int, debug:Bool)->Float { return sqrt (x) }
+    public static func tan  (_ x:Float, precision:Int, debug:Bool)->Float { return tan  (x) }
+    public static func tanh (_ x:Float, precision:Int, debug:Bool)->Float { return tanh (x) }
+    public static func atan2(y:Float, x:Float, precision:Int, debug:Bool)->Float { return atan2(y:y, x:x) }
+    public static func hypot(_ x:Float, _ y:Float, precision:Int, debug:Bool)->Float { return hypot(x, y) }
+    public static func pow  (_ x:Float, _ y:Float, precision:Int, debug:Bool)->Float { return pow  (x, y) }
 }
 
 //Todo:

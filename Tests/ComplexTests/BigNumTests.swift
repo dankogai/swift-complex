@@ -107,6 +107,27 @@ import BigNum
             #expect(e1 != BigRat(Foundation.exp(1.0)))
             #expect(e1 == nexp(BigRat(1), BigRat.precision))
         }
+        // the precision:debug: forms are requirements, so generic code
+        // dispatches to BigNum's precision-aware implementations
+        func gsqrt<T:RMath>(_ x:T, _ px:Int)->T { return T.sqrt(x, precision:px, debug:false) }
+        @Test func precisionDispatchesGenerically() {
+            let lo = gsqrt(BigFloat(2), 128)
+            let hi = gsqrt(BigFloat(2), 256)
+            #expect(lo != hi)
+            // hi must agree with lo through lo's precision and then keep going
+            #expect((hi - lo).magnitude < BigFloat(sign:.plus, exponent:-120, significand:1))
+            // Double ignores the argument
+            #expect(gsqrt(2.0, 256) == Foundation.sqrt(2.0))
+        }
+        @Test func precisionPropagatesThroughComplex() {
+            // the reported bug: Complex.sqrt(_, precision:256) returned the
+            // 128-bit result because Element calls bound to a forwarder
+            typealias C = Complex<BigFloat>
+            let lo = C.sqrt(C(BigFloat(2)), precision:128).real
+            let hi = C.sqrt(C(BigFloat(2)), precision:256).real
+            #expect(lo != hi)
+            #expect((hi - lo).magnitude < BigFloat(sign:.plus, exponent:-120, significand:1))
+        }
     }
 
     @Suite struct BigIntGaussianTests {
