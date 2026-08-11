@@ -76,6 +76,11 @@ import BigNum
             #expect(C.sinh(0) == C(0, 0))
             #expect(C(3, 4).abs == 5)
         }
+        @Test func toString() {
+            let z = C(BigFloat(1.5), BigFloat(-2))
+            #expect(z.toString(.tuple, radix:16) == "(0x1.8p+0, -0x1p+1)")
+            #expect(z.toString(.tuple, radix:2)  == "(0b1.1p+0, -0b1p+1)")
+        }
     }
 
     @Suite struct PrecisionDispatchTests {

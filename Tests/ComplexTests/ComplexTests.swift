@@ -92,6 +92,23 @@ import Foundation
         z.argument = 0.0
         #expect(z == 5.0+0.0.i)
     }
+    @Test func toString() {
+        let z: C = 3.0+4.0.i
+        #expect(z.toString() == "(3.0+4.0.i)")
+        #expect(z.description == z.toString(.math))
+        #expect("\(z)" == "(3.0+4.0.i)")
+        #expect(z.toString(.cartesian) == "(real:3.0, imag:4.0)")
+        #expect(z.toString(.tuple) == "(3.0, 4.0)")
+        #expect(z.toString(.polar) == "(abs:\(z.abs), arg:\(z.arg))")
+        let w: C = 1.5-2.0.i
+        #expect(w.toString(.math) == "(1.5-2.0.i)")
+        #expect(w.toString(.math,  radix:16) == "(0x1.8p+0-0x1p+1.i)")
+        #expect(w.toString(.tuple, radix:16) == "(0x1.8p+0, -0x1p+1)")
+        #expect(w.toString(.tuple, radix:8)  == "(0o1.4p+0, -0o1p+1)")
+        #expect(w.toString(.tuple, radix:2)  == "(0b1.1p+0, -0b1p+1)")
+        #expect(w.debugDescription == w.toString(.cartesian, radix:16))
+        #expect(w.debugDescription == "(real:0x1.8p+0, imag:-0x1p+1)")
+    }
     @Test func magnitude() {
         var z: C = 3.0+4.0.i
         #expect(z.magnitude == z.abs)
