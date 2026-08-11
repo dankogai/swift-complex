@@ -213,6 +213,11 @@ extension CMath {
             self = Self(abs:self.abs, arg:newValue)
         }
     }
+    /// argument, spelled out
+    public var argument:Element {
+        get { return self.arg }
+        set { self.arg = newValue }
+    }
 }
 
 public struct Complex<R:FloatingPoint> : ComplexFloat  {

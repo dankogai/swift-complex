@@ -86,6 +86,12 @@ import Foundation
         let z: C = 3.0+4.0.i
         #expect(z.abs == 5.0)
     }
+    @Test func argument() {
+        var z: C = 3.0+4.0.i
+        #expect(z.argument == z.arg)
+        z.argument = 0.0
+        #expect(z == 5.0+0.0.i)
+    }
     @Test func elementaryFunctions() {
         // RMath == RealElementaryFunctions constrains real types
         func f<T:RMath>(_ x:T)->T { return T.exp(x) }
