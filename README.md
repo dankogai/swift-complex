@@ -176,13 +176,16 @@ in your code.  Enjoy!
 
 Swift 6 or better, macOS or Linux to build.
 
-## CAVEAT: Swift Numerics vs. this module
+## Swift Numerics vs. this module
 
-With [apple/swift-numerics] complex number support on swift is [official at last].  You should consider using `ComplexModule` of `Numerics` instead of this.  I am switching to `swift-numerics` myself wherever I can. But there are still a few things that make you want to use this module in spite of that.
+This section used to be a CAVEAT that began "You should consider using `ComplexModule` of `Numerics` instead of this."  No longer.  With [apple/swift-numerics] complex number support on Swift is [official at last] — and as of 6.3 this module is fully resurrected, for the parts officialdom does not cover.
 
-* `swift-numerics` relies 100% on swift package manager.  You cannot use it on Swift Playgrounds.
-* `ComplexModule` may be too swifty on some respects.
-  * `ComplexModule` adopts [point at infinity].  While this is mathematically more correct, technically it may cause unexpected results because real operation on complex numbers is no longer isomorphic to real operations on real numbers.  For instance, `Complex(-1.0, 0.0) / Complex(0.0, 0.0)` is `Complex(+infinity, 0.0)`, not `Complex(-infinity, nan)` like many other platforms. 
+* **The element is open.**  `Complex<R>` asks only `FloatingPoint` of `R`; the math functions arrive when `R` conforms to `RMath`, whose slot is deliberately left for you to fill.  `ComplexModule` requires `RealType: Real`, its own hierarchy.  Here the element's math is whatever you choose — [SwiftNumericsExample](SwiftNumericsExample) fills the slot with swift-numerics' own `RealModule`, [SwiftBigNumExample](SwiftBigNumExample) with [dankogai/swift-bignum], an empty `extension` each.  This module does not compete with swift-numerics; it runs happily *on top of* it.
+* **Arbitrary precision, all the way down.**  Every math function comes in a `precision:debug:` form, as in swift-bignum, and `Complex` hands the flag to every element call underneath — `Complex<BigFloat>.sqrt(z, precision:256)` really is 256 bits.  Exact types stay exact: `(1+2i)/(3+4i)` over `Complex<BigRat>` is `(11+2i)/25`, not a rounding of it.  `ComplexModule` has no such channel.
+* **No [point at infinity].**  `ComplexModule` adopts it; while mathematically more correct, it may technically cause unexpected results because real operations on complex numbers are no longer isomorphic to real operations on real numbers: `Complex(-1.0, 0.0) / Complex(0.0, 0.0)` is `Complex(+infinity, 0.0)` there, not `Complex(-infinity, nan)` like many other platforms.  This module keeps the componentwise semantics of C++'s `std::complex` and friends.
+* **Gaussian integers.**  `GaussianInt<I>` for any `SignedInteger`, `BigInt` included.  swift-numerics has no counterpart.
+* **Ergonomics.**  `1.0 + 2.0.i` literals; `abs`, `arg`, `magnitude` and `argument` that are settable, not just readable; polar construction; `toString(_:radix:)` down to hexfloat; `**` via `import ComplexOperators`, opt-in so it never sneaks into your namespace.
+* **Nothing to fetch.**  The library depends on nothing but the standard library.  The examples that do depend on things are packages of their own, so `swift build` here fetches exactly nothing.
 
 [apple/swift-numerics]: https://github.com/apple/swift-numerics
 [official at last]: https://swift.org/blog/numerics/
