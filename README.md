@@ -91,7 +91,13 @@ $ swift build
 
 ### test
 
-The test suites live in the sibling example packages — written in [Swift Testing], the modern successor of `XCTest`:
+The suites are written in [Swift Testing], the modern successor of `XCTest`.  The root package tests everything that needs no dependency — still fetching nothing:
+
+```sh
+$ swift test
+```
+
+The element conformances have suites of their own, in the sibling example packages:
 
 ```sh
 $ (cd SwiftNumericsExample && swift test)

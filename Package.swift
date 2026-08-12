@@ -22,6 +22,9 @@ let package = Package(
       .executableTarget(
         name: "ComplexRun",
         dependencies: ["Complex"]),
+      .testTarget(
+        name: "ComplexTests",
+        dependencies: ["Complex", "ComplexOperators"]),
     ],
     swiftLanguageModes: [.v5]
 )
