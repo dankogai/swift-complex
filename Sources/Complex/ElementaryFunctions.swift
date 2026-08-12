@@ -166,9 +166,9 @@ extension Double : RMathViaDouble {
     public func toDouble()->Double { return self }
 }
 
-extension Float : RMathViaDouble {
-    public func toDouble()->Double { return Double(self) }
-}
+//extension Float : RMathViaDouble {
+//    public func toDouble()->Double { return Double(self) }
+//}
 
 
 //Todo:
