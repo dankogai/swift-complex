@@ -48,30 +48,23 @@ complex.swift implements all the functionality of [std::complex in c++11], argua
 
 ## RMath and CMath
 
-`Complex<R>` itself only requires `R` to be `FloatingPoint`.  When `R` also conforms to `RMath : FloatingPoint` (typealias `RealElementaryFunctions`), `Complex<R>` conforms to `CMath` (typealias `ComplexElementaryFunctions`) and gets the math functions.  `RMath` is deliberately not named `ElementaryFunctions`, which would collide with [apple/swift-numerics] and [dankogai/swift-bignum].  `RMath` is defined in this module to ensure necessary math functions exist.  If your type already has the math functions — like `BigRat` and `BigFloat` of [dankogai/swift-bignum] — they become the witnesses of the protocol requirements, and an empty conformance is all you need:
+What you get out of `Complex<R>` depends on what `R` can do.
 
-```swift
-import Complex
-import BigNum
+* `R: FloatingPoint` is all the struct itself asks.  Construction, `+` `-` `*` `/`, `conj`, `norm`, `.i`, `description`, and `Codable` (when `R` is) — everything that is plain arithmetic works for any element.
+* `R: RMath` is where the math comes from.  When `R` conforms, `Complex<R>` conforms to `CMath` (typealias `ComplexElementaryFunctions`) and gains `exp`, `log`, `sqrt` and friends, `abs`/`arg` and polar construction, and `toString(_:radix:)`.
 
-extension BigRat:   @retroactive RMath {}
-extension BigFloat: @retroactive RMath {}
-```
+`RMath` (typealias `RealElementaryFunctions`; deliberately not named `ElementaryFunctions`, which would collide with [apple/swift-numerics] and friends) asks of the element:
 
-Otherwise you provide the math functions yourself, along with `init(_:Double)`, `toDouble()`, and `precision`.  `RMath` deliberately ships no `Double`-round-trip defaults for them: a competing default would make witness resolution ambiguous for types like the above, and would silently lose precision.
+* `init(_:Double)` and `toDouble()` — the two conversions no protocol can guess;
+* `static var precision:Int` — the bit width results are computed to;
+* the math functions, `exp(_:)` through `atan2(y:x:)`, in plain form *and* with `precision:debug:` flags.  The full forms are requirements, not conveniences, so that a `precision:` you pass dispatches to the element instead of being silently dropped; fixed-precision elements accept and ignore the flags.  (`cbrt`, `expm1`, and `log1p` come with defaults built from the other requirements.)
 
-### precision and debug
+Out of the box **only `Double` is predefined**, by way of `RMathViaDouble` — a sub-protocol that implements every math requirement by round-tripping through `Double`; adopt it and `toDouble()` is all your type owes.  Every other element is a conformance you, or a sibling package, declare:
 
-Every math function also comes in a version with `precision` and `debug` flag, as in [dankogai/swift-bignum]:
+* [SwiftNumericsExample](SwiftNumericsExample) fills `Float`'s deliberately vacant slot with [apple/swift-numerics]' `RealModule`.
+* [SwiftBigNumExample](SwiftBigNumExample) adopts `BigRat` and `BigFloat` of [dankogai/swift-bignum] with an empty extension each, for arbitrary precision — `Complex<BigFloat>.sqrt(z, precision:256)` really is 256 bits, and `Complex<BigRat>` arithmetic is exact.
 
-```swift
-BigRat.exp(1, precision: 256)           // e to 256-bit precision
-Complex<BigRat>.exp(z)                  // computed natively at BigRat.precision
-```
-
-They are *not* protocol requirements.  `precision` and `debug` are used only when the element has the corresponding function — like `BigRat` and `BigFloat` of [dankogai/swift-bignum].  For elements like `Double` they are simply ignored.
-
-`ComplexFloat` also has a settable `precision` which defaults to `128`.  It is handed down to the element as the default precision of the math functions, and likewise ignored for cases like `Element == Double`.
+`CMath` also has a settable `precision`, defaulting to `128`: the default `precision:` handed down to the element, likewise ignored by elements whose precision is fixed.
 
 [dankogai/swift-bignum]: https://github.com/dankogai/swift-bignum
 
@@ -86,12 +79,6 @@ import ComplexOperators // @_exported imports Complex, too
 2.0 ** 3.0 ** 2.0       // 512.0 -- binds tighter than *, associates right
 ```
 
-### arbitrary precision
-
-This module is tested against [dankogai/swift-bignum] — `Complex<BigRat>`, `Complex<BigFloat>`, and `GaussianInt<BigInt>`.  Since `BigRat` and `BigFloat` natively offer arbitrary-precision math functions, `Complex` math on them is computed natively — not by way of `Double`.  See [Tests/ComplexTests/BigNumSupport.swift] for how to bridge them to `RMath`.  Note swift-bignum is a test-only dependency; the library itself depends on nothing but the standard library.
-
-[Tests/ComplexTests/BigNumSupport.swift]: Tests/ComplexTests/BigNumSupport.swift
-
 ## Usage
 
 ### build
@@ -104,10 +91,14 @@ $ swift build
 
 ### test
 
-The test suite is written in [Swift Testing], the modern successor of `XCTest`.  Simply:
+The test suites live in the sibling example packages — written in [Swift Testing], the modern successor of `XCTest`:
 
 ```sh
-$ swift test
+$ (cd SwiftNumericsExample && swift test)
+```
+
+```sh
+$ (cd SwiftBigNumExample && swift test)
 ```
 
 [Swift Testing]: https://developer.apple.com/documentation/testing/
