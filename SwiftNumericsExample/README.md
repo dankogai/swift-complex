@@ -43,6 +43,31 @@ requirements, i.e. still RealModule underneath.  What is left for Float to say i
 is fixed, so those accept and ignore the arguments, exactly like `RMathViaDouble`
 does for `Double`.
 
+## REPL
+
+```bash
+cd SwiftNumericsExample && swift run --repl
+```
+
+```swift
+  1> import Complex
+  2> import SwiftNumericsExample
+  3> Complex.sqrt(Complex(0, Float(1)))
+$R0: Complex.Complex<Float> = {
+  real = 0.707106769
+  imag = 0.707106769
+}
+```
+
+Both imports matter.  `Complex` names the types; `SwiftNumericsExample` is
+where the `Float: RMath` conformance is declared, and Swift only lets you use
+a conformance in code that imports the module declaring it.  Leave it out and
+`Complex(0, Float(1))` still constructs — the struct itself only asks
+`FloatingPoint` of its element — but the math functions are gone, and the
+compiler says so in a roundabout way: it falls back to the `Element`-argument
+overload of `sqrt` and complains that `Complex<Complex<Float>>` requires
+`Complex<Float>: FloatingPoint`.
+
 ## What it buys you
 
 - `Complex<Float>.exp(Complex<Float>(0, .pi))` — Euler's identity with cosine
