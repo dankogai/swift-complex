@@ -111,12 +111,6 @@ Simply
 $ swift run --repl
 ```
 
-or
-
-```sh
-$ scripts/run-repl.sh
-```
-
 and in your repl,
 
 ```sh
