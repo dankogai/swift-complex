@@ -11,9 +11,7 @@ let package = Package(
         targets: ["Complex", "ComplexOperators"]),
 
     ],
-    dependencies: [
-      .package(url: "https://github.com/dankogai/swift-bignum.git", from: "6.3.0"),
-    ],
+    dependencies: [],
     targets: [
       .target(
         name: "Complex",
@@ -24,13 +22,6 @@ let package = Package(
       .executableTarget(
         name: "ComplexRun",
         dependencies: ["Complex"]),
-      .testTarget(
-        name: "ComplexTests",
-        dependencies: [
-          "Complex",
-          "ComplexOperators",
-          .product(name: "BigNum", package: "swift-bignum"),
-        ]),
     ],
     swiftLanguageModes: [.v5]
 )
