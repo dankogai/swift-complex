@@ -21,3 +21,9 @@ jobs:
       - uses: actions/checkout@v6
       - name: Run tests
         run: swift test -c release -Xswiftc -enable-testing -v
+      - name: Run SwiftNumericsExample tests
+        working-directory: SwiftNumericsExample
+        run: swift test -c release -Xswiftc -enable-testing -v
+      - name: Run SwiftBigNumExample tests
+        working-directory: SwiftBigNumExample
+        run: swift test -c release -Xswiftc -enable-testing -v
