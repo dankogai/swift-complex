@@ -65,7 +65,53 @@ public protocol RMath : FloatingPoint & CustomDebugStringConvertible {
 
 public typealias RealElementaryFunctions = RMath
 
-import Foundation
+// Every branch here is `canImport`, and the order matters: Android also
+// has Glibc-shaped headers, and WASI would otherwise fall through.  This
+// is the same preamble swift-bignum and swift-interval carry.
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Bionic)
+import Bionic
+#elseif canImport(Android)
+import Android
+#elseif canImport(Glibc)
+import Glibc
+#elseif canImport(Musl)
+import Musl
+#elseif canImport(WASILibc)
+import WASILibc
+#elseif os(Windows)
+import CRT
+#endif
+
+// Bound at file scope, where unqualified lookup still means libm's free
+// functions -- inside the extensions below, `exp(x)` would mean the static
+// member being declared, and recurse.  (`Foundation.exp` would do the same
+// job on Apple platforms only; these work wherever libm does.)
+private let c_acos  : @Sendable (Double) -> Double = acos
+private let c_acosh : @Sendable (Double) -> Double = acosh
+private let c_asin  : @Sendable (Double) -> Double = asin
+private let c_asinh : @Sendable (Double) -> Double = asinh
+private let c_atan  : @Sendable (Double) -> Double = atan
+private let c_atanh : @Sendable (Double) -> Double = atanh
+private let c_cbrt  : @Sendable (Double) -> Double = cbrt
+private let c_cos   : @Sendable (Double) -> Double = cos
+private let c_cosh  : @Sendable (Double) -> Double = cosh
+private let c_exp   : @Sendable (Double) -> Double = exp
+private let c_exp2  : @Sendable (Double) -> Double = exp2
+private let c_expm1 : @Sendable (Double) -> Double = expm1
+private let c_log   : @Sendable (Double) -> Double = log
+private let c_log2  : @Sendable (Double) -> Double = log2
+private let c_log10 : @Sendable (Double) -> Double = log10
+private let c_log1p : @Sendable (Double) -> Double = log1p
+private let c_sin   : @Sendable (Double) -> Double = sin
+private let c_sinh  : @Sendable (Double) -> Double = sinh
+private let c_sqrt  : @Sendable (Double) -> Double = sqrt
+private let c_tan   : @Sendable (Double) -> Double = tan
+private let c_tanh  : @Sendable (Double) -> Double = tanh
+private let c_atan2 : @Sendable (Double, Double) -> Double = atan2
+private let c_hypot : @Sendable (Double, Double) -> Double = hypot
+private let c_pow   : @Sendable (Double, Double) -> Double = pow
 
 // Default implementations exist only for the requirements swift-bignum
 // spells differently (root(x,3), expMinusOne(_:), log(onePlus:)).  They go
@@ -111,30 +157,30 @@ public protocol RMathViaDouble : RMath {}
 
 extension RMathViaDouble {
     public static var precision:Int { return Double.significandBitCount }
-    public static func acos (_ x:Self)->Self { return Self(Foundation.acos (x.toDouble())) }
-    public static func acosh(_ x:Self)->Self { return Self(Foundation.acosh(x.toDouble())) }
-    public static func asin (_ x:Self)->Self { return Self(Foundation.asin (x.toDouble())) }
-    public static func asinh(_ x:Self)->Self { return Self(Foundation.asinh(x.toDouble())) }
-    public static func atan (_ x:Self)->Self { return Self(Foundation.atan (x.toDouble())) }
-    public static func atanh(_ x:Self)->Self { return Self(Foundation.atanh(x.toDouble())) }
-    public static func cbrt (_ x:Self)->Self { return Self(Foundation.cbrt (x.toDouble())) }
-    public static func cos  (_ x:Self)->Self { return Self(Foundation.cos  (x.toDouble())) }
-    public static func cosh (_ x:Self)->Self { return Self(Foundation.cosh (x.toDouble())) }
-    public static func exp  (_ x:Self)->Self { return Self(Foundation.exp  (x.toDouble())) }
-    public static func exp2 (_ x:Self)->Self { return Self(Foundation.exp2 (x.toDouble())) }
-    public static func expm1(_ x:Self)->Self { return Self(Foundation.expm1(x.toDouble())) }
-    public static func log  (_ x:Self)->Self { return Self(Foundation.log  (x.toDouble())) }
-    public static func log2 (_ x:Self)->Self { return Self(Foundation.log2 (x.toDouble())) }
-    public static func log10(_ x:Self)->Self { return Self(Foundation.log10(x.toDouble())) }
-    public static func log1p(_ x:Self)->Self { return Self(Foundation.log1p(x.toDouble())) }
-    public static func sin  (_ x:Self)->Self { return Self(Foundation.sin  (x.toDouble())) }
-    public static func sinh (_ x:Self)->Self { return Self(Foundation.sinh (x.toDouble())) }
-    public static func sqrt (_ x:Self)->Self { return Self(Foundation.sqrt (x.toDouble())) }
-    public static func tan  (_ x:Self)->Self { return Self(Foundation.tan  (x.toDouble())) }
-    public static func tanh (_ x:Self)->Self { return Self(Foundation.tanh (x.toDouble())) }
-    public static func atan2(y:Self, x:Self)->Self { return Self(Foundation.atan2(y.toDouble(), x.toDouble())) }
-    public static func hypot(_ x:Self, _ y:Self)->Self { return Self(Foundation.hypot(x.toDouble(), y.toDouble())) }
-    public static func pow  (_ x:Self, _ y:Self)->Self { return Self(Foundation.pow  (x.toDouble(), y.toDouble())) }
+    public static func acos (_ x:Self)->Self { return Self(c_acos(x.toDouble())) }
+    public static func acosh(_ x:Self)->Self { return Self(c_acosh(x.toDouble())) }
+    public static func asin (_ x:Self)->Self { return Self(c_asin(x.toDouble())) }
+    public static func asinh(_ x:Self)->Self { return Self(c_asinh(x.toDouble())) }
+    public static func atan (_ x:Self)->Self { return Self(c_atan(x.toDouble())) }
+    public static func atanh(_ x:Self)->Self { return Self(c_atanh(x.toDouble())) }
+    public static func cbrt (_ x:Self)->Self { return Self(c_cbrt(x.toDouble())) }
+    public static func cos  (_ x:Self)->Self { return Self(c_cos(x.toDouble())) }
+    public static func cosh (_ x:Self)->Self { return Self(c_cosh(x.toDouble())) }
+    public static func exp  (_ x:Self)->Self { return Self(c_exp(x.toDouble())) }
+    public static func exp2 (_ x:Self)->Self { return Self(c_exp2(x.toDouble())) }
+    public static func expm1(_ x:Self)->Self { return Self(c_expm1(x.toDouble())) }
+    public static func log  (_ x:Self)->Self { return Self(c_log(x.toDouble())) }
+    public static func log2 (_ x:Self)->Self { return Self(c_log2(x.toDouble())) }
+    public static func log10(_ x:Self)->Self { return Self(c_log10(x.toDouble())) }
+    public static func log1p(_ x:Self)->Self { return Self(c_log1p(x.toDouble())) }
+    public static func sin  (_ x:Self)->Self { return Self(c_sin(x.toDouble())) }
+    public static func sinh (_ x:Self)->Self { return Self(c_sinh(x.toDouble())) }
+    public static func sqrt (_ x:Self)->Self { return Self(c_sqrt(x.toDouble())) }
+    public static func tan  (_ x:Self)->Self { return Self(c_tan(x.toDouble())) }
+    public static func tanh (_ x:Self)->Self { return Self(c_tanh(x.toDouble())) }
+    public static func atan2(y:Self, x:Self)->Self { return Self(c_atan2(y.toDouble(), x.toDouble())) }
+    public static func hypot(_ x:Self, _ y:Self)->Self { return Self(c_hypot(x.toDouble(), y.toDouble())) }
+    public static func pow  (_ x:Self, _ y:Self)->Self { return Self(c_pow(x.toDouble(), y.toDouble())) }
     // precision is fixed for these types; the arguments are accepted and ignored
     public static func acos (_ x:Self, precision:Int, debug:Bool)->Self { return acos (x) }
     public static func acosh(_ x:Self, precision:Int, debug:Bool)->Self { return acosh(x) }

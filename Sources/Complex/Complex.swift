@@ -89,11 +89,8 @@ extension ComplexNumeric {
     }
 }
 
-#if os(Linux)
-import Glibc
-#else
-import Darwin
-#endif
+// (no libm import here: the math lives in ElementaryFunctions.swift,
+// which binds the platform libc itself)
 
 @available(*, deprecated, renamed: "RealElementaryFunctions")
 public typealias ComplexFloatElement = RealElementaryFunctions
